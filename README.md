@@ -211,7 +211,7 @@ print(summary(contact[,3]))
 #>   1.000   1.000   1.000   5.536   2.000 431.000
 print(summary(spikeInContact[,3]))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>    1.00    1.00    1.00   29.59    3.00  431.00
+#>    1.00    1.00    1.00   12.76    3.00  431.00
 ```
 
 ### Simulate from contact matrix

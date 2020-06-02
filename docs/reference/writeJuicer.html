@@ -89,7 +89,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/BaconZhou/FreeHiCLite/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -104,7 +109,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Write to short format with score</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/BaconZhou/FreeHiCLite/blob/master/R/writer.R'><code>R/writer.R</code></a></small>
     <div class="hidden name"><code>writeJuicer.Rd</code></div>
     </div>
 
@@ -174,7 +179,7 @@ The resulting list contains a list chromosomeSizes.</p>
 
 <span class='co'>## pass chrosomes into function, it will contains all the interaction pairs</span>
 
-<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readJuicer.html'>readJuicer</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='no'>localFilePath</span>, <span class='kw'>chromosomes</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>pairs</span> <span class='kw'>=</span> <span class='no'>pairs</span>, <span class='kw'>unit</span><span class='kw'>=</span><span class='no'>unit</span>, <span class='kw'>resolution</span><span class='kw'>=</span><span class='no'>resolution</span>)</div><div class='output co'>#&gt; <span class='message'>You are trying to access file from: /private/var/folders/bb/9m2pjpgj5nq5xft84vmyv7dm0000gn/T/Rtmpxplazj/temp_libpath2baf2fdc6e0f/FreeHiCLite/extdata/example.hic. Make sure you provide a valid path.</span></div><div class='output co'>#&gt; <span class='message'>Use pairs: 1_1, 1_2</span></div><div class='input'>
+<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readJuicer.html'>readJuicer</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='no'>localFilePath</span>, <span class='kw'>chromosomes</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>pairs</span> <span class='kw'>=</span> <span class='no'>pairs</span>, <span class='kw'>unit</span><span class='kw'>=</span><span class='no'>unit</span>, <span class='kw'>resolution</span><span class='kw'>=</span><span class='no'>resolution</span>)</div><div class='output co'>#&gt; <span class='message'>You are trying to access file from: /private/var/folders/bb/9m2pjpgj5nq5xft84vmyv7dm0000gn/T/RtmpPpyZe0/temp_libpath2cdb4a963440/FreeHiCLite/extdata/example.hic. Make sure you provide a valid path.</span></div><div class='output co'>#&gt; <span class='message'>Use pairs: 1_1, 1_2</span></div><div class='input'>
 <span class='no'>contactMatrixsList</span> <span class='kw'>&lt;-</span> <span class='no'>dat</span><span class='kw'>[[</span><span class='st'>'contact'</span>]]
 
 <span class='no'>.old_wd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>())
@@ -191,7 +196,7 @@ The resulting list contains a list chromosomeSizes.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Peigen Zhou, Ye Zheng.</p>
+  <p>Developed by Peigen Zhou, Ye Zheng, Sunduz Keles.</p>
 </div>
 
 <div class="pkgdown">
