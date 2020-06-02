@@ -21,15 +21,19 @@ hicDataInformation <- function(fileName, isHttp) {
     .Call(`_FreeHiCLite_hicDataInformation`, fileName, isHttp)
 }
 
-hicDataSimu <- function(fileName, chromosomes, unit, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate) {
-    .Call(`_FreeHiCLite_hicDataSimu`, fileName, chromosomes, unit, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate)
+hicDataSimuFromFile <- function(fileName, isHttp, pair, unit, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate) {
+    .Call(`_FreeHiCLite_hicDataSimuFromFile`, fileName, isHttp, pair, unit, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate)
 }
 
-hicDataSimuPure <- function(contactRecords, names, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate) {
-    .Call(`_FreeHiCLite_hicDataSimuPure`, contactRecords, names, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate)
+hicDataSimuList <- function(contactRecords, names, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate) {
+    .Call(`_FreeHiCLite_hicDataSimuList`, contactRecords, names, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate)
 }
 
-spikein <- function(background, SpikeInSignal, resolution, smooth) {
-    .Call(`_FreeHiCLite_spikein`, background, SpikeInSignal, resolution, smooth)
+hicDataSimuMatrix <- function(contactRecords, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate) {
+    .Call(`_FreeHiCLite_hicDataSimuMatrix`, contactRecords, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate)
+}
+
+spikein <- function(background, SpikeInSignal, bandwith, smooth) {
+    .Call(`_FreeHiCLite_spikein`, background, SpikeInSignal, bandwith, smooth)
 }
 

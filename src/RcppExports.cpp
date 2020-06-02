@@ -75,27 +75,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// hicDataSimu
-Rcpp::List hicDataSimu(const std::string& fileName, const std::vector<std::string>& chromosomes, const std::string& unit, int resolution, const int& sequenceDepth, const double& countScale, const double& noiseRate, const double& neighborZeroRate);
-RcppExport SEXP _FreeHiCLite_hicDataSimu(SEXP fileNameSEXP, SEXP chromosomesSEXP, SEXP unitSEXP, SEXP resolutionSEXP, SEXP sequenceDepthSEXP, SEXP countScaleSEXP, SEXP noiseRateSEXP, SEXP neighborZeroRateSEXP) {
+// hicDataSimuFromFile
+Rcpp::List hicDataSimuFromFile(const std::string& fileName, bool isHttp, const std::vector<std::string>& pair, const std::string& unit, int resolution, const int& sequenceDepth, const double& countScale, const double& noiseRate, const double& neighborZeroRate);
+RcppExport SEXP _FreeHiCLite_hicDataSimuFromFile(SEXP fileNameSEXP, SEXP isHttpSEXP, SEXP pairSEXP, SEXP unitSEXP, SEXP resolutionSEXP, SEXP sequenceDepthSEXP, SEXP countScaleSEXP, SEXP noiseRateSEXP, SEXP neighborZeroRateSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::string& >::type fileName(fileNameSEXP);
-    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type chromosomes(chromosomesSEXP);
+    Rcpp::traits::input_parameter< bool >::type isHttp(isHttpSEXP);
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type pair(pairSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type unit(unitSEXP);
     Rcpp::traits::input_parameter< int >::type resolution(resolutionSEXP);
     Rcpp::traits::input_parameter< const int& >::type sequenceDepth(sequenceDepthSEXP);
     Rcpp::traits::input_parameter< const double& >::type countScale(countScaleSEXP);
     Rcpp::traits::input_parameter< const double& >::type noiseRate(noiseRateSEXP);
     Rcpp::traits::input_parameter< const double& >::type neighborZeroRate(neighborZeroRateSEXP);
-    rcpp_result_gen = Rcpp::wrap(hicDataSimu(fileName, chromosomes, unit, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate));
+    rcpp_result_gen = Rcpp::wrap(hicDataSimuFromFile(fileName, isHttp, pair, unit, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate));
     return rcpp_result_gen;
 END_RCPP
 }
-// hicDataSimuPure
-Rcpp::List hicDataSimuPure(const Rcpp::List& contactRecords, const std::vector<std::string>& names, int resolution, const int& sequenceDepth, const double& countScale, const double& noiseRate, const double& neighborZeroRate);
-RcppExport SEXP _FreeHiCLite_hicDataSimuPure(SEXP contactRecordsSEXP, SEXP namesSEXP, SEXP resolutionSEXP, SEXP sequenceDepthSEXP, SEXP countScaleSEXP, SEXP noiseRateSEXP, SEXP neighborZeroRateSEXP) {
+// hicDataSimuList
+Rcpp::List hicDataSimuList(const Rcpp::List& contactRecords, const std::vector<std::string>& names, int resolution, const int& sequenceDepth, const double& countScale, const double& noiseRate, const double& neighborZeroRate);
+RcppExport SEXP _FreeHiCLite_hicDataSimuList(SEXP contactRecordsSEXP, SEXP namesSEXP, SEXP resolutionSEXP, SEXP sequenceDepthSEXP, SEXP countScaleSEXP, SEXP noiseRateSEXP, SEXP neighborZeroRateSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -106,21 +107,37 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type countScale(countScaleSEXP);
     Rcpp::traits::input_parameter< const double& >::type noiseRate(noiseRateSEXP);
     Rcpp::traits::input_parameter< const double& >::type neighborZeroRate(neighborZeroRateSEXP);
-    rcpp_result_gen = Rcpp::wrap(hicDataSimuPure(contactRecords, names, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate));
+    rcpp_result_gen = Rcpp::wrap(hicDataSimuList(contactRecords, names, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate));
+    return rcpp_result_gen;
+END_RCPP
+}
+// hicDataSimuMatrix
+Rcpp::IntegerMatrix hicDataSimuMatrix(const Rcpp::IntegerMatrix& contactRecords, int resolution, const int& sequenceDepth, const double& countScale, const double& noiseRate, const double& neighborZeroRate);
+RcppExport SEXP _FreeHiCLite_hicDataSimuMatrix(SEXP contactRecordsSEXP, SEXP resolutionSEXP, SEXP sequenceDepthSEXP, SEXP countScaleSEXP, SEXP noiseRateSEXP, SEXP neighborZeroRateSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type contactRecords(contactRecordsSEXP);
+    Rcpp::traits::input_parameter< int >::type resolution(resolutionSEXP);
+    Rcpp::traits::input_parameter< const int& >::type sequenceDepth(sequenceDepthSEXP);
+    Rcpp::traits::input_parameter< const double& >::type countScale(countScaleSEXP);
+    Rcpp::traits::input_parameter< const double& >::type noiseRate(noiseRateSEXP);
+    Rcpp::traits::input_parameter< const double& >::type neighborZeroRate(neighborZeroRateSEXP);
+    rcpp_result_gen = Rcpp::wrap(hicDataSimuMatrix(contactRecords, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate));
     return rcpp_result_gen;
 END_RCPP
 }
 // spikein
-Rcpp::IntegerMatrix spikein(const Rcpp::IntegerMatrix& background, const Rcpp::IntegerMatrix& SpikeInSignal, int resolution, bool smooth);
-RcppExport SEXP _FreeHiCLite_spikein(SEXP backgroundSEXP, SEXP SpikeInSignalSEXP, SEXP resolutionSEXP, SEXP smoothSEXP) {
+Rcpp::IntegerMatrix spikein(const Rcpp::IntegerMatrix& background, const Rcpp::IntegerMatrix& SpikeInSignal, int bandwith, bool smooth);
+RcppExport SEXP _FreeHiCLite_spikein(SEXP backgroundSEXP, SEXP SpikeInSignalSEXP, SEXP bandwithSEXP, SEXP smoothSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type background(backgroundSEXP);
     Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type SpikeInSignal(SpikeInSignalSEXP);
-    Rcpp::traits::input_parameter< int >::type resolution(resolutionSEXP);
+    Rcpp::traits::input_parameter< int >::type bandwith(bandwithSEXP);
     Rcpp::traits::input_parameter< bool >::type smooth(smoothSEXP);
-    rcpp_result_gen = Rcpp::wrap(spikein(background, SpikeInSignal, resolution, smooth));
+    rcpp_result_gen = Rcpp::wrap(spikein(background, SpikeInSignal, bandwith, smooth));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -131,8 +148,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_FreeHiCLite_hicDataExtra", (DL_FUNC) &_FreeHiCLite_hicDataExtra, 5},
     {"_FreeHiCLite_hicDataFragSites", (DL_FUNC) &_FreeHiCLite_hicDataFragSites, 3},
     {"_FreeHiCLite_hicDataInformation", (DL_FUNC) &_FreeHiCLite_hicDataInformation, 2},
-    {"_FreeHiCLite_hicDataSimu", (DL_FUNC) &_FreeHiCLite_hicDataSimu, 8},
-    {"_FreeHiCLite_hicDataSimuPure", (DL_FUNC) &_FreeHiCLite_hicDataSimuPure, 7},
+    {"_FreeHiCLite_hicDataSimuFromFile", (DL_FUNC) &_FreeHiCLite_hicDataSimuFromFile, 9},
+    {"_FreeHiCLite_hicDataSimuList", (DL_FUNC) &_FreeHiCLite_hicDataSimuList, 7},
+    {"_FreeHiCLite_hicDataSimuMatrix", (DL_FUNC) &_FreeHiCLite_hicDataSimuMatrix, 6},
     {"_FreeHiCLite_spikein", (DL_FUNC) &_FreeHiCLite_spikein, 4},
     {NULL, NULL, 0}
 };

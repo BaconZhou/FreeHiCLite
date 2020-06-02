@@ -1,11 +1,11 @@
 Package: FreeHiCLite
 Type: Package
-Title: FreeHiCLite version
+Title: FreeHiCLite
 Version: 0.1.0
-Date: 
-Author@R: c(person(given ="Peigen", family = "Zhou", role = c("aut", "cre"), 
+Date: 2020-06-02
+Authors@R: c(person(given ="Peigen", family = "Zhou", role = c("aut", "cre"), 
             email = "pzhou9@wisc.edu", comment = c(ORCID = "0000-0003-4609-0374")),
-            person(given ="Ye", family = "Zheng", role = c("aut", "cre"), 
+            person(given ="Ye", family = "Zheng", role = c("aut"), 
             email = "yzheng23@fredhutch.org", comment = c(ORCID = "0000-0002-8806-2761")))
 Maintainer: Peigen Zhou <pzhou9@wisc.edu>
 Description: An R implementation and lite version of FreeHiC.

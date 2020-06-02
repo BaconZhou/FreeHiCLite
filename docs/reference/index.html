@@ -12,8 +12,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -128,15 +128,27 @@
       <tr>
         
         <td>
-          <p><code><a href="readJuicer.html">readJuicer()</a></code> </p>
+          <p><code><a href="FreeHiC.html">FreeHiC()</a></code> </p>
         </td>
-        <td><p>Juicebox hic file reader</p></td>
+        <td><p>FreeHiC simulator</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="FreeHiCJuicer.html">FreeHiCJuicer()</a></code> </p>
+        </td>
+        <td><p>FreeHiC directly from hic file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="FreeSpikeIn.html">FreeSpikeIn()</a></code> </p>
+        </td>
+        <td><p>FreeHiC spikein</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
           <h2 id="section-data-extractor" class="hasAnchor"><a href="#section-data-extractor" class="anchor"></a>Data extractor</h2>
-          <p class="section-desc"><p>Functions for juicebox hic file extract</p></p>
+          <p class="section-desc"><p>Functions for juicebox hic file related</p></p>
         </th>
       </tr>
       
@@ -147,15 +159,33 @@
       <tr>
         
         <td>
+          <p><code><a href="readJuicerInformation.html">readJuicerInformation()</a></code> </p>
+        </td>
+        <td><p>Juicebox hic file information</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="readJuicerFragmentSites.html">readJuicerFragmentSites()</a></code> </p>
+        </td>
+        <td><p>Read fragment sites from the given hic file.</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="readJuicer.html">readJuicer()</a></code> </p>
         </td>
         <td><p>Juicebox hic file reader</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="readJuicerInformation.html">readJuicerInformation()</a></code> </p>
+          <p><code><a href="writeJuicer.html">writeJuicer()</a></code> </p>
         </td>
-        <td><p>Juicebox hic file information</p></td>
+        <td><p>Write to short format with score</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="convertJuicer.html">convertJuicer()</a></code> </p>
+        </td>
+        <td><p>Convert contact matrix</p></td>
       </tr>
     </tbody>
     </table>
@@ -171,7 +201,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Peigen Zhou.</p>
+  <p>Developed by Peigen Zhou, Ye Zheng.</p>
 </div>
 
 <div class="pkgdown">

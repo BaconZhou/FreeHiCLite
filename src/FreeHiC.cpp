@@ -138,25 +138,37 @@ void FreeHiC::getBasicInformation(
     this->totalCounts = 0.0;
     this->recordsMap.clear();
     this->pairMaxBin.clear();
-    int counter = 0;
     for (const auto &it : dataMap) {
         std::string key = it.first;
         const std::vector<contactRecord> &data = it.second;
-        int maxBinX = 0;
-        int maxBinY = 0;
-        std::vector<FreeContact> records;
-        records.reserve(data.size());
-        for (const contactRecord &contact : data) {
-            records.emplace_back(contact);
-            totalCounts += contact.counts;
-            maxBinX = std::max(maxBinX, contact.binX);
-            maxBinY = std::max(maxBinY, contact.binY);
-        }
-        this->recordsMap[key] = records;
-        this->pairMaxBin[key] = std::make_pair(maxBinX, maxBinY);
-        counter++;
+        FreeInfo info;
+        this->recordsMap[key] = getBasicInformation(data, key, info);
+        this->pairMaxBin[key] = std::make_pair(info.maxBinX, info.maxBinY);
+        this->totalCounts += info.totalCounts;
     }
 }
+
+std::vector<FreeContact> FreeHiC::getBasicInformation(
+    const std::vector<contactRecord> &data, const std::string& key, FreeInfo &info) {
+    int totalCounts_ = 0.0;
+    int maxBinX = 0;
+    int maxBinY = 0;
+    std::vector<FreeContact> records;
+    records.reserve(data.size());
+    for (const contactRecord &contact : data) {
+        records.emplace_back(contact);
+        totalCounts_ += contact.counts;
+        maxBinX = std::max(maxBinX, contact.binX);
+        maxBinY = std::max(maxBinY, contact.binY);
+    }
+    info.key = key;
+    info.maxBinX = maxBinX;
+    info.maxBinY = maxBinY;
+    info.totalCounts = totalCounts_;
+
+    return records;
+}
+
 
 std::unordered_map<std::string, std::vector<contactRecord>> FreeHiC::getData() {
     std::unordered_map<std::string, std::vector<contactRecord>> ans;

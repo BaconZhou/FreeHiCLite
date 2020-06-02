@@ -12,14 +12,14 @@ namespace FreeHiC {
             return std::ctime(&end_time);
         }
 
-        std::set<int>
+        std::unordered_set<int>
         hicReader::getBlockNumbersForRegionFromBinPosition(int *regionIndices, int blockBinCount, int blockColumnCount,
                                                            bool intra) {
             int col1 = regionIndices[0] / blockBinCount;
             int col2 = (regionIndices[1] + 1) / blockBinCount;
             int row1 = regionIndices[2] / blockBinCount;
             int row2 = (regionIndices[3] + 1) / blockBinCount;
-            std::set<int> blocksSet;
+            std::unordered_set<int> blocksSet;
             // first check the upper triangular matrix
             for (int r = row1; r <= row2; r++) {
                 for (int c = col1; c <= col2; c++) {
@@ -109,16 +109,19 @@ namespace FreeHiC {
             if (!foundBlock)
                 return false;
 
-            std::set<int> blockNumbers;
+            std::unordered_set<int> blockNumbers;
             if (useRegionIndex) {
                 blockNumbers = this->getBlockNumbersForRegionFromBinPosition(
                         regionIndices, blockBinCount, blockColumnCount, c1 == c2);
             } else {
                 blockNumbers = this->getBlockNumbers();
-
             }
+
+            std::vector<int> blockVec(blockNumbers.begin(), blockNumbers.end());
+            std::sort(blockVec.begin(), blockVec.end());
+
             std::vector<contactRecord> tmp_records;
-            for (std::__1::__tree_const_iterator<int, std::__1::__tree_node<int, void *> *, long>::value_type blockNumber : blockNumbers) {
+            for (const int & blockNumber : blockVec) {
                 // get contacts in this block
 #ifdef RVERSION
                 Rcpp::checkUserInterrupt();
@@ -545,7 +548,7 @@ namespace FreeHiC {
             return sites;
         }
 
-        long total_bytes;
+        // long total_bytes;
 
         size_t hdf(char *b, size_t size, size_t nitems, void *userdata) {
             size_t numbytes = size * nitems;
@@ -557,7 +560,7 @@ namespace FreeHiC {
                 //Content-Range: bytes 0-100000/891471462
                 if (found2 != std::string::npos) {
                     std::string total = s.substr(found2 + 1);
-                    total_bytes = stol(total);
+                    // total_bytes = stol(total);
                 }
             }
             return numbytes;
@@ -610,7 +613,7 @@ namespace FreeHiC {
             return curl;
         }
 
-        bool hicReaderHttp::readMatrixHttp(CURL *curl, long filePosition, int &blockBinCount, int &blockColumnCount) {
+        bool hicReaderHttp::readMatrix(CURL *curl, long filePosition, int &blockBinCount, int &blockColumnCount) {
 #ifdef HTTPTEST
             cout << "Read matrix data" << time() << endl;
 #endif
@@ -635,7 +638,7 @@ namespace FreeHiC {
                 Rcpp::checkUserInterrupt();
 #endif
                 // myFilePosition gets updated within call
-                found = this->readMatrixZoomDataHttp(curl, filePosition, blockBinCount, blockColumnCount);
+                found = this->readMatrixZoomData(curl, filePosition, blockBinCount, blockColumnCount);
                 i++;
             }
 
@@ -655,7 +658,7 @@ namespace FreeHiC {
         }
 
 //
-        bool hicReaderHttp::readMatrixZoomDataHttp(CURL *curl, long &FilePosition, int &myBlockBinCount,
+        bool hicReaderHttp::readMatrixZoomData(CURL *curl, long &FilePosition, int &myBlockBinCount,
                                                    int &myBlockColumnCount) {
             char *buffer;
             int header_size = 5 * sizeof(int) + 4 * sizeof(float);
@@ -746,7 +749,7 @@ namespace FreeHiC {
             std::istream bufin(&sbuf);
             this->readHeader(bufin);
             delete buffer;
-            this->totalBytes = total_bytes;
+            // this->totalBytes = total_bytes;
 #ifdef HTTPTEST
             cout << "Find resolution " << time() << endl;
 #endif
@@ -820,29 +823,34 @@ namespace FreeHiC {
             long filePosition = this->pairFilePositions[key];
 
 
-            bool foundBlock = this->readMatrixHttp(this->urlBuffer, filePosition,
+            bool foundBlock = this->readMatrix(this->urlBuffer, filePosition,
                                                    blockBinCount, blockColumnCount);
             if (!foundBlock) {
                 cerr << "Did not find block" << endl;
                 return false;
             }
 
-            std::set<int> blockNumbers;
+            std::unordered_set<int> blockNumbers;
             if (useRegionIndex) {
                 blockNumbers = this->getBlockNumbersForRegionFromBinPosition(
                         regionIndices, blockBinCount, blockColumnCount, c1 == c2);
             } else {
                 blockNumbers = getBlockNumbers();
             }
+
+            std::vector<int> blockVec(blockNumbers.begin(), blockNumbers.end());
+            std::sort(blockVec.begin(), blockVec.end());
+            DEBUG(blockVec.size());
             std::vector<contactRecord> tmp_records;
-            for (std::set<int>::iterator it = blockNumbers.begin(); it != blockNumbers.end(); ++it) {
+
+            for (const int & blockNumber : blockVec) {
                 // get contacts in this block
 #ifdef RVERSION
                 Rcpp::checkUserInterrupt();
 #endif
-                char *compressedBytes = new char[blockMap[*it].size];
-                compressedBytes = this->getData(this->urlBuffer, blockMap[*it].position, blockMap[*it].size);
-                tmp_records = this->readBlock(compressedBytes, blockMap[*it]);
+                char *compressedBytes = new char[blockMap[blockNumber].size];
+                compressedBytes = this->getData(this->urlBuffer, blockMap[blockNumber].position, blockMap[blockNumber].size);
+                tmp_records = this->readBlock(compressedBytes, blockMap[blockNumber]);
                 for (auto rec : tmp_records) {
                     int x = rec.binX * this->resolution_;
                     int y = rec.binY * this->resolution_;
@@ -871,8 +879,8 @@ namespace FreeHiC {
             return true;
         }
 
-        std::set<int> hicReader::getBlockNumbers() {
-            std::set<int> ans;
+        std::unordered_set<int> hicReader::getBlockNumbers() {
+            std::unordered_set<int> ans;
             for (auto & it : blockMap) {
                 ans.insert(it.first);
             }

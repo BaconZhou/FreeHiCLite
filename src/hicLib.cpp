@@ -17,6 +17,7 @@ Rcpp::IntegerMatrix contactVectorToMatrix(const std::vector<FreeHiC::contactReco
     ans(i, 1) = record.binY;
     ans(i, 2) = record.counts;
   }
+  Rcpp::colnames(ans) = Rcpp::CharacterVector({"x", "y", "counts"});
   return ans;
 }
 
@@ -30,6 +31,7 @@ std::vector<FreeHiC::contactRecord> matrixToContactVector(const Rcpp::IntegerMat
     float count = records(i, 2);
     ans[i] = FreeHiC::contactRecord(binX, binY, count);
   }
+  std::sort(ans.begin(), ans.end());
   return ans;
 }
 
@@ -180,25 +182,29 @@ Rcpp::List hicDataInformation(const std::string &fileName, bool isHttp) {
 }
 
 // [[Rcpp::export]]
-Rcpp::List hicDataSimu(const std::string &fileName, 
-                       const std::vector<std::string> &chromosomes, 
-                       const std::string &unit, int resolution,
-                       const int &sequenceDepth, const double &countScale, 
-                       const double &noiseRate, const double &neighborZeroRate) {
-  FreeHiC::Juicer::hicReader reader(fileName, unit, resolution);
+Rcpp::List hicDataSimuFromFile(const std::string &fileName,  bool isHttp,
+                               const std::vector<std::string> &pair,  
+                               const std::string &unit, int resolution,
+                               const int &sequenceDepth, const double &countScale, 
+                               const double &noiseRate, const double &neighborZeroRate) {
+  FreeHiC::Juicer::hicReader *reader;
+  if (isHttp) {
+    reader = new FreeHiC::Juicer::hicReaderHttp(fileName, unit, resolution);
+  } else {
+    reader = new FreeHiC::Juicer::hicReader(fileName, unit, resolution);
+  }
+  
   FreeHiC::FreeHiC simulator(resolution, sequenceDepth, countScale,
                              noiseRate, neighborZeroRate);
 
   std::unordered_map<std::string, std::vector<FreeHiC::contactRecord>> resMap;
-  for (int i = 0; i < chromosomes.size(); i++) {
-    for (int j = i; j < chromosomes.size(); j++) {
-      std::stringstream ss;
-      ss << chromosomes[i] << "_" << chromosomes[j];
-      std::vector<FreeHiC::contactRecord> res = reader.readData(chromosomes[i], chromosomes[j]);
-    
-      resMap[ss.str()] = res;
-    }
+  
+  for (size_t i = 0; i < pair.size(); i++) {
+    std::pair<std::string, std::string> chrPair = split(pair[i], "_");
+    std::vector<FreeHiC::contactRecord> res = reader->readData(chrPair.first, chrPair.second); 
+    resMap[pair[i]] = res;
   }
+
   simulator.simulate(resMap);
   std::unordered_map<std::string, std::vector<FreeHiC::contactRecord>> res = simulator.getData();
   
@@ -210,10 +216,10 @@ Rcpp::List hicDataSimu(const std::string &fileName,
 }
 
 // [[Rcpp::export]]
-Rcpp::List hicDataSimuPure(const Rcpp::List &contactRecords, 
-                           const std::vector<std::string> &names,
-                           int resolution, const int &sequenceDepth, const double &countScale, 
-                           const double &noiseRate, const double &neighborZeroRate) {
+Rcpp::List hicDataSimuList(const Rcpp::List &contactRecords, 
+                       const std::vector<std::string> &names,
+                       int resolution, const int &sequenceDepth, const double &countScale, 
+                       const double &noiseRate, const double &neighborZeroRate) {
   
   FreeHiC::FreeHiC simulator(resolution, sequenceDepth, countScale,
                              noiseRate, neighborZeroRate);
@@ -229,15 +235,30 @@ Rcpp::List hicDataSimuPure(const Rcpp::List &contactRecords,
   return ans;
 }
 
+// [[Rcpp::export]]
+Rcpp::IntegerMatrix hicDataSimuMatrix(const Rcpp::IntegerMatrix &contactRecords, 
+                       int resolution, const int &sequenceDepth, const double &countScale, 
+                       const double &noiseRate, const double &neighborZeroRate) {
+  
+  FreeHiC::FreeHiC simulator(resolution, sequenceDepth, countScale,
+                             noiseRate, neighborZeroRate);
+  
+  std::unordered_map<std::string, std::vector<FreeHiC::contactRecord>> resMap;
+  resMap["1"] = matrixToContactVector(contactRecords);
+  simulator.simulate(resMap);
+  std::unordered_map<std::string, std::vector<FreeHiC::contactRecord>> res = simulator.getData();
+  return contactVectorToMatrix(res["1"]);
+}
+
 
 // [[Rcpp::export]]
 Rcpp::IntegerMatrix spikein(const Rcpp::IntegerMatrix &background, 
                             const Rcpp::IntegerMatrix &SpikeInSignal, 
-                            int resolution, bool smooth) {
+                            int bandwith, bool smooth) {
   std::vector<FreeHiC::contactRecord> backgound_ = matrixToContactVector(background);
   std::vector<FreeHiC::contactRecord> SpikeInSignal_ = matrixToContactVector(SpikeInSignal);
   
-  FreeHiC::Spikein sol(backgound_, resolution, smooth);
+  FreeHiC::Spikein sol(backgound_, bandwith, smooth);
   
   sol.smoothSignal(SpikeInSignal_);
   return contactVectorToMatrix(sol.getData());

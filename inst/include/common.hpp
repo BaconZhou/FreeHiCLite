@@ -133,7 +133,6 @@ inline void replace(std::string &s, const std::string &from ,const std::string &
     if (start_pos != std::string::npos) s.replace(start_pos, from.length(), to);
 }
 
-
 } // namespace FreeHiC
 
 #endif // HICLIB_COMMON_HPP

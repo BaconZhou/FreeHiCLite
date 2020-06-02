@@ -13,6 +13,14 @@ namespace FreeHiC {
 //    static std::default_random_engine generator;
 //    static std::bernoulli_distribution bernoulli(0.5);
 //    static std::uniform_real_distribution<double> uniform(0, 1);
+    
+
+    struct FreeInfo {
+        int totalCounts = 0.0;
+        int maxBinX = 0;
+        int maxBinY = 0;
+        std::string key;
+    };
 
     class FreeContact : public contactRecord {
     private:
@@ -84,6 +92,7 @@ namespace FreeHiC {
                                                   neighborZeroRate_(neighborZeroRate) {};
 
         void simulate(const std::unordered_map<std::string, std::vector<contactRecord>> &data);
+        void simulate(const std::vector<contactRecord> &data);
 
         std::unordered_map<std::string, std::vector<contactRecord>> getData();
 
@@ -109,7 +118,7 @@ namespace FreeHiC {
         double totalCounts = 0.0;
 
         void getBasicInformation(const std::unordered_map<std::string, std::vector<contactRecord>> &dataMap);
-
+        std::vector<FreeContact> getBasicInformation(const std::vector<contactRecord> &data, const std::string& key, FreeInfo &info);
     };
 }
 

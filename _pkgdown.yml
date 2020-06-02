@@ -1,14 +1,24 @@
 destination: docs
+
+template:
+  params:
+    bootswatch: cosmo
+
 reference:
 - title: "Main function"
   desc: >
     Functions for FreeHiC simulator
 - contents:
-  - readJuicer
+  - FreeHiC
+  - FreeHiCJuicer
+  - FreeSpikeIn
+  
 - title: "Data extractor"
   desc: >
-    Functions for juicebox hic file extract
+    Functions for juicebox hic file related
 - contents:
-  - readJuicer
   - readJuicerInformation
   - readJuicerFragmentSites
+  - readJuicer
+  - writeJuicer
+  - convertJuicer
