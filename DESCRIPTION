@@ -1,0 +1,22 @@
+Package: FreeHiCLite
+Type: Package
+Title: FreeHiCLite version
+Version: 0.1.0
+Date: 
+Author@R: c(person(given ="Peigen", family = "Zhou", role = c("aut", "cre"), 
+            email = "pzhou9@wisc.edu", comment = c(ORCID = "0000-0003-4609-0374")),
+            person(given ="Ye", family = "Zheng", role = c("aut", "cre"), 
+            email = "yzheng23@fredhutch.org", comment = c(ORCID = "0000-0002-8806-2761")))
+Maintainer: Peigen Zhou <pzhou9@wisc.edu>
+Description: An R implementation and lite version of FreeHiC.
+License: GPL (>= 2)
+LinkingTo: Rcpp
+SystemRequirements: GNU make, C++11
+RoxygenNote: 7.1.0
+Depends: R (>= 3.1.0)
+Imports: Rcpp,
+    magrittr
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Encoding: UTF-8

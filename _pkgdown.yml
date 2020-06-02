@@ -1,0 +1,12 @@
+destination: docs
+reference:
+- title: "Main function"
+  desc: >
+    Functions for FreeHiC simulator
+- contents:
+  - readJuicer
+- title: "Data extractor"
+  desc: >
+    Functions for juicebox hic file extract
+- contents:
+  - readJuicer
