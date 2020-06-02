@@ -10,3 +10,5 @@ reference:
     Functions for juicebox hic file extract
 - contents:
   - readJuicer
+  - readJuicerInformation
+  - readJuicerFragmentSites

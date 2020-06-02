@@ -50,6 +50,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// hicDataFragSites
+Rcpp::List hicDataFragSites(const std::string& fileName, bool isHttp, const std::vector<std::string>& chromosomes);
+RcppExport SEXP _FreeHiCLite_hicDataFragSites(SEXP fileNameSEXP, SEXP isHttpSEXP, SEXP chromosomesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type fileName(fileNameSEXP);
+    Rcpp::traits::input_parameter< bool >::type isHttp(isHttpSEXP);
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type chromosomes(chromosomesSEXP);
+    rcpp_result_gen = Rcpp::wrap(hicDataFragSites(fileName, isHttp, chromosomes));
+    return rcpp_result_gen;
+END_RCPP
+}
+// hicDataInformation
+Rcpp::List hicDataInformation(const std::string& fileName, bool isHttp);
+RcppExport SEXP _FreeHiCLite_hicDataInformation(SEXP fileNameSEXP, SEXP isHttpSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type fileName(fileNameSEXP);
+    Rcpp::traits::input_parameter< bool >::type isHttp(isHttpSEXP);
+    rcpp_result_gen = Rcpp::wrap(hicDataInformation(fileName, isHttp));
+    return rcpp_result_gen;
+END_RCPP
+}
 // hicDataSimu
 Rcpp::List hicDataSimu(const std::string& fileName, const std::vector<std::string>& chromosomes, const std::string& unit, int resolution, const int& sequenceDepth, const double& countScale, const double& noiseRate, const double& neighborZeroRate);
 RcppExport SEXP _FreeHiCLite_hicDataSimu(SEXP fileNameSEXP, SEXP chromosomesSEXP, SEXP unitSEXP, SEXP resolutionSEXP, SEXP sequenceDepthSEXP, SEXP countScaleSEXP, SEXP noiseRateSEXP, SEXP neighborZeroRateSEXP) {
@@ -104,6 +129,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_FreeHiCLite_hicData", (DL_FUNC) &_FreeHiCLite_hicData, 5},
     {"_FreeHiCLite_hicDataHttp", (DL_FUNC) &_FreeHiCLite_hicDataHttp, 5},
     {"_FreeHiCLite_hicDataExtra", (DL_FUNC) &_FreeHiCLite_hicDataExtra, 5},
+    {"_FreeHiCLite_hicDataFragSites", (DL_FUNC) &_FreeHiCLite_hicDataFragSites, 3},
+    {"_FreeHiCLite_hicDataInformation", (DL_FUNC) &_FreeHiCLite_hicDataInformation, 2},
     {"_FreeHiCLite_hicDataSimu", (DL_FUNC) &_FreeHiCLite_hicDataSimu, 8},
     {"_FreeHiCLite_hicDataSimuPure", (DL_FUNC) &_FreeHiCLite_hicDataSimuPure, 7},
     {"_FreeHiCLite_spikein", (DL_FUNC) &_FreeHiCLite_spikein, 4},

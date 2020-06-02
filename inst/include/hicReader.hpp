@@ -62,7 +62,6 @@ namespace FreeHiC {
                 if (!this->initialized) {
                     this->init();
                 }
-
                 if (!this->checked) return this->records;
                 else {
                     if (!this->readData_(this->chr1, this->chr2)) {
@@ -84,7 +83,26 @@ namespace FreeHiC {
                 return ans;
             };
 
-            const std::map<std::string, int> getChromosomeNSites() const {return this->getChromosomeNSites();}
+            std::vector<int> getChromosomeSites(std::string chr) {
+                if (!this->initialized) {
+                    this->init();
+                }
+                std::string chrClean = cleanUpName(chr);
+                if (this->fragmentSitesCache.find(chrClean) == this->fragmentSitesCache.end()) {
+                    cout << "it could take a while" << endl;
+                    getChromosomeSites_(chrClean);
+                }
+                return this->fragmentSitesCache[chrClean];
+            }
+
+            bool init() {
+                if (this->initialized) return true;
+                this->initialized = true;
+                this->checked = this->prepareData();
+                this->records.clear();
+                if (!this->checked) cerr << "please checked the input and error message." << endl;
+                return this->checked;
+            }
 
         protected:
             // hic file
@@ -93,6 +111,7 @@ namespace FreeHiC {
             std::string unit_ = "BP";
             int resolution_ = 5000;
             bool useRegionIndex = false;
+            long filePos = 0;
 
             std::ifstream fileInStream;
 
@@ -102,7 +121,12 @@ namespace FreeHiC {
 
             std::map<std::string, std::vector<int>> fileResolutions;
             std::map<std::string, long> pairFilePositions;
+
+            // fragment
+            bool needFragmentSite = true;
+            long fragmentSitePos = 0;
             std::map<std::string, FragIndexEntry> fragmentSitesIndex;
+            std::map<std::string, std::vector<int>> fragmentSitesCache;
             std::map<std::string, int> chromosomeNSites; // fragmentCounts
 
             // hic info
@@ -114,14 +138,6 @@ namespace FreeHiC {
 
             bool checked = false;
             bool initialized = false;
-
-            bool init() {
-                this->initialized = true;
-                this->checked = this->prepareData();
-                this->records.clear();
-                if (!this->checked) cerr << "please checked the input and error message." << endl;
-                return this->checked;
-            }
 
             virtual bool readData_(const std::string &chr1, const std::string &chr2);
 
@@ -143,7 +159,7 @@ namespace FreeHiC {
 
 //            bool MatrixZoomData(int blockBinCount, int blockColumnCount, const std::vector<int> &chr1Sites, const std::vector<int> &chr2Sites);
 //
-//            std::vector<int> readSites(std::istream &fin, long position, int nSites);
+            std::vector<int> readSites(std::istream &fin, int nSites);
             std::vector<contactRecord> readBlock(char *compressedBytes, indexEntry idx);
 
             std::set<int>
@@ -159,6 +175,8 @@ namespace FreeHiC {
                 replace(name, "chr", "");
                 return name;
             }
+
+            virtual void getChromosomeSites_(std::string chr);
         };
 
 // Read file from web
@@ -169,7 +187,8 @@ namespace FreeHiC {
 
             hicReaderHttp(const std::string &fileName,
                           const std::string &unit,
-                          const int resolution) : hicReader(fileName, unit, resolution) {}
+                          const int resolution) : hicReader(fileName, unit, resolution) { this->needFragmentSite = false;
+            }
 
             ~hicReaderHttp() = default;
 
@@ -193,7 +212,7 @@ namespace FreeHiC {
 
             bool readMatrixZoomDataHttp(CURL *curl, long &FilePosition,
                                         int &blockBinCount, int &blockColumnCount);
-
+            void getChromosomeSites_(std::string chr) override;
         };
 
 

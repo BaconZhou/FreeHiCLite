@@ -59,7 +59,31 @@ std::pair<std::string, std::string> split(std::string s, std::string delimiter) 
 }
 
 
+
 // READ data
+
+Rcpp::List hicDataInformation(FreeHiC::Juicer::hicReader *reader) {
+  reader->init();
+  Rcpp::List resolutions;
+  for (const auto & it : reader->getResolutions()) {
+    resolutions.push_back(it.second, it.first);
+  }
+  
+  std::vector<std::string> chroName;
+  std::vector<int> chroSize;
+  Rcpp::DataFrame chromosomeSize;
+  for (const auto & it: reader->getChromosomeSize()) {
+    chroName.push_back(it.first);
+    chroSize.push_back(it.second);
+  }
+  Rcpp::List info = Rcpp::List::create(
+    Rcpp::Named("genomId") = reader->getGenome(),
+    Rcpp::Named("resolution") = resolutions,
+    Rcpp::Named("chromosomeSizes") = Rcpp::DataFrame::create(
+      Rcpp::Named("chromosome") = chroName,
+      Rcpp::Named("size") = chroSize));
+  return info;
+}
 
 // [[Rcpp::export]]
 Rcpp::IntegerMatrix hicData(std::string fileName, std::string chr1, 
@@ -112,7 +136,6 @@ Rcpp::List hicDataExtra(const std::string &fileName, bool isHttp,
     reader = new FreeHiC::Juicer::hicReader(fileName, unit, resolution);
   }
   
-  
   Rcpp::List contact;
   
   for (size_t i = 0; i < pair.size(); i++) {
@@ -120,31 +143,41 @@ Rcpp::List hicDataExtra(const std::string &fileName, bool isHttp,
       std::vector<FreeHiC::contactRecord> res = reader->readData(chrPair.first, chrPair.second); 
       contact.push_back(contactVectorToMatrix(res), pair[i]);
   }
-
-  Rcpp::List resolutions;
-  for (const auto & it : reader->getResolutions()) {
-    resolutions.push_back(it.second, it.first);
-  }
-  
-  std::vector<std::string> chroName;
-  std::vector<int> chroSize;
-  Rcpp::DataFrame chromosomeSize;
-  for (const auto & it: reader->getChromosomeSize()) {
-    chroName.push_back(it.first);
-    chroSize.push_back(it.second);
-  }
   
   Rcpp::List ans = Rcpp::List::create(Rcpp::Named("contact") = contact,
-                                      Rcpp::Named("information") = Rcpp::List::create(
-                                        Rcpp::Named("genomId") = reader->getGenome(),
-                                        Rcpp::Named("resolution") = resolutions,
-                                        Rcpp::Named("chromosomeSizes") = Rcpp::DataFrame::create(
-                                          Rcpp::Named("chromosome") = chroName,
-                                          Rcpp::Named("size") = chroSize)
-                                      ));
+                                      Rcpp::Named("information") = hicDataInformation(reader));
   return ans;
 }
 
+// [[Rcpp::export]]
+Rcpp::List hicDataFragSites(const std::string &fileName, bool isHttp,
+                            const std::vector<std::string> &chromosomes) {
+  
+  FreeHiC::Juicer::hicReader *reader;
+  if (isHttp) {
+    reader = new FreeHiC::Juicer::hicReaderHttp(fileName, "FRAG", 1);
+  } else {
+    reader = new FreeHiC::Juicer::hicReader(fileName, "FRAG", 1);
+  }
+  
+  Rcpp::List fragmentSites;
+  for (const std::string &chr : chromosomes) {
+    fragmentSites.push_back(reader->getChromosomeSites(chr), chr);
+  }
+  return fragmentSites;
+}
+
+
+// [[Rcpp::export]]
+Rcpp::List hicDataInformation(const std::string &fileName, bool isHttp) {
+  FreeHiC::Juicer::hicReader *reader;
+  if (isHttp) {
+    reader = new FreeHiC::Juicer::hicReaderHttp(fileName, "FRAG", 1);
+  } else {
+    reader = new FreeHiC::Juicer::hicReader(fileName, "FRAG", 1);
+  }
+  return hicDataInformation(reader);
+}
 
 // [[Rcpp::export]]
 Rcpp::List hicDataSimu(const std::string &fileName, 

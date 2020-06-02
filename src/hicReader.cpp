@@ -58,6 +58,15 @@ namespace FreeHiC {
         bool hicReader::prepareData() {
             if (!this->openFile()) return false;
             this->readHeader(this->fileInStream);
+
+            this->fileInStream.seekg(master, std::ios::beg);
+            bool foundFooter = this->readFooter(this->fileInStream);
+            return foundFooter;
+        }
+
+        bool hicReader::readData_(const std::string &chr1, const std::string &chr2) {
+
+            this->records.clear();
             if (!this->findResolution()) {
                 cerr << "Not find this resolution: (" << this->unit_ << ", " << this->resolution_ << ")" << endl;
                 cerr << "Available resolutions:" << endl;
@@ -69,17 +78,6 @@ namespace FreeHiC {
                 cerr << endl;
                 return false;
             }
-            bool foundFooter = false;
-
-            this->fileInStream.seekg(master, std::ios::beg);
-            foundFooter = this->readFooter(this->fileInStream);
-
-            if (!foundFooter) return false;
-            return true;
-        }
-
-        bool hicReader::readData_(const std::string &chr1, const std::string &chr2) {
-            this->records.clear();
             int c1 = std::min(this->chromosomeMap[chr1].index,
                               this->chromosomeMap[chr2].index);
             int c2 = std::max(this->chromosomeMap[chr1].index,
@@ -177,29 +175,49 @@ namespace FreeHiC {
                 this->master = -1;
                 return false;
             }
+            this->filePos += 4;
             fin.read((char *) &this->version, sizeof(int));
             if (version < 6) {
                 cerr << "Version " << version << " no longer supported" << endl;
                 this->master = -1;
                 return false;
             }
+            this->filePos += 4;
+
             fin.read((char *) &this->master, sizeof(long));
+
+            this->filePos += 8
+                    ;
             getline(fin, this->genome, '\0');
+
+            this->filePos += this->genome.size() + 1;
+
             int nAttributes;
             fin.read((char *) &nAttributes, sizeof(int));
+            this->filePos += 4;
+
             for (int i = 0; i < nAttributes; i++) {
                 std::string key, value;
                 getline(fin, key, '\0');
+                this->filePos += key.size() + 1;
                 getline(fin, value, '\0');
+                this->filePos += value.size() + 1;
             }
             int nChrs;
             fin.read((char *) &nChrs, sizeof(int));
+            this->filePos += 4;
             for (int i = 0; i < nChrs; i++) {
                 std::string name;
                 int length;
                 getline(fin, name, '\0');
+
+                this->filePos += name.size()+1;
+
                 name = cleanUpName(name);
                 fin.read((char *) &length, sizeof(int));
+
+                this->filePos += 4;
+
                 chromosome chr;
                 chr.index = i;
                 chr.name = name;
@@ -210,36 +228,43 @@ namespace FreeHiC {
 
             int nBpResolution;
             fin.read((char *) &nBpResolution, sizeof(int));
+            this->filePos += 4;
+
             std::vector<int> bpResolution;
             for (int i = 0; i < nBpResolution; i++) {
                 int bpResolution_;
                 fin.read((char *) &bpResolution_, sizeof(int));
+                this->filePos += 4;
                 bpResolution.push_back(bpResolution_);
             }
             this->fileResolutions["BP"] = bpResolution;
 
             int nFragResolution;
             fin.read((char *) &nFragResolution, sizeof(int));
+            this->filePos += 4;
             std::vector<int> FragResolution;
             for (int i = 0; i < nFragResolution; i++) {
                 int FragResolution_;
                 fin.read((char *) &FragResolution_, sizeof(int));
+                this->filePos += 4;
                 FragResolution.push_back(FragResolution_);
             }
             this->fileResolutions["FRAG"] = FragResolution;
-
-            if (nFragResolution > 0) {
+            this->fragmentSitePos = this->filePos;
+            if (nFragResolution > 0 && this->needFragmentSite) {
                 for (int i = 0; i < nChrs; i++) {
                     std::string chr = chromosomes[i];
                     int nSite_;
                     fin.read((char *) &nSite_, sizeof(int));
-                    this->fragmentSitesIndex[chr] = FragIndexEntry(nSite_, fin.tellg());
-                    // cout << "position: " << fin.tellg() << ", chr: " << chr << endl;
+                    this->fragmentSitesIndex[chr] = FragIndexEntry(nSite_, this->filePos);
+#ifdef HTTPTEST
+                    cerr << "chr: " << chr << ", nSites_: " << nSite_ << ", pos: " << this->filePos << endl;
+#endif
                     this->chromosomeNSites[chr] = nSite_;
                     fin.ignore(nSite_ * 4);
+                    this->filePos += nSite_ * 4;
                 }
             }
-
             return true;
         }
 
@@ -276,6 +301,8 @@ namespace FreeHiC {
             fin.read((char *) &c2, sizeof(int)); // chr2
             int nRes;
             fin.read((char *) &nRes, sizeof(int));
+
+
             int i = 0;
             bool found = false;
             //while (i < nRes && !found) {
@@ -508,16 +535,15 @@ namespace FreeHiC {
 //            return false;
 //        }
 //
-//        std::vector<int> hicReader::readSites(std::istream &fin, long position, int nSites) {
-//            fin.seekg(position);
-//            std::vector<int> sites(nSites);
-//            for (int i = 0; i < nSites; i++) {
-//                int site;
-//                fin.read((char *) &site, sizeof(int));
-//                sites[i] = site;
-//            }
-//            return sites;
-//        }
+        std::vector<int> hicReader::readSites(std::istream &fin, int nSites) {
+            std::vector<int> sites(nSites);
+            for (int i = 0; i < nSites; i++) {
+                int site;
+                fin.read((char *) &site, sizeof(int));
+                sites[i] = site;
+            }
+            return sites;
+        }
 
         long total_bytes;
 
@@ -603,6 +629,7 @@ namespace FreeHiC {
             bool found = false;
             filePosition = filePosition + size;
             delete buffer;
+
             while (i < nRes && !found) {
 #ifdef RVERSION
                 Rcpp::checkUserInterrupt();
@@ -611,6 +638,7 @@ namespace FreeHiC {
                 found = this->readMatrixZoomDataHttp(curl, filePosition, blockBinCount, blockColumnCount);
                 i++;
             }
+
             if (!found) {
                 cerr << "Error finding block data. The given chromosomes pair not find: (" << chr1 << ", " << chr2 << ")" << endl;
                 cerr << "Available chromosomes are: \n";
@@ -703,26 +731,22 @@ namespace FreeHiC {
 #ifdef HTTPTEST
             cout << "Init curl " << time() <<  endl;
 #endif
-            char *buffer;
+            char *buffer = nullptr;
             this->urlBuffer = initCURL(this->fileName_.c_str());
 #ifdef HTTPTEST
             cout << "Get buffer data " << time() << endl;
 #endif
-            if (this->urlBuffer) buffer = this->getData(this->urlBuffer, 0, 100000);
-            else {
-                cerr << "buffer error" << endl;
-                return false;
-            }
+            long headerReader = this->needFragmentSite ? 50000000 : 100000;
+            if (this->urlBuffer) buffer = this->getData(this->urlBuffer, 0, headerReader);
 
 #ifdef HTTPTEST
             cout << "Read head " << time() << endl;
 #endif
-            membuf sbuf(buffer, buffer + 100000);
+            membuf sbuf(buffer, buffer + headerReader);
             std::istream bufin(&sbuf);
             this->readHeader(bufin);
             delete buffer;
             this->totalBytes = total_bytes;
-
 #ifdef HTTPTEST
             cout << "Find resolution " << time() << endl;
 #endif
@@ -855,6 +879,65 @@ namespace FreeHiC {
             return ans;
         }
 
+        void hicReader::getChromosomeSites_(std::string chr) {
+            std::string chrClean = cleanUpName(chr);
+            std::vector<int> ans;
+            if (this->fragmentSitesCache.find(chrClean) != this->fragmentSitesCache.end()) {
+                ans = this->fragmentSitesCache[chrClean];
+            }
+            if (ans.size() < 1) {
+                if (this->fragmentSitesIndex.find(chrClean) != this->fragmentSitesIndex.end()) {
+                    FragIndexEntry entry = this->fragmentSitesIndex[chrClean];
+                    if (entry.nSites > 0) {
+                        this->fileInStream.seekg(entry.position, std::ios::beg);
+                        ans = readSites(this->fileInStream, entry.nSites);
+                    }
+                }
+                this->fragmentSitesCache[chrClean] = ans;
+            }
+        }
+
+        void hicReaderHttp::getChromosomeSites_(std::string chr) {
+            std::string chrClean = cleanUpName(chr);
+            std::vector<int> ans;
+            if (this->fragmentSitesCache.find(chrClean) != this->fragmentSitesCache.end()) {
+                ans = this->fragmentSitesCache[chrClean];
+            }
+            if (ans.size() < 1) {
+                long position = this->fragmentSitePos;
+                if (fileResolutions["FRAG"].size() > 0) {
+                    for (int i = 0; i < chromosomes.size(); i++) {
+#ifdef RVERSION
+                        Rcpp::checkUserInterrupt();
+#endif
+                        std::string chr = chromosomes[i];
+                        if (this->fragmentSitesCache.find(chr) != this->fragmentSitesCache.end()) continue;
+                        char *buffer = this->getData(this->urlBuffer, position, 4);
+                        membuf sbuf(buffer, buffer + 4);
+                        std::istream fin(&sbuf);
+                        int nSite_;
+                        fin.read((char *) &nSite_, sizeof(int));
+                        delete buffer;
+
+                        this->fragmentSitesIndex[chr] = FragIndexEntry(nSite_, position);
+#ifdef HTTPTEST
+                        cout << "chr: " << chr << ", nSite: " << nSite_ << ", position: " << position << endl;
+#endif
+                        position += 4;
+                        char *buffer2 = this->getData(this->urlBuffer, position, nSite_ * 4 + 4);
+                        membuf sbuf2(buffer2, buffer2 + nSite_ * 4 + 4);
+                        std::istream fin2(&sbuf2);
+
+                        this->chromosomeNSites[chr] = nSite_;
+                        this->fragmentSitesCache[chr] = readSites(fin2, nSite_);
+                        position += nSite_ * 4;
+                        this->fragmentSitePos = position;
+                        if (chrClean == chr) break;
+                        delete buffer2;
+                    }
+                }
+            }
+        }
 
     } // namespace Juicer
 } // namespace FreeHiC

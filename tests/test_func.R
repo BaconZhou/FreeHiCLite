@@ -12,7 +12,14 @@ file1 <- "/Users/pgzhou/Documents/hicLib//data/rabbit_rep1_30.hic"
 file3 <- "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
 
 
-system.time({dat1 <- FreeHiCLite::readJuicer(file1, c("chr1", "chr2"), NULL, "FRAG", 50L)})
+system.time({dat1 <- FreeHiCLite::readJuicer(file1, c("chr200", "chr2"), NULL, "FRAG", 50L)})
+info <- FreeHiCLite::readJuicerInformation(file1)
+str(info)
+
+info <- FreeHiCLite::readJuicerInformation(file3)
+str(info)
+
+
 system.time({dat1 <- FreeHiCLite::readJuicer(file1, c("chr1", "chr2"), c("1_1", "2_2"), "FRAG", 50L)})
 system.time({dat2 <- FreeHiCLite::readJuicer(file3, c("chr1"), "BP", c(500000L))})
 

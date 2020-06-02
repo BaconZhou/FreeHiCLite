@@ -13,6 +13,14 @@ hicDataExtra <- function(fileName, isHttp, pair, unit, resolution) {
     .Call(`_FreeHiCLite_hicDataExtra`, fileName, isHttp, pair, unit, resolution)
 }
 
+hicDataFragSites <- function(fileName, isHttp, chromosomes) {
+    .Call(`_FreeHiCLite_hicDataFragSites`, fileName, isHttp, chromosomes)
+}
+
+hicDataInformation <- function(fileName, isHttp) {
+    .Call(`_FreeHiCLite_hicDataInformation`, fileName, isHttp)
+}
+
 hicDataSimu <- function(fileName, chromosomes, unit, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate) {
     .Call(`_FreeHiCLite_hicDataSimu`, fileName, chromosomes, unit, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate)
 }
