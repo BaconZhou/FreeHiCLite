@@ -14,6 +14,19 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Introduction
+
+FreeHi-C (v2.0) is short for Fragment interactions empirical estimation for fast simulation of Hi-C data. It is a data-driven Hi-C data simulator for simulating and augmenting Hi-C datasets. FreeHi-C employs a non-parametric strategy for estimating an interaction distribution of genome fragments and simulates Hi-C reads from interacting fragments. Data from FreeHi-C exhibit higher fidelity to the biological Hi-C data. FreeHi-C not only can be used to study and benchmark a wide range of Hi-C analysis methods but also boosts power and enables false discovery rate control for differential interaction detection algorithms through data augmentation. Different from FreeHi-C (v1.0), a spike-in module is added enabling the simulation of true differential chromatin interactions.
+
+## Usage
+
 ```{r setup}
 library(FreeHiCLite)
 ```
+
+### FreeHi-C
+
+### SpikeIn
+
+## References
+
