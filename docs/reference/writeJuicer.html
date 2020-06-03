@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Write to short format with score — writeJuicer" />
-<meta property="og:description" content="This function will write contact matrixs into short with score foramt." />
+<meta property="og:description" content="This function will write contact matrixs into short with score format." />
 
 
 
@@ -87,6 +87,24 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/Usage-FreeHiC.html">Usage-FreeHiC</a>
+    </li>
+    <li>
+      <a href="../articles/Usage-reader.html">Usage-reader</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -114,7 +132,7 @@
     </div>
 
     <div class="ref-description">
-    <p>This function will write contact matrixs into <a href='https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format'>short with score foramt</a>.</p>
+    <p>This function will write contact matrixs into <a href='https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format'>short with score format</a>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>writeJuicer</span>(<span class='no'>contactMatrixsList</span>, <span class='no'>file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
@@ -124,7 +142,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>contactMatrixsList</th>
-      <td><p>A list contains all the contact matrix. The list name should be pair as form "1_1" or "1_2"</p></td>
+      <td><p>A list contains all the contact matrix. The list name should be pair as form '1_1' or '1_2'</p></td>
     </tr>
     <tr>
       <th>file</th>
@@ -142,7 +160,7 @@ re-write it. If FALSE, function will append the result to the existing file.</p>
     <p>write a file into disk</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The <a href='https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format'>short with score foramt</a> contains 9 columns.</p>
+    <p>The <a href='https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format'>short with score format</a> contains 9 columns.</p>
 <ol>
 <li><p>str1 = strand (0 for forward, anything else for reverse)</p></li>
 <li><p>chr1 = the first chromosome (must be a chromosome in the genome)</p></li>
@@ -170,16 +188,18 @@ The resulting list contains a list chromosomeSizes.</p>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>FreeHiCLite</span>)
 
 <span class='co'>## Local file location</span>
-<span class='no'>localFilePath</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.hic"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"FreeHiCLite"</span>)
+<span class='no'>localFilePath</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>'extdata'</span>, <span class='st'>'example.hic'</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>'FreeHiCLite'</span>)
 
-<span class='co'>## Pairs needs to be extra</span>
-<span class='no'>pairs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"1_1"</span>, <span class='st'>"1_2"</span>)
-<span class='no'>unit</span> <span class='kw'>=</span> <span class='st'>"BP"</span>
+<span class='co'>## Pairs needs to be extracted</span>
+<span class='no'>pairs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'1_1'</span>, <span class='st'>'1_2'</span>)
+<span class='no'>unit</span> <span class='kw'>=</span> <span class='st'>'BP'</span>
 <span class='no'>resolution</span> <span class='kw'>=</span> <span class='fl'>500000L</span>
 
 <span class='co'>## pass chrosomes into function, it will contains all the interaction pairs</span>
 
-<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readJuicer.html'>readJuicer</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='no'>localFilePath</span>, <span class='kw'>chromosomes</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>pairs</span> <span class='kw'>=</span> <span class='no'>pairs</span>, <span class='kw'>unit</span><span class='kw'>=</span><span class='no'>unit</span>, <span class='kw'>resolution</span><span class='kw'>=</span><span class='no'>resolution</span>)</div><div class='output co'>#&gt; <span class='message'>You are trying to access file from: /private/var/folders/bb/9m2pjpgj5nq5xft84vmyv7dm0000gn/T/RtmpPpyZe0/temp_libpath2cdb4a963440/FreeHiCLite/extdata/example.hic. Make sure you provide a valid path.</span></div><div class='output co'>#&gt; <span class='message'>Use pairs: 1_1, 1_2</span></div><div class='input'>
+<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readJuicer.html'>readJuicer</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='no'>localFilePath</span>, <span class='kw'>chromosomes</span><span class='kw'>=</span><span class='kw'>NULL</span>,
+<span class='kw'>pairs</span> <span class='kw'>=</span> <span class='no'>pairs</span>, <span class='kw'>unit</span><span class='kw'>=</span><span class='no'>unit</span>, <span class='kw'>resolution</span><span class='kw'>=</span><span class='no'>resolution</span>)
+
 <span class='no'>contactMatrixsList</span> <span class='kw'>&lt;-</span> <span class='no'>dat</span><span class='kw'>[[</span><span class='st'>'contact'</span>]]
 
 <span class='no'>.old_wd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>())

@@ -87,6 +87,24 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/Usage-FreeHiC.html">Usage-FreeHiC</a>
+    </li>
+    <li>
+      <a href="../articles/Usage-reader.html">Usage-reader</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -127,13 +145,13 @@
       <td><p>Filename can be a local path or remote path. The remote path full list can be obtained from <a href='http://aidenlab.org/data.html'>http://aidenlab.org/data.html</a>.</p></td>
     </tr>
     <tr>
-      <th>verbose</th>
-      <td><p>A bool value, indicate whether print message</p></td>
+      <th>chromosomes</th>
+      <td><p>A vector contains all the chromosomes. 
+For example c('chr1', 'chr2')</p></td>
     </tr>
     <tr>
-      <th>chromsomes</th>
-      <td><p>A vector contains all the chromosomes. 
-For example c("chr1", "chr2")</p></td>
+      <th>verbose</th>
+      <td><p>A bool value, indicate whether print message</p></td>
     </tr>
     </table>
 
@@ -151,12 +169,12 @@ is required for juicer to provide a hic file with fragment level resolution.</p>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>FreeHiCLite</span>)
 
 <span class='co'>## Remote file location. The reomte file include downloading, it may take a while</span>
-<span class='no'>remoteFilePath</span> <span class='kw'>=</span> <span class='st'>"https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"</span>
+<span class='no'>remoteFilePath</span> <span class='kw'>=</span> <span class='st'>'https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic'</span>
 
 <span class='co'>## Local file location</span>
-<span class='no'>localFilePath</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.hic"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"FreeHiCLite"</span>)
+<span class='no'>localFilePath</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>'extdata'</span>, <span class='st'>'example.hic'</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>'FreeHiCLite'</span>)
 
-<span class='no'>fragSites</span> <span class='kw'>&lt;-</span> <span class='fu'>readJuicerFragmentSites</span>(<span class='no'>remoteFilePath</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"chr1"</span>, <span class='st'>"chr2"</span>))</div><div class='output co'>#&gt; <span class='message'>You are trying to access file from: https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic. Make sure you provide a valid path.</span></div><div class='output co'>#&gt; <span class='message'>Remote file can take a while.</span>
+<span class='no'>fragSites</span> <span class='kw'>&lt;-</span> <span class='fu'>readJuicerFragmentSites</span>(<span class='no'>remoteFilePath</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'chr1'</span>, <span class='st'>'chr2'</span>))</div><div class='output co'>#&gt; <span class='message'>You are trying to access file from: https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic. Make sure you provide a valid path.</span></div><div class='output co'>#&gt; <span class='message'>Remote file can take a while.</span>
 #&gt; <span class='message'>The full list of remote files can be found in http://aidenlab.org/data.html</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>fragSites</span>)</div><div class='output co'>#&gt; List of 2
 #&gt;  $ 1: int [1:576357] 11160 12411 12461 12686 12829 13315 13420 13566 13698 13915 ...
 #&gt;  $ 2: int [1:578290] 11514 11874 12160 12371 12600 12678 13547 13774 14180 15635 ...</div><div class='input'>

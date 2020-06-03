@@ -87,6 +87,24 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/Usage-FreeHiC.html">Usage-FreeHiC</a>
+    </li>
+    <li>
+      <a href="../articles/Usage-reader.html">Usage-reader</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -126,6 +144,10 @@
       <th>file</th>
       <td><p>Filename can be a local path or remote path. The remote path full list can be obtained from <a href='http://aidenlab.org/data.html'>http://aidenlab.org/data.html</a>.</p></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>TRUE or FALSE. Whether print information.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -133,6 +155,7 @@
     <p>A list object includes hic file information.</p>
 <dt>genomId</dt><dd><p>The genom id of the current hic file.</p></dd>
 <dt>resolution</dt><dd><p>The list of current hic file available resolution.</p></dd>
+<dt>pairs</dt><dd><p>The list of current hic file available pair.</p></dd>
 <dt>chromosomeSizes</dt><dd><p>A dataframe of chromsomeSize (chromsome, size). Can be used in juicer pre function for different genom.</p></dd>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -146,33 +169,37 @@ Check <code><a href='writeJuicer.html'>writeJuicer</a></code> for details.</p>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>FreeHiCLite</span>)
 
 <span class='co'>## Remote file location. The reomte file include downloading, it may take a while</span>
-<span class='no'>remoteFilePath</span> <span class='kw'>=</span> <span class='st'>"https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"</span>
+<span class='no'>remoteFilePath</span> <span class='kw'>=</span> <span class='st'>'https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic'</span>
 
 <span class='co'>## Local file location</span>
-<span class='no'>localFilePath</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.hic"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"FreeHiCLite"</span>)
+<span class='no'>localFilePath</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>'extdata'</span>, <span class='st'>'example.hic'</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>'FreeHiCLite'</span>)
 
 <span class='no'>juicerInfo</span> <span class='kw'>&lt;-</span> <span class='fu'>readJuicerInformation</span>(<span class='no'>localFilePath</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>juicerInfo</span>))</div><div class='output co'>#&gt; List of 3
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>juicerInfo</span>))</div><div class='output co'>#&gt; List of 4
 #&gt;  $ genomId        : chr "hg19"
 #&gt;  $ resolution     :List of 2
-#&gt;   ..$ BP  : int [1:9] 2500000 1000000 500000 250000 100000 50000 25000 10000 5000
+#&gt;   ..$ BP  : int [1:3] 2500000 500000 5000
 #&gt;   ..$ FRAG: int(0) 
+#&gt;  $ pairs          : chr [1:6] "1_1" "1_2" "1_3" "2_2" ...
 #&gt;  $ chromosomeSizes:'data.frame':	26 obs. of  2 variables:
 #&gt;   ..$ chromosome: chr [1:26] "1" "10" "11" "12" ...
 #&gt;   ..$ size      : int [1:26] 249250621 135534747 135006516 133851895 115169878 107349540 102531392 90354753 81195210 78077248 ...
 #&gt;  - attr(*, "class")= chr [1:2] "juicer" "information"
 #&gt; NULL</div><div class='input'>
+<span class='co'># \donttest{</span>
 <span class='no'>juicerInfo</span> <span class='kw'>&lt;-</span> <span class='fu'>readJuicerInformation</span>(<span class='no'>remoteFilePath</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>juicerInfo</span>))</div><div class='output co'>#&gt; List of 3
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>juicerInfo</span>))</div><div class='output co'>#&gt; List of 4
 #&gt;  $ genomId        : chr "hg19"
 #&gt;  $ resolution     :List of 2
 #&gt;   ..$ BP  : int [1:10] 2500000 1000000 500000 250000 100000 50000 25000 10000 5000 1000
 #&gt;   ..$ FRAG: int [1:8] 500 200 100 50 20 5 2 1
+#&gt;  $ pairs          : chr [1:325] "10_10" "10_11" "10_12" "10_13" ...
 #&gt;  $ chromosomeSizes:'data.frame':	26 obs. of  2 variables:
 #&gt;   ..$ chromosome: chr [1:26] "1" "10" "11" "12" ...
 #&gt;   ..$ size      : int [1:26] 249250621 135534747 135006516 133851895 115169878 107349540 102531392 90354753 81195210 78077248 ...
 #&gt;  - attr(*, "class")= chr [1:2] "juicer" "information"
-#&gt; NULL</div><div class='input'>
+#&gt; NULL</div><div class='input'># }
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -87,6 +87,24 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/Usage-FreeHiC.html">Usage-FreeHiC</a>
+    </li>
+    <li>
+      <a href="../articles/Usage-reader.html">Usage-reader</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -140,17 +158,17 @@ The remote path full list can be obtained from <a href='http://aidenlab.org/data
     <tr>
       <th>chromosomes</th>
       <td><p>A vector contains all the chromosomes. 
-For example c("chr1", "chr2"), the resulting contact matrixs will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2).</p></td>
+For example c('chr1', 'chr2'), the resulting contact matrixs will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2).</p></td>
     </tr>
     <tr>
       <th>pairs</th>
       <td><p>A vector contains all the pair. 
-The pair take format as "1_1" or "chr1_chr1", both means the contact between chromosome1 and chromosome1. If <code>pair</code> presents, <code>chromosomes</code> argument will be ignore.</p></td>
+The pair take format as '1_1' or 'chr1_chr1', both means the contact between chromosome1 and chromosome1. If <code>pair</code> presents, <code>chromosomes</code> argument will be ignore.</p></td>
     </tr>
     <tr>
       <th>unit</th>
-      <td><p>Unit only supports c("BP", "FRAG"). 
-"BP" means base-pair, and "FRAG" means fragment.</p></td>
+      <td><p>Unit only supports c('BP', 'FRAG'). 
+'BP' means base-pair, and 'FRAG' means fragment.</p></td>
     </tr>
     <tr>
       <th>seqDepth</th>
@@ -206,14 +224,14 @@ The resolution must be a value from following list.</p><ul>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>FreeHiCLite</span>)
 
 <span class='co'>## Local file location</span>
-<span class='no'>localFilePath</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"example.hic"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"FreeHiCLite"</span>)
+<span class='no'>localFilePath</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>'extdata'</span>, <span class='st'>'example.hic'</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>'FreeHiCLite'</span>)
 
-<span class='co'>## Chromosomes needs to be extra</span>
-<span class='no'>chromosomes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"chr1"</span>, <span class='st'>"chr2"</span>)
+<span class='co'>## Chromosomes needs to be extracted</span>
+<span class='no'>chromosomes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'chr1'</span>, <span class='st'>'chr2'</span>)
 
-<span class='co'>## Pairs needs to be extra</span>
-<span class='no'>pairs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"1_1"</span>, <span class='st'>"1_2"</span>)
-<span class='no'>unit</span> <span class='kw'>=</span> <span class='st'>"BP"</span>
+<span class='co'>## Pairs needs to be extracted</span>
+<span class='no'>pairs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'1_1'</span>, <span class='st'>'1_2'</span>)
+<span class='no'>unit</span> <span class='kw'>=</span> <span class='st'>'BP'</span>
 <span class='no'>resolution</span> <span class='kw'>=</span> <span class='fl'>500000L</span>
 
 <span class='no'>seqDepth</span> <span class='kw'>&lt;-</span> <span class='fl'>20000</span>
@@ -224,26 +242,29 @@ The resolution must be a value from following list.</p><ul>
 
 <span class='co'>## pass chrosomes into function, it will contains all the interaction pairs</span>
 
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>FreeHiCJuicer</span>(<span class='kw'>file</span><span class='kw'>=</span><span class='no'>localFilePath</span>, <span class='kw'>chromosomes</span><span class='kw'>=</span><span class='no'>chromosomes</span>, <span class='kw'>pairs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>unit</span><span class='kw'>=</span><span class='no'>unit</span>, <span class='kw'>resolution</span><span class='kw'>=</span><span class='no'>resolution</span>,
-<span class='kw'>seqDepth</span> <span class='kw'>=</span> <span class='no'>seqDepth</span>, <span class='kw'>countScale</span> <span class='kw'>=</span> <span class='no'>countScale</span>, <span class='kw'>noiseRate</span> <span class='kw'>=</span> <span class='no'>noiseRate</span>, <span class='kw'>neighborZeroRate</span> <span class='kw'>=</span> <span class='no'>neighborZeroRate</span>)</div><div class='output co'>#&gt; <span class='message'>You are trying to access file from: /private/var/folders/bb/9m2pjpgj5nq5xft84vmyv7dm0000gn/T/RtmpPpyZe0/temp_libpath2cdb4a963440/FreeHiCLite/extdata/example.hic. Make sure you provide a valid path.</span></div><div class='output co'>#&gt; <span class='message'>Use pairs: 1_1, 1_2, 2_2</span></div><div class='input'>
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>FreeHiCJuicer</span>(<span class='kw'>file</span><span class='kw'>=</span><span class='no'>localFilePath</span>, <span class='kw'>chromosomes</span><span class='kw'>=</span><span class='no'>chromosomes</span>,
+<span class='kw'>pairs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>unit</span><span class='kw'>=</span><span class='no'>unit</span>, <span class='kw'>resolution</span><span class='kw'>=</span><span class='no'>resolution</span>,
+<span class='kw'>seqDepth</span> <span class='kw'>=</span> <span class='no'>seqDepth</span>, <span class='kw'>countScale</span> <span class='kw'>=</span> <span class='no'>countScale</span>,
+<span class='kw'>noiseRate</span> <span class='kw'>=</span> <span class='no'>noiseRate</span>, <span class='kw'>neighborZeroRate</span> <span class='kw'>=</span> <span class='no'>neighborZeroRate</span>)</div><div class='output co'>#&gt; <span class='message'>You are trying to access file from: /private/var/folders/bb/9m2pjpgj5nq5xft84vmyv7dm0000gn/T/Rtmp2O7h4J/temp_libpath70145ed168c/FreeHiCLite/extdata/example.hic. Make sure you provide a valid path.</span></div><div class='output co'>#&gt; <span class='message'>Use pairs: 1_1, 1_2, 2_2</span></div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; List of 4
-#&gt;  $ 2_2        : int [1:3801, 1:3] 0 500000 0 500000 1000000 0 1000000 1500000 1000000 2000000 ...
+#&gt;  $ 2_2        : int [1:4588, 1:3] 0 0 500000 500000 1000000 500000 1000000 1500000 1500000 2000000 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : NULL
 #&gt;   .. ..$ : chr [1:3] "x" "y" "counts"
-#&gt;  $ 1_2        : int [1:519, 1:3] 32500000 49000000 83000000 13000000 176500000 105000000 223000000 94500000 148500000 199500000 ...
+#&gt;  $ 1_2        : int [1:386, 1:3] 53500000 168500000 244000000 227000000 64500000 168000000 45500000 183000000 243500000 171500000 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : NULL
 #&gt;   .. ..$ : chr [1:3] "x" "y" "counts"
-#&gt;  $ 1_1        : int [1:3857, 1:3] 0 0 500000 500000 1000000 500000 1000000 1500000 500000 1500000 ...
+#&gt;  $ 1_1        : int [1:3989, 1:3] 500000 500000 1000000 1500000 1500000 2000000 1500000 2000000 2500000 1000000 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : NULL
 #&gt;   .. ..$ : chr [1:3] "x" "y" "counts"
-#&gt;  $ information:List of 3
+#&gt;  $ information:List of 4
 #&gt;   ..$ genomId        : chr "hg19"
 #&gt;   ..$ resolution     :List of 2
-#&gt;   .. ..$ BP  : int [1:9] 2500000 1000000 500000 250000 100000 50000 25000 10000 5000
+#&gt;   .. ..$ BP  : int [1:3] 2500000 500000 5000
 #&gt;   .. ..$ FRAG: int(0) 
+#&gt;   ..$ pairs          : chr [1:6] "1_1" "1_2" "1_3" "2_2" ...
 #&gt;   ..$ chromosomeSizes:'data.frame':	26 obs. of  2 variables:
 #&gt;   .. ..$ chromosome: chr [1:26] "1" "10" "11" "12" ...
 #&gt;   .. ..$ size      : int [1:26] 249250621 135534747 135006516 133851895 115169878 107349540 102531392 90354753 81195210 78077248 ...
