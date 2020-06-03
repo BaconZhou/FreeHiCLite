@@ -21,13 +21,13 @@ FreeHiCJuicer(
 The remote path full list can be obtained from \url{http://aidenlab.org/data.html}.}
 
 \item{chromosomes}{A vector contains all the chromosomes. 
-For example c("chr1", "chr2"), the resulting contact matrixs will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2).}
+For example c('chr1', 'chr2'), the resulting contact matrixs will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2).}
 
 \item{pairs}{A vector contains all the pair. 
-The pair take format as "1_1" or "chr1_chr1", both means the contact between chromosome1 and chromosome1. If \code{pair} presents, \code{chromosomes} argument will be ignore.}
+The pair take format as '1_1' or 'chr1_chr1', both means the contact between chromosome1 and chromosome1. If \code{pair} presents, \code{chromosomes} argument will be ignore.}
 
-\item{unit}{Unit only supports c("BP", "FRAG"). 
-"BP" means base-pair, and "FRAG" means fragment.}
+\item{unit}{Unit only supports c('BP', 'FRAG'). 
+'BP' means base-pair, and 'FRAG' means fragment.}
 
 \item{seqDepth}{The desired sequence depth.}
 
@@ -76,14 +76,14 @@ FreeHiC directly from hic file
 library(FreeHiCLite)
 
 ## Local file location
-localFilePath = system.file("extdata", "example.hic", package = "FreeHiCLite")
+localFilePath = system.file('extdata', 'example.hic', package = 'FreeHiCLite')
 
-## Chromosomes needs to be extra
-chromosomes = c("chr1", "chr2")
+## Chromosomes needs to be extracted
+chromosomes = c('chr1', 'chr2')
 
-## Pairs needs to be extra
-pairs = c("1_1", "1_2")
-unit = "BP"
+## Pairs needs to be extracted
+pairs = c('1_1', '1_2')
+unit = 'BP'
 resolution = 500000L
 
 seqDepth <- 20000
@@ -94,8 +94,10 @@ neighborZeroRate <- 0
 
 ## pass chrosomes into function, it will contains all the interaction pairs
 
-res <- FreeHiCJuicer(file=localFilePath, chromosomes=chromosomes, pairs = NULL, unit=unit, resolution=resolution,
-seqDepth = seqDepth, countScale = countScale, noiseRate = noiseRate, neighborZeroRate = neighborZeroRate)
+res <- FreeHiCJuicer(file=localFilePath, chromosomes=chromosomes, 
+pairs = NULL, unit=unit, resolution=resolution,
+seqDepth = seqDepth, countScale = countScale, 
+noiseRate = noiseRate, neighborZeroRate = neighborZeroRate)
 
 str(res)
 

@@ -33,7 +33,7 @@ A same format as contactBackgroup
 Add spikein to contact matrix.
 }
 \details{
-
+Spikein will add signals to the background. Also use Gaussian kernel smooth with bandwith.
 }
 \examples{
 
@@ -83,29 +83,29 @@ contacts2[,3] <- counts2
 spikeIn2 <- contacts2[sample(1:N2, Ns2),]
 spikeIn2[,3] <- spikeIn2[,3] * sample(seq(0, 10, 0.5), Ns2, replace=TRUE)
 
-contactsBackgroup <- list("1_1" = contacts, "2_2" = contacts2)
-spikeInlist <- list("1_1" = spikeIn, "2_2" = spikeIn2)
+contactsBackgroup <- list('1_1' = contacts, '2_2' = contacts2)
+spikeInlist <- list('1_1' = spikeIn, '2_2' = spikeIn2)
 
 res <- FreeSpikeIn(contactsBackgroup, spikeInlist, kernelSmooth = kernelSmooth, bandwith = bandwith)
 str(res)
 
 ## Dataframe version
 
-chr1 <- c(rep("1", N), rep("2", N2))
-chr2 <- c(rep("1", N), rep("2", N2))
+chr1 <- c(rep('1', N), rep('2', N2))
+chr2 <- c(rep('1', N), rep('2', N2))
 
-schr1 <- c(rep("1", Ns), rep("2", Ns2))
-schr2 <- c(rep("1", Ns), rep("2", Ns2))
+schr1 <- c(rep('1', Ns), rep('2', Ns2))
+schr2 <- c(rep('1', Ns), rep('2', Ns2))
 
 contactsAll <- rbind(contacts, contacts2)
 spikeInAll <- rbind(spikeIn, spikeIn2)
 
-contactsDf <- data.frame(chr1 = chr1, x = contactsAll[,1], chr2 = chr2, y = contactsAll[,2], counts = contactsAll[,3])
-spikeInDf <- data.frame(chr1 = schr1, x = spikeInAll[,1], chr2 = schr2, y = spikeInAll[,2], counts = spikeInAll[,3])
+contactsDf <- data.frame(chr1 = chr1, x = contactsAll[,1], 
+chr2 = chr2, y = contactsAll[,2], counts = contactsAll[,3])
+spikeInDf <- data.frame(chr1 = schr1, x = spikeInAll[,1], 
+chr2 = schr2, y = spikeInAll[,2], counts = spikeInAll[,3])
 res <- FreeSpikeIn(contactsDf, spikeInDf, kernelSmooth = kernelSmooth, bandwith = bandwith)
 head(res)
-
-
 
 
 }

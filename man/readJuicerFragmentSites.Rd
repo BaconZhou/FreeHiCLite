@@ -9,10 +9,10 @@ readJuicerFragmentSites(file, chromosomes, verbose = TRUE)
 \arguments{
 \item{file}{Filename can be a local path or remote path. The remote path full list can be obtained from \url{http://aidenlab.org/data.html}.}
 
-\item{verbose}{A bool value, indicate whether print message}
+\item{chromosomes}{A vector contains all the chromosomes. 
+For example c('chr1', 'chr2')}
 
-\item{chromsomes}{A vector contains all the chromosomes. 
-For example c("chr1", "chr2")}
+\item{verbose}{A bool value, indicate whether print message}
 }
 \value{
 A list contains all the chromosomes and their fragement sites.
@@ -31,12 +31,12 @@ is required for juicer to provide a hic file with fragment level resolution.
 library(FreeHiCLite)
 
 ## Remote file location. The reomte file include downloading, it may take a while
-remoteFilePath = "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
+remoteFilePath = 'https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic'
 
 ## Local file location
-localFilePath = system.file("extdata", "example.hic", package = "FreeHiCLite")
+localFilePath = system.file('extdata', 'example.hic', package = 'FreeHiCLite')
 
-fragSites <- readJuicerFragmentSites(remoteFilePath, c("chr1", "chr2"))
+fragSites <- readJuicerFragmentSites(remoteFilePath, c('chr1', 'chr2'))
 str(fragSites)
 
 }

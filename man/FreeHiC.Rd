@@ -76,18 +76,19 @@ contacts2[,1] <- binX2
 contacts2[,2] <- binY2
 contacts2[,3] <- counts2
 
-contactsMap <- list("1_1" = contacts, "2_2" = contacts2)
+contactsMap <- list('1_1' = contacts, '2_2' = contacts2)
 res <- FreeHiC(contactsMap, seqDepth, countScale, noiseRate, neighborZeroRate, resolution)
 str(res)
 
 ## Dataframe version
 
-chr1 <- c(rep("1", N), rep("2", N2))
-chr2 <- c(rep("1", N), rep("2", N2))
+chr1 <- c(rep('1', N), rep('2', N2))
+chr2 <- c(rep('1', N), rep('2', N2))
 
 contactsAll <- rbind(contacts, contacts2)
 
-contactsDf <- data.frame(chr1 = chr1, x = contactsAll[,1], chr2 = chr2, y = contactsAll[,2], counts = contactsAll[,3])
+contactsDf <- data.frame(chr1 = chr1, x = contactsAll[,1], 
+chr2 = chr2, y = contactsAll[,2], counts = contactsAll[,3])
 
 res <- FreeHiC(contactsDf, seqDepth, countScale, noiseRate, neighborZeroRate, resolution)
 head(res)

@@ -7,7 +7,7 @@
 writeJuicer(contactMatrixsList, file, overwrite = TRUE)
 }
 \arguments{
-\item{contactMatrixsList}{A list contains all the contact matrix. The list name should be pair as form "1_1" or "1_2"}
+\item{contactMatrixsList}{A list contains all the contact matrix. The list name should be pair as form '1_1' or '1_2'}
 
 \item{file}{File name to store the contact matrix}
 
@@ -18,10 +18,10 @@ re-write it. If FALSE, function will append the result to the existing file.}
 write a file into disk
 }
 \description{
-This function will write contact matrixs into \href{https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format}{short with score foramt}.
+This function will write contact matrixs into \href{https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format}{short with score format}.
 }
 \details{
-The \href{https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format}{short with score foramt} contains 9 columns.
+The \href{https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format}{short with score format} contains 9 columns.
 
 \enumerate{
 \item str1 = strand (0 for forward, anything else for reverse)
@@ -53,21 +53,23 @@ The resulting list contains a list chromosomeSizes.
 library(FreeHiCLite)
  
 ## Local file location
-localFilePath = system.file("extdata", "example.hic", package = "FreeHiCLite")
+localFilePath = system.file('extdata', 'example.hic', package = 'FreeHiCLite')
 
-## Pairs needs to be extra
-pairs = c("1_1", "1_2")
-unit = "BP"
+## Pairs needs to be extracted
+pairs = c('1_1', '1_2')
+unit = 'BP'
 resolution = 500000L
 
 ## pass chrosomes into function, it will contains all the interaction pairs
 
-dat <- readJuicer(file=localFilePath, chromosomes=NULL, pairs = pairs, unit=unit, resolution=resolution)
+dat <- readJuicer(file=localFilePath, chromosomes=NULL, 
+pairs = pairs, unit=unit, resolution=resolution)
 
 contactMatrixsList <- dat[['contact']]
 
 \dontshow{.old_wd <- setwd(tempdir())}
 writeJuicer(contactMatrixsList, 'test.txt')
 \dontshow{setwd(.old_wd)}
+
 
 }

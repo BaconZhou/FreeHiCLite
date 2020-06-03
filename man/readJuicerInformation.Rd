@@ -8,11 +8,14 @@ readJuicerInformation(file, verbose = FALSE)
 }
 \arguments{
 \item{file}{Filename can be a local path or remote path. The remote path full list can be obtained from \url{http://aidenlab.org/data.html}.}
+
+\item{verbose}{TRUE or FALSE. Whether print information.}
 }
 \value{
 A list object includes hic file information.
 \item{genomId}{The genom id of the current hic file.}
 \item{resolution}{The list of current hic file available resolution.}
+\item{pairs}{The list of current hic file available pair.}
 \item{chromosomeSizes}{A dataframe of chromsomeSize (chromsome, size). Can be used in juicer pre function for different genom.}
 }
 \description{
@@ -29,15 +32,17 @@ Check \code{\link[FreeHiCLite]{writeJuicer}} for details.
 library(FreeHiCLite)
 
 ## Remote file location. The reomte file include downloading, it may take a while
-remoteFilePath = "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
+remoteFilePath = 'https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic'
 
 ## Local file location
-localFilePath = system.file("extdata", "example.hic", package = "FreeHiCLite")
+localFilePath = system.file('extdata', 'example.hic', package = 'FreeHiCLite')
 
 juicerInfo <- readJuicerInformation(localFilePath)
 print(str(juicerInfo))
 
+\donttest{
 juicerInfo <- readJuicerInformation(remoteFilePath)
 print(str(juicerInfo))
+}
 
 }

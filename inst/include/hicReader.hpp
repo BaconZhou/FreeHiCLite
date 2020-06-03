@@ -100,6 +100,15 @@ class hicReader {
         return this->fileResolutions;
     };
 
+    std::vector<std::string> getPairs() {
+        std::vector<std::string> ans;
+        for (const auto &it : pairFilePositions) {
+            if (it.first == "0_0") continue;
+            ans.push_back(it.first);
+        }
+        return ans;
+    }
+
     std::map<std::string, int> getChromosomeSize() {
         std::map<std::string, int> ans;
         for (const auto &it : this->chromosomeMap) {

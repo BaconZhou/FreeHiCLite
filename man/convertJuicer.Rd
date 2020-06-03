@@ -9,15 +9,15 @@ convertJuicer(contactMatrix, chr1, chr2)
 \arguments{
 \item{contactMatrix}{A contact matrix, the first column is the first chromosome location, and second column is the second chromosome location, the third column is count number}
 
-\item{chr1}{The first chromosome name. For example, 1 or "chr1".}
+\item{chr1}{The first chromosome name. For example, 1 or 'chr1'.}
 
-\item{chr2}{The second chromosome name. For example, 1 or "chr1"}
+\item{chr2}{The second chromosome name. For example, 1 or 'chr1'}
 }
 \value{
 A data.frame has 9 columns, and it can be used directly by juicer \href{https://github.com/aidenlab/juicer/wiki/Pre}{Pre}.
 }
 \description{
-This function can covert a contact matrix (x, y, counts) format into a \href{https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format}{short with score foramt}.
+This function can covert a contact matrix (x, y, counts) format into a \href{https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format}{short with score format}.
 }
 \examples{
 
@@ -26,14 +26,14 @@ This function can covert a contact matrix (x, y, counts) format into a \href{htt
 contactMatrix <- structure(
 c(0L, 0L, 50L, 0L, 50L, 100L, 0L, 50L, 50L, 100L, 100L, 
 100L, 526L, 123L, 499L, 36L, 213L, 562L), .Dim = c(6L, 3L), 
-.Dimnames = list(NULL, c("x", "y", "counts")))
+.Dimnames = list(NULL, c('x', 'y', 'counts')))
 
 contactMatrix
 
 ## chromosomes names
 
-chr1 = "chr1"
-chr2 = "chr2"
+chr1 = 'chr1'
+chr2 = 'chr2'
 
 ## Convert to hic
 (df = convertJuicer(contactMatrix, chr1, chr2))

@@ -9,7 +9,8 @@ readJuicer(
   chromosomes = NULL,
   pairs = NULL,
   unit = c("BP", "FRAG"),
-  resolution
+  resolution,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -17,13 +18,13 @@ readJuicer(
 The remote path full list can be obtained from \url{http://aidenlab.org/data.html}.}
 
 \item{chromosomes}{A vector contains all the chromosomes. 
-For example c("chr1", "chr2"), the resulting contact matrixs will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2).}
+For example c('chr1', 'chr2'), the resulting contact matrixs will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2).}
 
 \item{pairs}{A vector contains all the pair. 
-The pair take format as "1_1" or "chr1_chr1", both means the contact between chromosome1 and chromosome1. If \code{pairs} presents, \code{chromosomes} argument will be ignore.}
+The pair take format as '1_1' or 'chr1_chr1', both means the contact between chromosome1 and chromosome1. If \code{pairs} presents, \code{chromosomes} argument will be ignore.}
 
-\item{unit}{Unit only supports c("BP", "FRAG"). 
-"BP" means base-pair, and "FRAG" means fragment.}
+\item{unit}{Unit only supports c('BP', 'FRAG'). 
+'BP' means base-pair, and 'FRAG' means fragment.}
 
 \item{resolution}{The desired resolution of the contact matrix. 
 The resolution must be a value from following list.
@@ -52,6 +53,8 @@ The resolution must be a value from following list.
 \item 1
 }
 }}
+
+\item{verbose}{TRUE or FALSE. Whether print information.}
 }
 \value{
 A list object includes following items.
@@ -78,29 +81,30 @@ and c++ version \href{https://github.com/aidenlab/straw}{straw}.
 library(FreeHiCLite)
 
 ## Remote file location. The reomte file include downloading, it may take a while
-remoteFilePath = "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
+remoteFilePath = 'https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic'
 
 ## Local file location
-localFilePath = system.file("extdata", "example.hic", package = "FreeHiCLite")
+localFilePath = system.file('extdata', 'example.hic', package = 'FreeHiCLite')
 
-## Chromosomes needs to be extra
-chromosomes = c("chr1", "chr2")
+## Chromosomes needs to be extracted
+chromosomes = c('chr1', 'chr2')
 
-## Pairs needs to be extra
-pairs = c("1_1", "1_2")
-unit = "BP"
+## Pairs needs to be extracted
+pairs = c('1_1', '1_2')
+unit = 'BP'
 resolution = 500000L
 
 ## pass chrosomes into function, it will contains all the interaction pairs
 
-dat <- readJuicer(file=localFilePath, chromosomes=chromosomes, pairs = NULL, unit=unit, resolution=resolution)
+dat <- readJuicer(file=localFilePath, chromosomes=chromosomes, 
+pairs = NULL, unit=unit, resolution=resolution)
 
 print(names(dat[['contact']]))
 
 ## pass pairs into function, it will contains only the given pairs
 start = Sys.time()
-#dat <- readJuicer(file=localFilePath, chromosomes=chromosomes, pairs = pairs, unit=unit, resolution=resolution) ## Give you same result
-dat <- readJuicer(file=localFilePath, chromosomes=NULL, pairs = pairs, unit=unit, resolution=resolution)
+dat <- readJuicer(file=localFilePath, chromosomes=NULL, 
+pairs = pairs, unit=unit, resolution=resolution)
 end = Sys.time()
 
 print(end - start)
@@ -111,12 +115,12 @@ str(dat)
 contacts = dat[['contact']]
 
 ## chromsome 1 vs chromosome 1
-key = "1_1"
+key = '1_1'
 contactMatrix <- contacts[[key]]
 head(contactMatrix)
 
 ## chromsome 1 vs chromosome 2
-key = "1_2"
+key = '1_2'
 contactMatrix <- contacts[[key]]
 head(contactMatrix)
 
