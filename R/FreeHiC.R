@@ -154,7 +154,7 @@ FreeHiC <- function(contacts, seqDepth = NULL, countScale = 1, noiseRate = 0, ne
 #' @param file Filename can be a local path or remote path. 
 #' The remote path full list can be obtained from \url{http://aidenlab.org/data.html}.
 #' @param chromosomes A vector contains all the chromosomes. 
-#' For example c('chr1', 'chr2'), the resulting contact matrixs will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2). 
+#' For example c('chr1', 'chr2'), the resulting contact matrixes will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2). 
 #' @param pairs A vector contains all the pair. 
 #' The pair take format as '1_1' or 'chr1_chr1', both means the contact between chromosome1 and chromosome1. If \code{pair} presents, \code{chromosomes} argument will be ignore.
 #' @param unit Unit only supports c('BP', 'FRAG'). 
@@ -190,6 +190,7 @@ FreeHiC <- function(contacts, seqDepth = NULL, countScale = 1, noiseRate = 0, ne
 #' @param countScale The scale of counts. A number larger than 0. If both \code{seqDepth} and \code{countScale} are provided. Choose the larger one.
 #' @param noiseRate The noise rate for contact matrix. 0 - 1 scale
 #' @param neighborZeroRate The rate for neighborhood noise rate. 0 - 1 scale
+#' @param verbose TRUE or FALSE. Whether print information.
 #' 
 #' @return A list contains simulated contact matrix and basic information of hic data
 #' 
@@ -226,7 +227,7 @@ FreeHiC <- function(contacts, seqDepth = NULL, countScale = 1, noiseRate = 0, ne
 #' 
 #' @export
 FreeHiCJuicer <- function(file, chromosomes = NULL, pairs = NULL, unit = c("BP", "FRAG"), seqDepth = NULL, 
-    countScale = 1, noiseRate = 0, neighborZeroRate = 0, resolution = 50000L) {
+    countScale = 1, noiseRate = 0, neighborZeroRate = 0, resolution = 50000L, verbose=TRUE) {
     defResolution <- list(BP = c(2500000, 1e+06, 5e+05, 250000, 1e+05, 50000, 25000, 10000, 5000), 
         FRAG = c(500, 250, 100, 50, 20, 5, 2, 1))
     isHttp <- startsWith(file, "http")
@@ -234,9 +235,9 @@ FreeHiCJuicer <- function(file, chromosomes = NULL, pairs = NULL, unit = c("BP",
         file = normalizePath(file)
         stopifnot(file.exists(file))
     }
-    message("You are trying to access file from: ", file, ". Make sure you provide a valid path.")
+    if(verbose) message("You are trying to access file from: ", file, ". Make sure you provide a valid path.")
     
-    if (isHttp) 
+    if (isHttp & verbose) 
         message("Remote file can take a while.\nThe full list of remote files can be found in http://aidenlab.org/data.html")
     
     ## process chromsome
@@ -256,7 +257,7 @@ FreeHiCJuicer <- function(file, chromosomes = NULL, pairs = NULL, unit = c("BP",
     } else {
         pairClean <- .chrosomes_to_pair(chromosomesChar)
     }
-    message("Use pairs: ", paste(pairClean, collapse = ", "))
+    if(verbose) message("Use pairs: ", paste(pairClean, collapse = ", "))
     
     unit = match.arg(unit)
     

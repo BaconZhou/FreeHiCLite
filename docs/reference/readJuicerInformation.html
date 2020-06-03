@@ -153,14 +153,14 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A list object includes hic file information.</p>
-<dt>genomId</dt><dd><p>The genom id of the current hic file.</p></dd>
-<dt>resolution</dt><dd><p>The list of current hic file available resolution.</p></dd>
-<dt>pairs</dt><dd><p>The list of current hic file available pair.</p></dd>
-<dt>chromosomeSizes</dt><dd><p>A dataframe of chromsomeSize (chromsome, size). Can be used in juicer pre function for different genom.</p></dd>
+<dt><code>genomId</code></dt><dd><p>The genome id of the current hic file.</p></dd>
+<dt><code>resolution</code></dt><dd><p>The list of current hic file available resolution.</p></dd>
+<dt><code>pairs</code></dt><dd><p>The list of current hic file available pair.</p></dd>
+<dt><code>chromosomeSizes</code></dt><dd><p>A dataframe of chromosome size (chromosome, size). Can be used in juicer pre function for different genome.</p></dd>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function is heavily adpoted from both java version juicebox <a href='https://github.com/aidenlab/juicer/wiki/Data-Extraction'>Dump</a> function 
+    <p>This function is heavily adopted from both java version juicebox <a href='https://github.com/aidenlab/juicer/wiki/Data-Extraction'>Dump</a> function 
 and c++ version <a href='https://github.com/aidenlab/straw'>straw</a>.</p>
 <p>In case people needs to use juice box <a href='https://github.com/aidenlab/juicer/wiki/Pre'>Pre</a> to generate hic file. 
 Check <code><a href='writeJuicer.html'>writeJuicer</a></code> for details.</p>
@@ -176,7 +176,7 @@ Check <code><a href='writeJuicer.html'>writeJuicer</a></code> for details.</p>
 
 <span class='no'>juicerInfo</span> <span class='kw'>&lt;-</span> <span class='fu'>readJuicerInformation</span>(<span class='no'>localFilePath</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>juicerInfo</span>))</div><div class='output co'>#&gt; List of 4
-#&gt;  $ genomId        : chr "hg19"
+#&gt;  $ genomeID       : chr "hg19"
 #&gt;  $ resolution     :List of 2
 #&gt;   ..$ BP  : int [1:3] 2500000 500000 5000
 #&gt;   ..$ FRAG: int(0) 
@@ -189,7 +189,7 @@ Check <code><a href='writeJuicer.html'>writeJuicer</a></code> for details.</p>
 <span class='co'># \donttest{</span>
 <span class='no'>juicerInfo</span> <span class='kw'>&lt;-</span> <span class='fu'>readJuicerInformation</span>(<span class='no'>remoteFilePath</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>juicerInfo</span>))</div><div class='output co'>#&gt; List of 4
-#&gt;  $ genomId        : chr "hg19"
+#&gt;  $ genomeID       : chr "hg19"
 #&gt;  $ resolution     :List of 2
 #&gt;   ..$ BP  : int [1:10] 2500000 1000000 500000 250000 100000 50000 25000 10000 5000 1000
 #&gt;   ..$ FRAG: int [1:8] 500 200 100 50 20 5 2 1

@@ -5,7 +5,7 @@
 
 ## Overview
 
-The ‘FreeHiCLite’ package is designed for simulate Hi-C contact matrix.
+The `FreeHiCLite` package is designed for simulate Hi-C contact matrix.
 
 The original package [FreeHi-C](https://github.com/yezhengSTAT/FreeHiC)
 is short for **Fr**agment interactions **e**mpirical **e**stimation for
@@ -51,16 +51,15 @@ The [`.hic`](https://github.com/aidenlab/juicer/wiki/Data) file is a
 highly compressed binary file, which is developed in the [Aiden
 Lab](http://aidenlab.org/). Which can be used in
 [juicebox](https://aidenlab.org/juicebox/) for contact matrix
-visulization.
+visualization.
 
-The `.hic` file is formated as
-[HiCFormat](https://github.com/aidenlab/Juicebox/blob/master/HiCFormatV8.md).
+The `.hic` file is formatted as [HiC
+Format](https://github.com/aidenlab/Juicebox/blob/master/HiCFormatV8.md).
 To program with `.hic` file, they provide
 [straw](https://github.com/aidenlab/straw) and
 [Dump](https://github.com/aidenlab/juicer/wiki/Data-Extraction) to
-extract the information from the `.hic` file. The
-‘FreeHiCLite::readJuicer’ adopts most from the C++ version of
-[straw](https://github.com/aidenlab/straw).
+extract the information from the `.hic` file. The `readJuicer()` adopts
+most from the C++ version of [straw](https://github.com/aidenlab/straw).
 
 The `.hic` file only contains two units of resolution, and each unit
 contains a fix set of resolutions.
@@ -97,13 +96,14 @@ We can extract some basic information from a `.hic` file via:
 juicerInfo <- readJuicerInformation(localFilePath, verbose = TRUE)
 #> File: /Library/Frameworks/R.framework/Versions/4.0/Resources/library/FreeHiCLite/extdata/example.hic
 #> GenomId: hg19
+#> Available pair: 1_1, 1_2, 1_3, 2_2, 2_3, 3_3.
 #> Hi-C resolution:
-#>     BP: 2500000, 1000000, 500000, 250000, 100000, 50000, 25000, 10000, 5000.
-#>     FRAG not avaiable.
+#>     BP: 2500000, 500000, 5000.
+#>     FRAG not available.
 ```
 
-Besides, `juicerInfo` also provides chromsome size information, if the
-genomeID is not one of the genome they provided. [check
+Besides, `juicerInfo()` also provides chromosome size information, if
+the genomeID is not one of the genome they provided. [check
 here](https://github.com/aidenlab/juicer/wiki/Pre#usage)
 
 ``` r
@@ -131,28 +131,27 @@ datRemote <- readJuicer(file=remoteFilePath, chromosomes=chromosomes, pairs = NU
 ``` r
 ## pass chrosomes into function, it will contains all the interaction pairs
 datLoc <- readJuicer(file=localFilePath, chromosomes=chromosomes, pairs = NULL, unit=unit, resolution=resolution)
-#> You are trying to access file from: /Library/Frameworks/R.framework/Versions/4.0/Resources/library/FreeHiCLite/extdata/example.hic. Make sure you provide a valid path.
-#> Use pairs: 1_1, 1_2, 2_2
 str(datLoc)
 #> List of 3
 #>  $ contact    :List of 3
-#>   ..$ 1_1: int [1:26875, 1:3] 0 0 500000 0 500000 1000000 500000 1000000 1500000 500000 ...
+#>   ..$ 1_1: int [1:87158, 1:3] 500000 500000 1000000 500000 1000000 1500000 500000 1000000 1500000 2000000 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
 #>   .. .. ..$ : NULL
 #>   .. .. ..$ : chr [1:3] "x" "y" "counts"
-#>   ..$ 1_2: int [1:7551, 1:3] 27000000 34000000 50000000 50500000 57500000 66000000 167500000 175500000 244000000 245000000 ...
+#>   ..$ 1_2: int [1:69341, 1:3] 2500000 4000000 4500000 5000000 5500000 6000000 7000000 8500000 9500000 10000000 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
 #>   .. .. ..$ : NULL
 #>   .. .. ..$ : chr [1:3] "x" "y" "counts"
-#>   ..$ 2_2: int [1:28005, 1:3] 0 0 500000 0 500000 1000000 0 500000 1000000 1500000 ...
+#>   ..$ 2_2: int [1:104782, 1:3] 0 0 500000 0 500000 1000000 0 500000 1000000 1500000 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
 #>   .. .. ..$ : NULL
 #>   .. .. ..$ : chr [1:3] "x" "y" "counts"
-#>  $ information:List of 3
+#>  $ information:List of 4
 #>   ..$ genomId        : chr "hg19"
 #>   ..$ resolution     :List of 2
-#>   .. ..$ BP  : int [1:9] 2500000 1000000 500000 250000 100000 50000 25000 10000 5000
+#>   .. ..$ BP  : int [1:3] 2500000 500000 5000
 #>   .. ..$ FRAG: int(0) 
+#>   ..$ pairs          : chr [1:6] "1_1" "1_2" "1_3" "2_2" ...
 #>   ..$ chromosomeSizes:'data.frame':  26 obs. of  2 variables:
 #>   .. ..$ chromosome: chr [1:26] "1" "10" "11" "12" ...
 #>   .. ..$ size      : int [1:26] 249250621 135534747 135006516 133851895 115169878 107349540 102531392 90354753 81195210 78077248 ...
@@ -168,7 +167,7 @@ str(datLoc)
 
 The [juicebox](https://aidenlab.org/juicebox/) also provide a function
 [Pre](https://github.com/aidenlab/juicer/wiki/Pre) to generate `.hic`
-file from different format. In ‘FreeHiCLite’, we provide a function
+file from different format. In `FreeHiCLite`, we provide a function
 `writeJuicer()` to write the contact matrix into a [short with score
 format](https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format).
 You can use `convertJuicer()` to view the matrix, or directly use
@@ -177,12 +176,12 @@ You can use `convertJuicer()` to view the matrix, or directly use
 ``` r
 head(convertJuicer(datLoc[['contact']][[1]], "1", "1"))
 #>   str1 chr1    pos1 frag1 str2 chr2    pos2 frag2 score
-#> 1    0    1       0     0    0    1       0     0    19
-#> 2    0    1       0     0    0    1  500000     0    14
-#> 3    0    1  500000     0    0    1  500000     0    88
-#> 4    0    1       0     0    0    1 1000000     0     1
-#> 5    0    1  500000     0    0    1 1000000     0    29
-#> 6    0    1 1000000     0    0    1 1000000     0   159
+#> 1    0    1  500000     0    0    1  500000     1   384
+#> 2    0    1  500000     0    0    1 1000000     1   231
+#> 3    0    1 1000000     0    0    1 1000000     1  1272
+#> 4    0    1  500000     0    0    1 1500000     1    47
+#> 5    0    1 1000000     0    0    1 1500000     1   373
+#> 6    0    1 1500000     0    0    1 1500000     1  1665
 ```
 
 ``` r
@@ -191,8 +190,8 @@ writeJuicer(datLoc, file, overwrite = TRUE)
 
 ### Add spikeIn
 
-To add spikeIn into contact matrix. The ‘FreeHiCLite’ provides
-`FreeSpikeIn(contactBackground, contactSpikeInSignal)` to add spikein.
+To add spikeIn into contact matrix. The `FreeHiCLite` provides
+`FreeSpikeIn()` to add spikein.
 
 ``` r
 kernelSmooth = TRUE
@@ -208,13 +207,23 @@ spikeIn[,3] <- spikeIn[,3] * sample(seq(0, 10, 0.5), Ns, replace=TRUE) # 3rd is 
 spikeInContact <- FreeSpikeIn(contact, spikeIn, kernelSmooth = kernelSmooth, bandwith = bandwith)
 print(summary(contact[,3]))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>   1.000   1.000   1.000   5.536   2.000 431.000
+#>    1.00    2.00    4.00   25.71    9.00 4545.00
 print(summary(spikeInContact[,3]))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>    1.00    1.00    1.00   12.76    3.00  431.00
+#>    1.00    2.00    5.00   67.78   14.00 4545.00
 ```
 
 ### Simulate from contact matrix
+
+Here we use `FreeHiC()` function to perform
+simulation.
+
+``` r
+simuContact <- FreeHiC(spikeInContact, seqDepth = 2 * sum(contact[,3]), resolution = 5000L)
+print(summary(simuContact[,3]))
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>     1.0     2.0     6.0    74.3    16.0  4444.0
+```
 
 ## References
 

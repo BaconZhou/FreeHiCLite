@@ -89,7 +89,7 @@
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
-<p>The ‘FreeHiCLite’ package is designed for simulate Hi-C contact matrix.</p>
+<p>The <code>FreeHiCLite</code> package is designed for simulate Hi-C contact matrix.</p>
 <p>The original package <a href="https://github.com/yezhengSTAT/FreeHiC">FreeHi-C</a> is short for <strong>Fr</strong>agment interactions <strong>e</strong>mpirical <strong>e</strong>stimation for fast simulation of <strong>Hi-C</strong> data. It is a data-driven Hi-C data simulator for simulating and augmenting Hi-C datasets. FreeHi-C employs a non-parametric strategy for estimating an interaction distribution of genome fragments and simulates Hi-C reads from interacting fragments. Data from FreeHi-C exhibit higher fidelity to the biological Hi-C data. FreeHi-C not only can be used to study and benchmark a wide range of Hi-C analysis methods but also boosts power and enables false discovery rate control for differential interaction detection algorithms through data augmentation. Different from FreeHi-C (v1.0), a spike-in module is added enabling the simulation of true differential chromatin interactions.</p>
 <p>FreeHi-C is designed for studies that are prone to simulate Hi-C interactions from the real data and add deviations from the true ones. Therefore, FreeHi-C requires real Hi-C sequencing data (FASTQ format) as input along with user-defined simulation parameters. FreeHi-C will eventually provide the simulated genomics contact counts in a sparse matrix format (BED format) which is compatible with the standard input of downstream Hi-C analysis.</p>
 </div>
@@ -107,8 +107,8 @@
 <div id="read-hic-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#read-hic-data" class="anchor"></a>Read hic data</h3>
-<p>The <a href="https://github.com/aidenlab/juicer/wiki/Data"><code>.hic</code></a> file is a highly compressed binary file, which is developed in the <a href="http://aidenlab.org/">Aiden Lab</a>. Which can be used in <a href="https://aidenlab.org/juicebox/">juicebox</a> for contact matrix visulization.</p>
-<p>The <code>.hic</code> file is formated as <a href="https://github.com/aidenlab/Juicebox/blob/master/HiCFormatV8.md">HiCFormat</a>. To program with <code>.hic</code> file, they provide <a href="https://github.com/aidenlab/straw">straw</a> and <a href="https://github.com/aidenlab/juicer/wiki/Data-Extraction">Dump</a> to extract the information from the <code>.hic</code> file. The ‘FreeHiCLite::readJuicer’ adopts most from the C++ version of <a href="https://github.com/aidenlab/straw">straw</a>.</p>
+<p>The <a href="https://github.com/aidenlab/juicer/wiki/Data"><code>.hic</code></a> file is a highly compressed binary file, which is developed in the <a href="http://aidenlab.org/">Aiden Lab</a>. Which can be used in <a href="https://aidenlab.org/juicebox/">juicebox</a> for contact matrix visualization.</p>
+<p>The <code>.hic</code> file is formatted as <a href="https://github.com/aidenlab/Juicebox/blob/master/HiCFormatV8.md">HiC Format</a>. To program with <code>.hic</code> file, they provide <a href="https://github.com/aidenlab/straw">straw</a> and <a href="https://github.com/aidenlab/juicer/wiki/Data-Extraction">Dump</a> to extract the information from the <code>.hic</code> file. The <code><a href="reference/readJuicer.html">readJuicer()</a></code> adopts most from the C++ version of <a href="https://github.com/aidenlab/straw">straw</a>.</p>
 <p>The <code>.hic</code> file only contains two units of resolution, and each unit contains a fix set of resolutions.</p>
 <ol>
 <li>Base-pair-delimited resolutions (<strong>BP</strong>): 2.5M, 1M, 500K, 250K, 100K, 50K, 25K, 10K, and 5K.</li>
@@ -134,10 +134,11 @@
 <div class="sourceCode" id="cb4"><pre class="r"><span class="no">juicerInfo</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/readJuicerInformation.html">readJuicerInformation</a></span>(<span class="no">localFilePath</span>, <span class="kw">verbose</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
 <span class="co">#&gt; File: /Library/Frameworks/R.framework/Versions/4.0/Resources/library/FreeHiCLite/extdata/example.hic</span>
 <span class="co">#&gt; GenomId: hg19</span>
+<span class="co">#&gt; Available pair: 1_1, 1_2, 1_3, 2_2, 2_3, 3_3.</span>
 <span class="co">#&gt; Hi-C resolution:</span>
-<span class="co">#&gt;     BP: 2500000, 1000000, 500000, 250000, 100000, 50000, 25000, 10000, 5000.</span>
-<span class="co">#&gt;     FRAG not avaiable.</span></pre></div>
-<p>Besides, <code>juicerInfo</code> also provides chromsome size information, if the genomeID is not one of the genome they provided. <a href="https://github.com/aidenlab/juicer/wiki/Pre#usage">check here</a></p>
+<span class="co">#&gt;     BP: 2500000, 500000, 5000.</span>
+<span class="co">#&gt;     FRAG not available.</span></pre></div>
+<p>Besides, <code>juicerInfo()</code> also provides chromosome size information, if the genomeID is not one of the genome they provided. <a href="https://github.com/aidenlab/juicer/wiki/Pre#usage">check here</a></p>
 <div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">juicerInfo</span><span class="kw">[[</span><span class="st">"chromosomeSizes"</span>]])
 <span class="co">#&gt;   chromosome      size</span>
 <span class="co">#&gt; 1          1 249250621</span>
@@ -155,28 +156,27 @@
 <span class="no">datRemote</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/readJuicer.html">readJuicer</a></span>(<span class="kw">file</span><span class="kw">=</span><span class="no">remoteFilePath</span>, <span class="kw">chromosomes</span><span class="kw">=</span><span class="no">chromosomes</span>, <span class="kw">pairs</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">unit</span><span class="kw">=</span><span class="no">unit</span>, <span class="kw">resolution</span><span class="kw">=</span><span class="no">resolution</span>)</pre></div>
 <div class="sourceCode" id="cb7"><pre class="r"><span class="co">## pass chrosomes into function, it will contains all the interaction pairs</span>
 <span class="no">datLoc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/readJuicer.html">readJuicer</a></span>(<span class="kw">file</span><span class="kw">=</span><span class="no">localFilePath</span>, <span class="kw">chromosomes</span><span class="kw">=</span><span class="no">chromosomes</span>, <span class="kw">pairs</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">unit</span><span class="kw">=</span><span class="no">unit</span>, <span class="kw">resolution</span><span class="kw">=</span><span class="no">resolution</span>)
-<span class="co">#&gt; You are trying to access file from: /Library/Frameworks/R.framework/Versions/4.0/Resources/library/FreeHiCLite/extdata/example.hic. Make sure you provide a valid path.</span>
-<span class="co">#&gt; Use pairs: 1_1, 1_2, 2_2</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">datLoc</span>)
 <span class="co">#&gt; List of 3</span>
 <span class="co">#&gt;  $ contact    :List of 3</span>
-<span class="co">#&gt;   ..$ 1_1: int [1:26875, 1:3] 0 0 500000 0 500000 1000000 500000 1000000 1500000 500000 ...</span>
+<span class="co">#&gt;   ..$ 1_1: int [1:87158, 1:3] 500000 500000 1000000 500000 1000000 1500000 500000 1000000 1500000 2000000 ...</span>
 <span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="co">#&gt;   .. .. ..$ : NULL</span>
 <span class="co">#&gt;   .. .. ..$ : chr [1:3] "x" "y" "counts"</span>
-<span class="co">#&gt;   ..$ 1_2: int [1:7551, 1:3] 27000000 34000000 50000000 50500000 57500000 66000000 167500000 175500000 244000000 245000000 ...</span>
+<span class="co">#&gt;   ..$ 1_2: int [1:69341, 1:3] 2500000 4000000 4500000 5000000 5500000 6000000 7000000 8500000 9500000 10000000 ...</span>
 <span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="co">#&gt;   .. .. ..$ : NULL</span>
 <span class="co">#&gt;   .. .. ..$ : chr [1:3] "x" "y" "counts"</span>
-<span class="co">#&gt;   ..$ 2_2: int [1:28005, 1:3] 0 0 500000 0 500000 1000000 0 500000 1000000 1500000 ...</span>
+<span class="co">#&gt;   ..$ 2_2: int [1:104782, 1:3] 0 0 500000 0 500000 1000000 0 500000 1000000 1500000 ...</span>
 <span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span>
 <span class="co">#&gt;   .. .. ..$ : NULL</span>
 <span class="co">#&gt;   .. .. ..$ : chr [1:3] "x" "y" "counts"</span>
-<span class="co">#&gt;  $ information:List of 3</span>
+<span class="co">#&gt;  $ information:List of 4</span>
 <span class="co">#&gt;   ..$ genomId        : chr "hg19"</span>
 <span class="co">#&gt;   ..$ resolution     :List of 2</span>
-<span class="co">#&gt;   .. ..$ BP  : int [1:9] 2500000 1000000 500000 250000 100000 50000 25000 10000 5000</span>
+<span class="co">#&gt;   .. ..$ BP  : int [1:3] 2500000 500000 5000</span>
 <span class="co">#&gt;   .. ..$ FRAG: int(0) </span>
+<span class="co">#&gt;   ..$ pairs          : chr [1:6] "1_1" "1_2" "1_3" "2_2" ...</span>
 <span class="co">#&gt;   ..$ chromosomeSizes:'data.frame':  26 obs. of  2 variables:</span>
 <span class="co">#&gt;   .. ..$ chromosome: chr [1:26] "1" "10" "11" "12" ...</span>
 <span class="co">#&gt;   .. ..$ size      : int [1:26] 249250621 135534747 135006516 133851895 115169878 107349540 102531392 90354753 81195210 78077248 ...</span>
@@ -190,22 +190,22 @@
 <div id="write-to-disk-file" class="section level4">
 <h4 class="hasAnchor">
 <a href="#write-to-disk-file" class="anchor"></a>Write to disk file</h4>
-<p>The <a href="https://aidenlab.org/juicebox/">juicebox</a> also provide a function <a href="https://github.com/aidenlab/juicer/wiki/Pre">Pre</a> to generate <code>.hic</code> file from different format. In ‘FreeHiCLite’, we provide a function <code><a href="reference/writeJuicer.html">writeJuicer()</a></code> to write the contact matrix into a <a href="https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format">short with score format</a>. You can use <code><a href="reference/convertJuicer.html">convertJuicer()</a></code> to view the matrix, or directly use <code><a href="reference/writeJuicer.html">writeJuicer()</a></code>.</p>
+<p>The <a href="https://aidenlab.org/juicebox/">juicebox</a> also provide a function <a href="https://github.com/aidenlab/juicer/wiki/Pre">Pre</a> to generate <code>.hic</code> file from different format. In <code>FreeHiCLite</code>, we provide a function <code><a href="reference/writeJuicer.html">writeJuicer()</a></code> to write the contact matrix into a <a href="https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format">short with score format</a>. You can use <code><a href="reference/convertJuicer.html">convertJuicer()</a></code> to view the matrix, or directly use <code><a href="reference/writeJuicer.html">writeJuicer()</a></code>.</p>
 <div class="sourceCode" id="cb8"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu"><a href="reference/convertJuicer.html">convertJuicer</a></span>(<span class="no">datLoc</span><span class="kw">[[</span><span class="st">'contact'</span>]]<span class="kw">[[</span><span class="fl">1</span>]], <span class="st">"1"</span>, <span class="st">"1"</span>))
 <span class="co">#&gt;   str1 chr1    pos1 frag1 str2 chr2    pos2 frag2 score</span>
-<span class="co">#&gt; 1    0    1       0     0    0    1       0     0    19</span>
-<span class="co">#&gt; 2    0    1       0     0    0    1  500000     0    14</span>
-<span class="co">#&gt; 3    0    1  500000     0    0    1  500000     0    88</span>
-<span class="co">#&gt; 4    0    1       0     0    0    1 1000000     0     1</span>
-<span class="co">#&gt; 5    0    1  500000     0    0    1 1000000     0    29</span>
-<span class="co">#&gt; 6    0    1 1000000     0    0    1 1000000     0   159</span></pre></div>
+<span class="co">#&gt; 1    0    1  500000     0    0    1  500000     1   384</span>
+<span class="co">#&gt; 2    0    1  500000     0    0    1 1000000     1   231</span>
+<span class="co">#&gt; 3    0    1 1000000     0    0    1 1000000     1  1272</span>
+<span class="co">#&gt; 4    0    1  500000     0    0    1 1500000     1    47</span>
+<span class="co">#&gt; 5    0    1 1000000     0    0    1 1500000     1   373</span>
+<span class="co">#&gt; 6    0    1 1500000     0    0    1 1500000     1  1665</span></pre></div>
 <div class="sourceCode" id="cb9"><pre class="r"><span class="fu"><a href="reference/writeJuicer.html">writeJuicer</a></span>(<span class="no">datLoc</span>, <span class="no">file</span>, <span class="kw">overwrite</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></div>
 </div>
 </div>
 <div id="add-spikein" class="section level3">
 <h3 class="hasAnchor">
 <a href="#add-spikein" class="anchor"></a>Add spikeIn</h3>
-<p>To add spikeIn into contact matrix. The ‘FreeHiCLite’ provides <code><a href="reference/FreeSpikeIn.html">FreeSpikeIn(contactBackground, contactSpikeInSignal)</a></code> to add spikein.</p>
+<p>To add spikeIn into contact matrix. The <code>FreeHiCLite</code> provides <code><a href="reference/FreeSpikeIn.html">FreeSpikeIn()</a></code> to add spikein.</p>
 <div class="sourceCode" id="cb10"><pre class="r"><span class="no">kernelSmooth</span> <span class="kw">=</span> <span class="fl">TRUE</span>
 <span class="no">bandwith</span> <span class="kw">=</span> <span class="fl">50000L</span>
 
@@ -219,14 +219,19 @@
 <span class="no">spikeInContact</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/FreeSpikeIn.html">FreeSpikeIn</a></span>(<span class="no">contact</span>, <span class="no">spikeIn</span>, <span class="kw">kernelSmooth</span> <span class="kw">=</span> <span class="no">kernelSmooth</span>, <span class="kw">bandwith</span> <span class="kw">=</span> <span class="no">bandwith</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">contact</span>[,<span class="fl">3</span>]))
 <span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">#&gt;   1.000   1.000   1.000   5.536   2.000 431.000</span>
+<span class="co">#&gt;    1.00    2.00    4.00   25.71    9.00 4545.00</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">spikeInContact</span>[,<span class="fl">3</span>]))
 <span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">#&gt;    1.00    1.00    1.00   12.76    3.00  431.00</span></pre></div>
+<span class="co">#&gt;    1.00    2.00    5.00   67.78   14.00 4545.00</span></pre></div>
 </div>
 <div id="simulate-from-contact-matrix" class="section level3">
 <h3 class="hasAnchor">
 <a href="#simulate-from-contact-matrix" class="anchor"></a>Simulate from contact matrix</h3>
+<p>Here we use <code><a href="reference/FreeHiC.html">FreeHiC()</a></code> function to perform simulation.</p>
+<div class="sourceCode" id="cb11"><pre class="r"><span class="no">simuContact</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/FreeHiC.html">FreeHiC</a></span>(<span class="no">spikeInContact</span>, <span class="kw">seqDepth</span> <span class="kw">=</span> <span class="fl">2</span> * <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">contact</span>[,<span class="fl">3</span>]), <span class="kw">resolution</span> <span class="kw">=</span> <span class="fl">5000L</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">simuContact</span>[,<span class="fl">3</span>]))
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;     1.0     2.0     6.0    74.3    16.0  4444.0</span></pre></div>
 </div>
 </div>
 <div id="references" class="section level2">

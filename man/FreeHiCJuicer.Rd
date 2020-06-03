@@ -13,7 +13,8 @@ FreeHiCJuicer(
   countScale = 1,
   noiseRate = 0,
   neighborZeroRate = 0,
-  resolution = 50000L
+  resolution = 50000L,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -21,7 +22,7 @@ FreeHiCJuicer(
 The remote path full list can be obtained from \url{http://aidenlab.org/data.html}.}
 
 \item{chromosomes}{A vector contains all the chromosomes. 
-For example c('chr1', 'chr2'), the resulting contact matrixs will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2).}
+For example c('chr1', 'chr2'), the resulting contact matrixes will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2).}
 
 \item{pairs}{A vector contains all the pair. 
 The pair take format as '1_1' or 'chr1_chr1', both means the contact between chromosome1 and chromosome1. If \code{pair} presents, \code{chromosomes} argument will be ignore.}
@@ -64,6 +65,8 @@ The resolution must be a value from following list.
 \item 1
 }
 }}
+
+\item{verbose}{TRUE or FALSE. Whether print information.}
 }
 \value{
 A list contains simulated contact matrix and basic information of hic data

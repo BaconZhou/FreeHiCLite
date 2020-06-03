@@ -79,7 +79,7 @@ Rcpp::List hicDataInformation(FreeHiC::Juicer::hicReader *reader) {
     chroSize.push_back(it.second);
   }
   Rcpp::List info = Rcpp::List::create(
-    Rcpp::Named("genomId") = reader->getGenome(),
+    Rcpp::Named("genomeID") = reader->getGenome(),
     Rcpp::Named("resolution") = resolutions,
     Rcpp::Named("pairs") = reader->getPairs(),
     Rcpp::Named("chromosomeSizes") = Rcpp::DataFrame::create(
@@ -255,11 +255,11 @@ Rcpp::IntegerMatrix hicDataSimuMatrix(const Rcpp::IntegerMatrix &contactRecords,
 // [[Rcpp::export]]
 Rcpp::IntegerMatrix spikein(const Rcpp::IntegerMatrix &background, 
                             const Rcpp::IntegerMatrix &SpikeInSignal, 
-                            int bandwith, bool smooth) {
+                            int bandwidth, bool smooth) {
   std::vector<FreeHiC::contactRecord> backgound_ = matrixToContactVector(background);
   std::vector<FreeHiC::contactRecord> SpikeInSignal_ = matrixToContactVector(SpikeInSignal);
   
-  FreeHiC::Spikein sol(backgound_, bandwith, smooth);
+  FreeHiC::Spikein sol(backgound_, bandwidth, smooth);
   
   sol.smoothSignal(SpikeInSignal_);
   return contactVectorToMatrix(sol.getData());

@@ -30,7 +30,7 @@ sticker(expression({plot.new(); text(0.5, 0.5, "F", font=2, cex = 10, col = scal
 
 ## Overview 
 
-The 'FreeHiCLite' package is designed for simulate Hi-C contact matrix. 
+The `FreeHiCLite` package is designed for simulate Hi-C contact matrix. 
 
 The original package [FreeHi-C](https://github.com/yezhengSTAT/FreeHiC) is short for **Fr**agment  interactions **e**mpirical **e**stimation for fast simulation of **Hi-C** data. It is a data-driven Hi-C data simulator for simulating and augmenting Hi-C datasets.  FreeHi-C employs a non-parametric strategy for estimating an interaction distribution of genome fragments and simulates Hi-C reads from interacting fragments. Data from FreeHi-C exhibit higher fidelity to the biological Hi-C data. FreeHi-C not only can be used to study and benchmark a wide range of Hi-C analysis methods but also boosts power and enables false discovery rate control for differential interaction detection algorithms through data augmentation. Different from FreeHi-C (v1.0), a spike-in module is added enabling the simulation of true differential chromatin interactions.
 
@@ -53,9 +53,9 @@ library(FreeHiCLite)
 
 ### Read hic data
 
-The [`.hic`](https://github.com/aidenlab/juicer/wiki/Data) file is a highly compressed binary file, which is developed in the [Aiden Lab](http://aidenlab.org/). Which can be used in [juicebox](https://aidenlab.org/juicebox/) for contact matrix visulization.
+The [`.hic`](https://github.com/aidenlab/juicer/wiki/Data) file is a highly compressed binary file, which is developed in the [Aiden Lab](http://aidenlab.org/). Which can be used in [juicebox](https://aidenlab.org/juicebox/) for contact matrix visualization.
 
-The `.hic` file is formated as [HiCFormat](https://github.com/aidenlab/Juicebox/blob/master/HiCFormatV8.md). To program with `.hic` file, they provide [straw](https://github.com/aidenlab/straw) and [Dump](https://github.com/aidenlab/juicer/wiki/Data-Extraction) to extract the information from the `.hic` file. The 'FreeHiCLite::readJuicer' adopts most from the C++ version of [straw](https://github.com/aidenlab/straw).
+The `.hic` file is formatted as [HiC Format](https://github.com/aidenlab/Juicebox/blob/master/HiCFormatV8.md). To program with `.hic` file, they provide [straw](https://github.com/aidenlab/straw) and [Dump](https://github.com/aidenlab/juicer/wiki/Data-Extraction) to extract the information from the `.hic` file. The `readJuicer()` adopts most from the C++ version of [straw](https://github.com/aidenlab/straw).
 
 The `.hic` file only contains two units of resolution, and each unit contains a fix set of resolutions.
 
@@ -86,7 +86,7 @@ We can extract some basic information from a `.hic` file via:
 juicerInfo <- readJuicerInformation(localFilePath, verbose = TRUE)
 ```
 
-Besides, `juicerInfo` also provides chromsome size information, if the genomeID is not one of the genome they provided. [check here](https://github.com/aidenlab/juicer/wiki/Pre#usage)
+Besides, `juicerInfo()` also provides chromosome size information, if the genomeID is not one of the genome they provided. [check here](https://github.com/aidenlab/juicer/wiki/Pre#usage)
 
 ```{r hic-info-size}
 head(juicerInfo[["chromosomeSizes"]])
@@ -109,7 +109,7 @@ str(datLoc)
 
 #### Write to disk file
 
-The [juicebox](https://aidenlab.org/juicebox/) also provide a function [Pre](https://github.com/aidenlab/juicer/wiki/Pre) to generate `.hic` file from different format. In 'FreeHiCLite', we provide a function `writeJuicer()` to write the contact matrix into a [short with score format](https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format). You can use `convertJuicer()` to view the matrix, or directly use `writeJuicer()`.
+The [juicebox](https://aidenlab.org/juicebox/) also provide a function [Pre](https://github.com/aidenlab/juicer/wiki/Pre) to generate `.hic` file from different format. In `FreeHiCLite`, we provide a function `writeJuicer()` to write the contact matrix into a [short with score format](https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format). You can use `convertJuicer()` to view the matrix, or directly use `writeJuicer()`.
 
 ```{r convert-juicer}
 head(convertJuicer(datLoc[['contact']][[1]], "1", "1"))
@@ -121,7 +121,7 @@ writeJuicer(datLoc, file, overwrite = TRUE)
 
 ### Add spikeIn
 
-To add spikeIn into contact matrix. The 'FreeHiCLite' provides `FreeSpikeIn(contactBackground, contactSpikeInSignal)` to add spikein.
+To add spikeIn into contact matrix. The `FreeHiCLite` provides `FreeSpikeIn()` to add spikein.
 
 ```{r spikein}
 kernelSmooth = TRUE
@@ -141,8 +141,12 @@ print(summary(spikeInContact[,3]))
 
 ### Simulate from contact matrix
 
+Here we use `FreeHiC()` function to perform simulation.
 
-
+```{r}
+simuContact <- FreeHiC(spikeInContact, seqDepth = 2 * sum(contact[,3]), resolution = 5000L)
+print(summary(simuContact[,3]))
+```
 
 ## References
 

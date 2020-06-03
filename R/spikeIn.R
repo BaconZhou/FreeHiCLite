@@ -15,13 +15,13 @@
 #' where \code{x} stands for the first chromosome location, \code{y} stands for the second chromosome location and \code{counts} is the interaction counts.
 #' @param contactSpikeInSignal The spikein signal. It should has the exact same format as \code{contactBackground}
 #' @param kernelSmooth TRUE or FALSE. Whether to perform kernel smoothing.
-#' @param bandwith The bandwith used in the kernel smooth.
+#' @param bandwidth The bandwidth used in the kernel smooth.
 #' 
-#' @return A same format as contactBackgroup
+#' @return A same format as \code{contactBackground}
 #' 
 #' @details 
 #' 
-#' Spikein will add signals to the background. Also use Gaussian kernel smooth with bandwith.
+#' Spikein will add signals to the background. Also use Gaussian kernel smooth with bandwidth.
 #' 
 #' @examples 
 #' 
@@ -36,7 +36,7 @@
 #' counts <- sample(1:10, N, replace=TRUE)
 #' 
 #' kernelSmooth = TRUE
-#' bandwith = 50000L
+#' bandwidth = 50000L
 #' 
 #' 
 #' ## Matrix version
@@ -53,7 +53,7 @@
 #' spikeIn[,3] <- spikeIn[,3] * sample(seq(0, 10, 0.5), Ns, replace=TRUE)
 #' hist(spikeIn[,3])
 #' 
-#' res <- FreeSpikeIn(contacts, spikeIn, kernelSmooth = kernelSmooth, bandwith = bandwith)
+#' res <- FreeSpikeIn(contacts, spikeIn, kernelSmooth = kernelSmooth, bandwidth = bandwidth)
 #' head(res)
 #' 
 #' ## List version
@@ -74,7 +74,7 @@
 #' contactsBackgroup <- list('1_1' = contacts, '2_2' = contacts2)
 #' spikeInlist <- list('1_1' = spikeIn, '2_2' = spikeIn2)
 #' 
-#' res <- FreeSpikeIn(contactsBackgroup, spikeInlist, kernelSmooth = kernelSmooth, bandwith = bandwith)
+#' res <- FreeSpikeIn(contactsBackgroup, spikeInlist, kernelSmooth = kernelSmooth, bandwidth = bandwidth)
 #' str(res)
 #' 
 #' ## Dataframe version
@@ -92,36 +92,36 @@
 #' chr2 = chr2, y = contactsAll[,2], counts = contactsAll[,3])
 #' spikeInDf <- data.frame(chr1 = schr1, x = spikeInAll[,1], 
 #' chr2 = schr2, y = spikeInAll[,2], counts = spikeInAll[,3])
-#' res <- FreeSpikeIn(contactsDf, spikeInDf, kernelSmooth = kernelSmooth, bandwith = bandwith)
+#' res <- FreeSpikeIn(contactsDf, spikeInDf, kernelSmooth = kernelSmooth, bandwidth = bandwidth)
 #' head(res)
 #' 
 #' 
 #' @importFrom methods is
 #' 
 #' @export
-FreeSpikeIn <- function(contactBackground, contactSpikeInSignal, kernelSmooth = TRUE, bandwith = 500000L) {
+FreeSpikeIn <- function(contactBackground, contactSpikeInSignal, kernelSmooth = TRUE, bandwidth = 500000L) {
     
     stopifnot(is.logical(kernelSmooth))
-    stopifnot(bandwith > 0)
+    stopifnot(bandwidth > 0)
     if (methods::is(contactBackground, "list")) {
         stopifnot(methods::is(contactSpikeInSignal, "list"))
         ans <- .FreeSpikeInList(contactBackground = contactBackground, contactSpikeInSignal = contactSpikeInSignal, 
-            kernelSmooth = kernelSmooth, bandwith = bandwith)
+            kernelSmooth = kernelSmooth, bandwidth = bandwidth)
     } else if (methods::is(contactBackground, "data.frame")) {
         stopifnot(methods::is(contactSpikeInSignal, "data.frame"))
         ans <- .FreeSpikeInDf(contactBackground = contactBackground, contactSpikeInSignal = contactSpikeInSignal, 
-            kernelSmooth = kernelSmooth, bandwith = bandwith)
+            kernelSmooth = kernelSmooth, bandwidth = bandwidth)
     } else if (methods::is(contactBackground, "matrix")) {
         stopifnot(methods::is(contactSpikeInSignal, "matrix"))
         ans <- .FreeSpikeInMatrix(contactBackground = contactBackground, contactSpikeInSignal = contactSpikeInSignal, 
-            kernelSmooth = kernelSmooth, bandwith = bandwith)
+            kernelSmooth = kernelSmooth, bandwidth = bandwidth)
     } else {
         stop("Not implemented. Check ?FreeSpikeIn")
     }
     return(ans)
 }
 
-.FreeSpikeInList <- function(contactBackground, contactSpikeInSignal, kernelSmooth, bandwith) {
+.FreeSpikeInList <- function(contactBackground, contactSpikeInSignal, kernelSmooth, bandwidth) {
     pairs1 <- sort(names(contactBackground))
     pairs2 <- sort(names(contactSpikeInSignal))
     stopifnot(all(pairs1 == pairs2))
@@ -129,19 +129,19 @@ FreeSpikeIn <- function(contactBackground, contactSpikeInSignal, kernelSmooth = 
     ans <- list()
     for (i in seq_along(pairs1)) {
         pair <- pairs1[i]
-        ans[[pair]] <- spikein(contactBackground[[pair]], contactSpikeInSignal[[pair]], bandwith = bandwith, 
+        ans[[pair]] <- spikein(contactBackground[[pair]], contactSpikeInSignal[[pair]], bandwidth = bandwidth, 
             smooth = kernelSmooth)
     }
     return(ans)
 }
 
-.FreeSpikeInDf <- function(contactBackground, contactSpikeInSignal, kernelSmooth, bandwith) {
+.FreeSpikeInDf <- function(contactBackground, contactSpikeInSignal, kernelSmooth, bandwidth) {
     
     stopifnot(NCOL(contactBackground) == 5)
     contactsMap <- .dfToList(contactBackground)
     spikeInMap <- .dfToList(contactSpikeInSignal)
     resList <- .FreeSpikeInList(contactBackground = contactsMap, contactSpikeInSignal = spikeInMap, 
-        kernelSmooth = kernelSmooth, bandwith = bandwith)
+        kernelSmooth = kernelSmooth, bandwidth = bandwidth)
     pairs <- names(resList)
     counts <- sapply(resList, NROW)
     chrs <- sapply(pairs, FUN = function(x) {
@@ -164,11 +164,11 @@ FreeSpikeIn <- function(contactBackground, contactSpikeInSignal, kernelSmooth = 
     return(df)
     
 }
-.FreeSpikeInMatrix <- function(contactBackground, contactSpikeInSignal, kernelSmooth, bandwith) {
+.FreeSpikeInMatrix <- function(contactBackground, contactSpikeInSignal, kernelSmooth, bandwidth) {
     
     stopifnot(NCOL(contactBackground) == 3)
     stopifnot(NCOL(contactSpikeInSignal) == 3)
     
-    return(spikein(contactBackground, contactSpikeInSignal, bandwith = bandwith, smooth = kernelSmooth))
+    return(spikein(contactBackground, contactSpikeInSignal, bandwidth = bandwidth, smooth = kernelSmooth))
     
 }

@@ -33,7 +33,7 @@ hicDataSimuMatrix <- function(contactRecords, resolution, sequenceDepth, countSc
     .Call(`_FreeHiCLite_hicDataSimuMatrix`, contactRecords, resolution, sequenceDepth, countScale, noiseRate, neighborZeroRate)
 }
 
-spikein <- function(background, SpikeInSignal, bandwith, smooth) {
-    .Call(`_FreeHiCLite_spikein`, background, SpikeInSignal, bandwith, smooth)
+spikein <- function(background, SpikeInSignal, bandwidth, smooth) {
+    .Call(`_FreeHiCLite_spikein`, background, SpikeInSignal, bandwidth, smooth)
 }
 

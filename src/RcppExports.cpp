@@ -128,16 +128,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // spikein
-Rcpp::IntegerMatrix spikein(const Rcpp::IntegerMatrix& background, const Rcpp::IntegerMatrix& SpikeInSignal, int bandwith, bool smooth);
-RcppExport SEXP _FreeHiCLite_spikein(SEXP backgroundSEXP, SEXP SpikeInSignalSEXP, SEXP bandwithSEXP, SEXP smoothSEXP) {
+Rcpp::IntegerMatrix spikein(const Rcpp::IntegerMatrix& background, const Rcpp::IntegerMatrix& SpikeInSignal, int bandwidth, bool smooth);
+RcppExport SEXP _FreeHiCLite_spikein(SEXP backgroundSEXP, SEXP SpikeInSignalSEXP, SEXP bandwidthSEXP, SEXP smoothSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type background(backgroundSEXP);
     Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type SpikeInSignal(SpikeInSignalSEXP);
-    Rcpp::traits::input_parameter< int >::type bandwith(bandwithSEXP);
+    Rcpp::traits::input_parameter< int >::type bandwidth(bandwidthSEXP);
     Rcpp::traits::input_parameter< bool >::type smooth(smoothSEXP);
-    rcpp_result_gen = Rcpp::wrap(spikein(background, SpikeInSignal, bandwith, smooth));
+    rcpp_result_gen = Rcpp::wrap(spikein(background, SpikeInSignal, bandwidth, smooth));
     return rcpp_result_gen;
 END_RCPP
 }

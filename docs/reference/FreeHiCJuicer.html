@@ -144,7 +144,8 @@
   <span class='kw'>countScale</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>noiseRate</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>neighborZeroRate</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='fl'>50000L</span>
+  <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='fl'>50000L</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -158,7 +159,7 @@ The remote path full list can be obtained from <a href='http://aidenlab.org/data
     <tr>
       <th>chromosomes</th>
       <td><p>A vector contains all the chromosomes. 
-For example c('chr1', 'chr2'), the resulting contact matrixs will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2).</p></td>
+For example c('chr1', 'chr2'), the resulting contact matrixes will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2).</p></td>
     </tr>
     <tr>
       <th>pairs</th>
@@ -213,6 +214,10 @@ The resolution must be a value from following list.</p><ul>
 </ul></li>
 </ul></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>TRUE or FALSE. Whether print information.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -245,7 +250,7 @@ The resolution must be a value from following list.</p><ul>
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>FreeHiCJuicer</span>(<span class='kw'>file</span><span class='kw'>=</span><span class='no'>localFilePath</span>, <span class='kw'>chromosomes</span><span class='kw'>=</span><span class='no'>chromosomes</span>,
 <span class='kw'>pairs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>unit</span><span class='kw'>=</span><span class='no'>unit</span>, <span class='kw'>resolution</span><span class='kw'>=</span><span class='no'>resolution</span>,
 <span class='kw'>seqDepth</span> <span class='kw'>=</span> <span class='no'>seqDepth</span>, <span class='kw'>countScale</span> <span class='kw'>=</span> <span class='no'>countScale</span>,
-<span class='kw'>noiseRate</span> <span class='kw'>=</span> <span class='no'>noiseRate</span>, <span class='kw'>neighborZeroRate</span> <span class='kw'>=</span> <span class='no'>neighborZeroRate</span>)</div><div class='output co'>#&gt; <span class='message'>You are trying to access file from: /private/var/folders/bb/9m2pjpgj5nq5xft84vmyv7dm0000gn/T/Rtmp2O7h4J/temp_libpath70145ed168c/FreeHiCLite/extdata/example.hic. Make sure you provide a valid path.</span></div><div class='output co'>#&gt; <span class='message'>Use pairs: 1_1, 1_2, 2_2</span></div><div class='input'>
+<span class='kw'>noiseRate</span> <span class='kw'>=</span> <span class='no'>noiseRate</span>, <span class='kw'>neighborZeroRate</span> <span class='kw'>=</span> <span class='no'>neighborZeroRate</span>)</div><div class='output co'>#&gt; <span class='message'>You are trying to access file from: /private/var/folders/bb/9m2pjpgj5nq5xft84vmyv7dm0000gn/T/RtmpqraV20/temp_libpath2002445c1fe2/FreeHiCLite/extdata/example.hic. Make sure you provide a valid path.</span></div><div class='output co'>#&gt; <span class='message'>Use pairs: 1_1, 1_2, 2_2</span></div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; List of 4
 #&gt;  $ 2_2        : int [1:4588, 1:3] 0 0 500000 500000 1000000 500000 1000000 1500000 1500000 2000000 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
@@ -260,7 +265,7 @@ The resolution must be a value from following list.</p><ul>
 #&gt;   .. ..$ : NULL
 #&gt;   .. ..$ : chr [1:3] "x" "y" "counts"
 #&gt;  $ information:List of 4
-#&gt;   ..$ genomId        : chr "hg19"
+#&gt;   ..$ genomeID       : chr "hg19"
 #&gt;   ..$ resolution     :List of 2
 #&gt;   .. ..$ BP  : int [1:3] 2500000 500000 5000
 #&gt;   .. ..$ FRAG: int(0) 

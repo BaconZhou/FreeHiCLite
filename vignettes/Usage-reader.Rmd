@@ -17,16 +17,16 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-The [`.hic`](https://github.com/aidenlab/juicer/wiki/Data) file is a highly compressed binary file, which is developed in the [Aiden Lab](http://aidenlab.org/). Which can be used in [juicebox](https://aidenlab.org/juicebox/) for contact matrix visulization.
+The [`.hic`](https://github.com/aidenlab/juicer/wiki/Data) file is a highly compressed binary file, which is developed in the [Aiden Lab](http://aidenlab.org/). Which can be used in [juicebox](https://aidenlab.org/juicebox/) for contact matrix visualization.
 
-The `.hic` file is formated as [HiCFormat](https://github.com/aidenlab/Juicebox/blob/master/HiCFormatV8.md). To program with `.hic` file, they provide [straw](https://github.com/aidenlab/straw) and [Dump](https://github.com/aidenlab/juicer/wiki/Data-Extraction) to extract the information from the `.hic` file. The `FreeHiCLite::readJuicer()` adopts most from the C++ version of straw.
+The `.hic` file is formatted as [HiC Format](https://github.com/aidenlab/Juicebox/blob/master/HiCFormatV8.md). To program with `.hic` file, they provide [straw](https://github.com/aidenlab/straw) and [Dump](https://github.com/aidenlab/juicer/wiki/Data-Extraction) to extract the information from the `.hic` file. The `FreeHiCLite::readJuicer()` adopts most from the C++ version of straw.
 
 The `.hic` file only contains two units of resolution, and each unit contains a fix set of resolutions.
 
 1. Base-pair-delimited resolutions (**BP**): 2.5M, 1M, 500K, 250K, 100K, 50K, 25K, 10K, and 5K.
 2. Fragment-delimited resolutions (**FRAG**): 500f, 250f, 100f, 50f, 20f, 5f, 2f, 1f.
 
-The following figure shows how juicebox visualizied a human genome at chromosome 1.
+The following figure shows how juicebox visualized a human genome at chromosome 1.
 
 ```{r show-hic-img, echo=FALSE}
 knitr::include_graphics("gm12878_chr1.png")
@@ -45,7 +45,7 @@ The remote file lists can be found in [http://aidenlab.org/data.html](http://aid
 
 ### Read basic information
 
-To access basic information about a `.hic` file. We can use function `readJuicerInformation()`. For example, we want to know which *genomId* and what are the available *resolutions* of a remote file locates in: [https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic](). Besides, it will also extract the chromsomes sizes.
+To access basic information about a `.hic` file. We can use function `readJuicerInformation()`. For example, we want to know which *genomeID* and what are the available *resolutions* of a remote file locates in: [https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic](). Besides, it will also extract the chromosomes sizes.
 
 ```{r remote-info}
 ## Remote file location. The reomte file include downloading, it may take a while
@@ -72,7 +72,7 @@ localInfo <- readJuicerInformation(localFilePath, verbose = TRUE)
 
 ### Read a resolution
 
-The 'FreeHiCLite' package provide a `readJuicer()` function to read file of chromsomes at a specific resolution.
+The 'FreeHiCLite' package provide a `readJuicer()` function to read file of chromosomes at a specific resolution.
 
 The `example.hic` data is a small customized file with only three resolutions in BP. 
 
@@ -96,7 +96,7 @@ str(dat)
 
 The result object contains 
 
-- `contact`: A list of contact matrixs. For each matrix, the name stands for `chrA_chrB`, and matrix has has format (x, y, count).
+- `contact`: A list of contact matrixes. For each matrix, the name stands for `chrA_chrB`, and matrix has has format (x, y, count).
 
 ```{r, echo=FALSE}
 knitr::kable(
@@ -147,8 +147,8 @@ writeJuicer(dat[['contact']], file = 'test.txt')
 
 After you write to disk, you can run [juicer](https://github.com/aidenlab/juicer/)'s [Pre](https://github.com/aidenlab/juicer/wiki/Pre) function to produce a `.hic` file for display purpose. Here we display an example code of running Pre command. 
 
-```{r, engine='java', eval=F}
-java -jar /path/to/juicer_tool.jar pre test.txt test.hic genomId 
+```{r, engine='bash', eval=F}
+java -jar /path/to/juicer_tool.jar pre test.txt test.hic genomeID 
 ```
 
 

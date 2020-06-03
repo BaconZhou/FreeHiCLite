@@ -95,12 +95,158 @@
 
     
     
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">FreeHiCLite</span>)</pre></body></html></div>
+<div id="introduction" class="section level2">
+<h2 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h2>
+<p>FreeHi-C (v2.0) is short for Fragment interactions empirical estimation for fast simulation of Hi-C data. It is a data-driven Hi-C data simulator for simulating and augmenting Hi-C datasets. FreeHi-C employs a non-parametric strategy for estimating an interaction distribution of genome fragments and simulates Hi-C reads from interacting fragments. Data from FreeHi-C exhibit higher fidelity to the biological Hi-C data. FreeHi-C not only can be used to study and benchmark a wide range of Hi-C analysis methods but also boosts power and enables false discovery rate control for differential interaction detection algorithms through data augmentation. Different from FreeHi-C (v1.0), a spike-in module is added enabling the simulation of true differential chromatin interactions.</p>
+<p>The fragment level package is available here: <a href="https://github.com/yezhengSTAT/FreeHiC">YeZheng/FreeHiC</a></p>
+</div>
+<div id="method" class="section level2">
+<h2 class="hasAnchor">
+<a href="#method" class="anchor"></a>Method</h2>
+<p>Here is a contact matrix of human genome chromosome 1. All the red dots are contact counts. The X axis and Y axis are sequence indices.</p>
+<p><img src="gm12878_chr1.png"><!-- --></p>
+<p>To save this symmetric and sparse matrix, we use <span class="math inline">\((x, y, \text{count})\)</span>, where x and y are location, and count is the number of count in the location.</p>
+<p>Then “FreeHiCLite” performs the following procedures to simulate the contact matrix.</p>
+<ol style="list-style-type: decimal">
+<li><p>Calculate the total number of contact counts <span class="math inline">\(N = \sum_{ij}n_{ij}\)</span> where <span class="math inline">\(n_{ij}\)</span> is the contact counts at location <span class="math inline">\((i, j)\)</span> in the matrix.</p></li>
+<li><p>Estimate <span class="math inline">\(\pi_{ij} = \frac{n_{ij}}{N}\)</span>. We assume the contact matrix follows a multinomial distribution.</p></li>
+<li><p>Sample new counts <span class="math inline">\(\hat{n_{ij}} \sim Binomial(\text{SeqDepth}, \pi_{ij})\)</span>. Where <code>*SeqDepth*</code> is provided by user.</p></li>
+<li><p>Sample a random variable <span class="math inline">\(r_{\text{noise}}\)</span> from Uniform(0, 1). If <span class="math inline">\(r_{\text{noise}} \le \text{noiseRate}\)</span>, let <span class="math inline">\(\hat{M_{ij}}\)</span> add or minus one with equal probability. This step is approximate deletion, insertion. <code>*noiseRate*</code> is provided by user.</p></li>
+<li><p>If user specified <code>*neighborZeroRate*</code> &gt; 0. Calculate zero rate as <span class="math inline">\(p_{0} = \sum_{ij}I(n_{ij} = 0) / M^2\)</span>, where <span class="math inline">\(M\)</span> is the number of locations.</p></li>
+</ol>
+<p>For each location <span class="math inline">\((i, j, n_{ij})\)</span> with <span class="math inline">\(n_{ij} &gt; 0\)</span>, calculate its neighborhood non-zero probability as <span class="math inline">\(p_{\text{neighbor}} = \frac{2}{|i_{prev} - i| * |j_{prev} - j|}\)</span> (previous closest location, we order all the location based on <span class="math inline">\(j\)</span> and <span class="math inline">\(i\)</span>). Then select a random number <span class="math inline">\(r\)</span>. If <span class="math inline">\(r &lt; p_{\text{neighbor}}\)</span>, randomly select an index <span class="math inline">\((i_{r}, j_r)\)</span> from the whole matrix and assign <span class="math inline">\(n_{i_rj_r} = 1\)</span>. Also let <span class="math inline">\(n_{ij} = n_{ij} - 1\)</span>.</p>
+</div>
+<div id="usage" class="section level2">
+<h2 class="hasAnchor">
+<a href="#usage" class="anchor"></a>Usage</h2>
+<p>To fulfill the needs of use FreeHi-C with the processed data, contact matrix. We implement “FreeHiCLite” package, which can use multi-nomial sampling and directly functional on both contact matrix and <a href="https://github.com/aidenlab/juicer/wiki/Data"><code>.hic</code></a> file directly.</p>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">FreeHiCLite</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">123456789</span>)</pre></body></html></div>
+<p>Read a data from a hic file.</p>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">localFilePath</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"example.hic"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"FreeHiCLite"</span>)
+<span class="no">unit</span> <span class="kw">=</span> <span class="st">"BP"</span>
+<span class="no">resolution</span> <span class="kw">=</span> <span class="fl">5000L</span>
+
+<span class="no">dat</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/readJuicer.html">readJuicer</a></span>(<span class="kw">file</span><span class="kw">=</span><span class="no">localFilePath</span>, <span class="kw">chromosomes</span><span class="kw">=</span><span class="st">"chr1"</span>, <span class="kw">pairs</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">unit</span><span class="kw">=</span><span class="no">unit</span>, <span class="kw">resolution</span><span class="kw">=</span><span class="no">resolution</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">dat</span>)
+<span class="co">#&gt; List of 3</span>
+<span class="co">#&gt;  $ contact    :List of 1</span>
+<span class="co">#&gt;   ..$ 1_1: int [1:719619, 1:3] 550000 750000 750000 800000 700000 750000 800000 850000 750000 800000 ...</span>
+<span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="co">#&gt;   .. .. ..$ : NULL</span>
+<span class="co">#&gt;   .. .. ..$ : chr [1:3] "x" "y" "counts"</span>
+<span class="co">#&gt;  $ information:List of 4</span>
+<span class="co">#&gt;   ..$ genomeID       : chr "hg19"</span>
+<span class="co">#&gt;   ..$ resolution     :List of 2</span>
+<span class="co">#&gt;   .. ..$ BP  : int [1:3] 2500000 500000 5000</span>
+<span class="co">#&gt;   .. ..$ FRAG: int(0) </span>
+<span class="co">#&gt;   ..$ pairs          : chr [1:6] "1_1" "1_2" "1_3" "2_2" ...</span>
+<span class="co">#&gt;   ..$ chromosomeSizes:'data.frame':  26 obs. of  2 variables:</span>
+<span class="co">#&gt;   .. ..$ chromosome: chr [1:26] "1" "10" "11" "12" ...</span>
+<span class="co">#&gt;   .. ..$ size      : int [1:26] 249250621 135534747 135006516 133851895 115169878 107349540 102531392 90354753 81195210 78077248 ...</span>
+<span class="co">#&gt;  $ settings   :List of 4</span>
+<span class="co">#&gt;   ..$ unit       : chr "BP"</span>
+<span class="co">#&gt;   ..$ resolution : int 5000</span>
+<span class="co">#&gt;   ..$ chromosomes: chr "chr1"</span>
+<span class="co">#&gt;   ..$ file       : chr "/private/var/folders/bb/9m2pjpgj5nq5xft84vmyv7dm0000gn/T/RtmpqraV20/temp_libpath2002445c1fe2/FreeHiCLite/extdata/example.hic"</span>
+<span class="co">#&gt;  - attr(*, "class")= chr [1:2] "juicer" "freehic"</span></pre></body></html></div>
+<p>The contact matrix has form</p>
+<table class="table">
+<thead><tr class="header">
+<th align="left">x</th>
+<th align="left">y</th>
+<th align="right">counts</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">550000</td>
+<td align="left">550000</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">750000</td>
+<td align="left">750000</td>
+<td align="right">21</td>
+</tr>
+<tr class="odd">
+<td align="left">750000</td>
+<td align="left">800000</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td align="left">800000</td>
+<td align="left">800000</td>
+<td align="right">60</td>
+</tr>
+<tr class="odd">
+<td align="left">700000</td>
+<td align="left">850000</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">750000</td>
+<td align="left">850000</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+<div id="freehi-c" class="section level3">
+<h3 class="hasAnchor">
+<a href="#freehi-c" class="anchor"></a>FreeHi-C</h3>
+<p>We can use <code><a href="../reference/readJuicer.html">readJuicer()</a></code> to extract the data, then perform this simulation.</p>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">contacts</span> <span class="kw">&lt;-</span> <span class="no">dat</span>$<span class="no">contact</span>
+<span class="no">seqDepth</span> <span class="kw">&lt;-</span> <span class="fl">1000000L</span>
+<span class="no">countScale</span> <span class="kw">&lt;-</span> <span class="fl">0</span>
+<span class="no">noiseRate</span> <span class="kw">&lt;-</span> <span class="fl">0.2</span>
+<span class="no">neighborZeroRate</span> <span class="kw">&lt;-</span> <span class="fl">0.1</span>
+
+<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/FreeHiC.html">FreeHiC</a></span>(<span class="no">contacts</span>, <span class="no">seqDepth</span>, <span class="no">countScale</span>, <span class="no">noiseRate</span>, <span class="no">neighborZeroRate</span>, <span class="no">resolution</span>)</pre></body></html></div>
+<p>After we perform <code><a href="../reference/FreeHiC.html">FreeHiC()</a></code>, we can visualize the result via juicebox. Here are the following command to use.</p>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="../reference/writeJuicer.html">writeJuicer</a></span>(<span class="no">res</span>, <span class="st">'chr1.txt'</span>)</pre></body></html></div>
+<p>Here our genomeID is hg19.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="ex">java</span> -jar /path/to/juicer_tool.jar pre chr1.txt chr1.hic genomeID</a></code></pre></div>
+<p>Here is the simulated matrix.</p>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/include_graphics.html">include_graphics</a></span>(<span class="st">"simu_chr1.png"</span>)</pre></body></html></div>
+<p><img src="simu_chr1.png"><!-- --></p>
+<p>We can also directly use <code><a href="../reference/FreeHiCJuicer.html">FreeHiCJuicer()</a></code> to perform simulation directly on the <code>.hic</code> file.</p>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/FreeHiCJuicer.html">FreeHiCJuicer</a></span>(<span class="kw">file</span><span class="kw">=</span><span class="no">localFilePath</span>, <span class="kw">chromosomes</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"chr1"</span>, <span class="st">"chr2"</span>, <span class="st">"chr3"</span>),
+                     <span class="kw">pairs</span> <span class="kw">=</span> <span class="kw">NULL</span>, <span class="kw">unit</span><span class="kw">=</span><span class="no">unit</span>, <span class="kw">resolution</span><span class="kw">=</span><span class="no">resolution</span>,
+                     <span class="kw">seqDepth</span> <span class="kw">=</span> <span class="no">seqDepth</span>, <span class="kw">countScale</span> <span class="kw">=</span> <span class="no">countScale</span>,
+                     <span class="kw">noiseRate</span> <span class="kw">=</span> <span class="no">noiseRate</span>, <span class="kw">neighborZeroRate</span> <span class="kw">=</span> <span class="no">neighborZeroRate</span>)</pre></body></html></div>
+</div>
+<div id="spikein" class="section level3">
+<h3 class="hasAnchor">
+<a href="#spikein" class="anchor"></a>SpikeIn</h3>
+<p>The detail of method can be found in: <a href="https://github.com/yezhengSTAT/FreeHiC/tree/master/SpikeInModule">YeZheng/FreeHiC/SpikeIn</a>.</p>
+<p>Here <code><a href="../reference/FreeSpikeIn.html">FreeSpikeIn()</a></code> provide a function to add spikein in our contact matrix.</p>
+<p>To smooth the spikein signal, we use <a href="https://github.com/jmhodges/kdtree2">kdtree2</a> for fast range based query, and Gaussian kernel smoothing to smooth the neighborhood.</p>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co">## create a spikeIn rate</span>
+<span class="no">contactBackground</span> <span class="kw">&lt;-</span> <span class="no">contacts</span><span class="kw">[[</span><span class="st">'1_1'</span>]]
+<span class="no">Ns</span> <span class="kw">&lt;-</span> <span class="fl">0.1</span> * <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">NROW</a></span>(<span class="no">contactBackground</span>)
+<span class="no">spikeIn</span> <span class="kw">&lt;-</span> <span class="no">contactBackground</span>[<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">NROW</a></span>(<span class="no">contactBackground</span>), <span class="no">Ns</span>),]
+<span class="no">spikeIn</span>[,<span class="fl">3</span>] <span class="kw">&lt;-</span> <span class="no">spikeIn</span>[,<span class="fl">3</span>] * <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.5</span>), <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">0.5</span>)), <span class="no">Ns</span>, <span class="kw">replace</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+
+<span class="no">spikeInRes</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/FreeSpikeIn.html">FreeSpikeIn</a></span>(<span class="no">contactBackground</span>, <span class="no">spikeIn</span>, <span class="kw">kernelSmooth</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">bandwidth</span> <span class="kw">=</span> <span class="fl">5000</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="../reference/writeJuicer.html">writeJuicer</a></span>(<span class="no">spikeInRes</span>, <span class="st">'1_1'</span>, <span class="st">'chr1_spikein.txt'</span>)</pre></body></html></div>
+<p><img src="spikein_chr1.png"><!-- --></p>
+<p>We can also perform spikein with <code><a href="../reference/FreeHiC.html">FreeHiC()</a></code>.</p>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">spikeInFreeHiC</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/FreeHiC.html">FreeHiC</a></span>(<span class="no">spikeInRes</span>, <span class="kw">seqDepth</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">contactBackground</span>[,<span class="fl">3</span>]), <span class="kw">countScale</span> <span class="kw">=</span> <span class="fl">0</span>, <span class="kw">noiseRate</span> <span class="kw">=</span> <span class="fl">0.5</span>, <span class="kw">neighborZeroRate</span> <span class="kw">=</span> <span class="fl">0.01</span>, <span class="kw">resolution</span> <span class="kw">=</span> <span class="fl">5000</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="../reference/writeJuicer.html">writeJuicer</a></span>(<span class="no">spikeInFreeHiC</span>, <span class="st">'1_1'</span>, <span class="st">'chr1_spikein_free.txt'</span>)</pre></body></html></div>
+<p><img src="spifree_chr1.png"><!-- --></p>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

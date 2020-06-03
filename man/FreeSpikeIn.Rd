@@ -8,7 +8,7 @@ FreeSpikeIn(
   contactBackground,
   contactSpikeInSignal,
   kernelSmooth = TRUE,
-  bandwith = 500000L
+  bandwidth = 500000L
 )
 }
 \arguments{
@@ -24,16 +24,16 @@ where \code{x} stands for the first chromosome location, \code{y} stands for the
 
 \item{kernelSmooth}{TRUE or FALSE. Whether to perform kernel smoothing.}
 
-\item{bandwith}{The bandwith used in the kernel smooth.}
+\item{bandwidth}{The bandwidth used in the kernel smooth.}
 }
 \value{
-A same format as contactBackgroup
+A same format as \code{contactBackground}
 }
 \description{
 Add spikein to contact matrix.
 }
 \details{
-Spikein will add signals to the background. Also use Gaussian kernel smooth with bandwith.
+Spikein will add signals to the background. Also use Gaussian kernel smooth with bandwidth.
 }
 \examples{
 
@@ -48,7 +48,7 @@ binY <- sample(1:maxBinY, N, replace=TRUE)
 counts <- sample(1:10, N, replace=TRUE)
 
 kernelSmooth = TRUE
-bandwith = 50000L
+bandwidth = 50000L
 
 
 ## Matrix version
@@ -65,7 +65,7 @@ hist(spikeIn[,3])
 spikeIn[,3] <- spikeIn[,3] * sample(seq(0, 10, 0.5), Ns, replace=TRUE)
 hist(spikeIn[,3])
 
-res <- FreeSpikeIn(contacts, spikeIn, kernelSmooth = kernelSmooth, bandwith = bandwith)
+res <- FreeSpikeIn(contacts, spikeIn, kernelSmooth = kernelSmooth, bandwidth = bandwidth)
 head(res)
 
 ## List version
@@ -86,7 +86,7 @@ spikeIn2[,3] <- spikeIn2[,3] * sample(seq(0, 10, 0.5), Ns2, replace=TRUE)
 contactsBackgroup <- list('1_1' = contacts, '2_2' = contacts2)
 spikeInlist <- list('1_1' = spikeIn, '2_2' = spikeIn2)
 
-res <- FreeSpikeIn(contactsBackgroup, spikeInlist, kernelSmooth = kernelSmooth, bandwith = bandwith)
+res <- FreeSpikeIn(contactsBackgroup, spikeInlist, kernelSmooth = kernelSmooth, bandwidth = bandwidth)
 str(res)
 
 ## Dataframe version
@@ -104,7 +104,7 @@ contactsDf <- data.frame(chr1 = chr1, x = contactsAll[,1],
 chr2 = chr2, y = contactsAll[,2], counts = contactsAll[,3])
 spikeInDf <- data.frame(chr1 = schr1, x = spikeInAll[,1], 
 chr2 = schr2, y = spikeInAll[,2], counts = spikeInAll[,3])
-res <- FreeSpikeIn(contactsDf, spikeInDf, kernelSmooth = kernelSmooth, bandwith = bandwith)
+res <- FreeSpikeIn(contactsDf, spikeInDf, kernelSmooth = kernelSmooth, bandwidth = bandwidth)
 head(res)
 
 

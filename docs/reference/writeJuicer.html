@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Write to short format with score — writeJuicer" />
-<meta property="og:description" content="This function will write contact matrixs into short with score format." />
+<meta property="og:description" content="This function will write contact matrixes into short with score format." />
 
 
 
@@ -132,17 +132,22 @@
     </div>
 
     <div class="ref-description">
-    <p>This function will write contact matrixs into <a href='https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format'>short with score format</a>.</p>
+    <p>This function will write contact matrixes into <a href='https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format'>short with score format</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>writeJuicer</span>(<span class='no'>contactMatrixsList</span>, <span class='no'>file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>writeJuicer</span>(<span class='no'>contactMatrixsList</span>, <span class='kw'>pairs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>contactMatrixsList</th>
-      <td><p>A list contains all the contact matrix. The list name should be pair as form '1_1' or '1_2'</p></td>
+      <td><p>A list contains all the contact matrix or a single matrix. The list name should be pair as form '1_1' or '1_2'</p></td>
+    </tr>
+    <tr>
+      <th>pairs</th>
+      <td><p>Which pairs of the chromosomes. If <code>contactMatrixList</code> is a list, with name, this argument can be NULL. 
+If <code>contactMatrixList</code> is a matrix, it must has pair which format "A_B".</p></td>
     </tr>
     <tr>
       <th>file</th>
@@ -165,21 +170,21 @@ re-write it. If FALSE, function will append the result to the existing file.</p>
 <li><p>str1 = strand (0 for forward, anything else for reverse)</p></li>
 <li><p>chr1 = the first chromosome (must be a chromosome in the genome)</p></li>
 <li><p>pos1 = the first position</p></li>
-<li><p>frag1 = restiction site fragment</p></li>
+<li><p>frag1 = restriction site fragment</p></li>
 <li><p>str2 = strand (0 for forward, anything else for reverse)</p></li>
 <li><p>chr2 = the second chromosome (must be a chromosome in the genome)</p></li>
 <li><p>pos2 = the second position</p></li>
-<li><p>frag2 = restiction site fragment</p></li>
+<li><p>frag2 = restriction site fragment</p></li>
 <li><p>score = the score imputed to this read</p></li>
 </ol>
 
-<p>If not using the restriction site file option <code><a href='readJuicerFragmentSites.html'>readJuicerFragmentSites</a></code>, both frag1 and frag2 will be ignored. By defualt, the function gives them 0.</p>
-<p><code>java -jar juicer_tool.jar -r 5000 -n &lt;infile&gt; &lt;outfile&gt; &lt;genomId&gt;</code></p>
-<p>If <code>&lt;genomId&gt;</code> not in the list of hg18, hg19, hg38, dMel, mm9, mm10, 
+<p>If not using the restriction site file option <code><a href='readJuicerFragmentSites.html'>readJuicerFragmentSites</a></code>, both frag1 and frag2 will be ignored. By default, the function gives them 0.</p>
+<p><code>java -jar juicer_tool.jar -r 5000 -n &lt;infile&gt; &lt;outfile&gt; &lt;genomeID&gt;</code></p>
+<p>If <code>&lt;genomeID&gt;</code> not in the list of hg18, hg19, hg38, dMel, mm9, mm10, 
 anasPlat1, bTaurus3, canFam3, equCab2, galGal4, Pf3D7, sacCer3, sCerS288c, susScr3, or TAIR10. 
 You must provide a chrom.sizes file path that lists on each line the name and size of the chromosomes.</p>
 <p>Use <code><a href='readJuicerInformation.html'>readJuicerInformation</a></code> with the given hic file, you can extract the chromosome size. 
-The resulting list contains a list chromosomeSizes.</p>
+The resulting list contains a list <code>chromosomeSizes</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -203,8 +208,7 @@ The resulting list contains a list chromosomeSizes.</p>
 <span class='no'>contactMatrixsList</span> <span class='kw'>&lt;-</span> <span class='no'>dat</span><span class='kw'>[[</span><span class='st'>'contact'</span>]]
 
 <span class='no'>.old_wd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>())
-<span class='fu'>writeJuicer</span>(<span class='no'>contactMatrixsList</span>, <span class='st'>'test.txt'</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span>(<span class='no'>.old_wd</span>)</div></pre>
+<span class='fu'>writeJuicer</span>(<span class='no'>contactMatrixsList</span>, <span class='st'>'test.txt'</span>)</div><div class='output co'>#&gt; <span class='error'>Error in file.exists(file): argument "file" is missing, with no default</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span>(<span class='no'>.old_wd</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

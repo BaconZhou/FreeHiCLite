@@ -4,10 +4,13 @@
 \alias{writeJuicer}
 \title{Write to short format with score}
 \usage{
-writeJuicer(contactMatrixsList, file, overwrite = TRUE)
+writeJuicer(contactMatrixsList, pairs = NULL, file, overwrite = TRUE)
 }
 \arguments{
-\item{contactMatrixsList}{A list contains all the contact matrix. The list name should be pair as form '1_1' or '1_2'}
+\item{contactMatrixsList}{A list contains all the contact matrix or a single matrix. The list name should be pair as form '1_1' or '1_2'}
+
+\item{pairs}{Which pairs of the chromosomes. If \code{contactMatrixList} is a list, with name, this argument can be NULL. 
+If \code{contactMatrixList} is a matrix, it must has pair which format "A_B".}
 
 \item{file}{File name to store the contact matrix}
 
@@ -18,7 +21,7 @@ re-write it. If FALSE, function will append the result to the existing file.}
 write a file into disk
 }
 \description{
-This function will write contact matrixs into \href{https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format}{short with score format}.
+This function will write contact matrixes into \href{https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format}{short with score format}.
 }
 \details{
 The \href{https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format}{short with score format} contains 9 columns.
@@ -27,24 +30,24 @@ The \href{https://github.com/aidenlab/juicer/wiki/Pre#short-with-score-format}{s
 \item str1 = strand (0 for forward, anything else for reverse)
 \item chr1 = the first chromosome (must be a chromosome in the genome)
 \item pos1 = the first position 
-\item frag1 = restiction site fragment
+\item frag1 = restriction site fragment
 \item str2 = strand (0 for forward, anything else for reverse)
 \item chr2 = the second chromosome (must be a chromosome in the genome)
 \item pos2 = the second position 
-\item frag2 = restiction site fragment
+\item frag2 = restriction site fragment
 \item score = the score imputed to this read
 }
 
-If not using the restriction site file option \code{\link[FreeHiCLite]{readJuicerFragmentSites}}, both frag1 and frag2 will be ignored. By defualt, the function gives them 0.
+If not using the restriction site file option \code{\link[FreeHiCLite]{readJuicerFragmentSites}}, both frag1 and frag2 will be ignored. By default, the function gives them 0.
 
-\code{java -jar juicer_tool.jar -r 5000 -n <infile> <outfile> <genomId>}
+\code{java -jar juicer_tool.jar -r 5000 -n <infile> <outfile> <genomeID>}
 
-If \code{<genomId>} not in the list of hg18, hg19, hg38, dMel, mm9, mm10, 
+If \code{<genomeID>} not in the list of hg18, hg19, hg38, dMel, mm9, mm10, 
 anasPlat1, bTaurus3, canFam3, equCab2, galGal4, Pf3D7, sacCer3, sCerS288c, susScr3, or TAIR10. 
 You must provide a chrom.sizes file path that lists on each line the name and size of the chromosomes.
 
 Use \code{\link[FreeHiCLite]{readJuicerInformation}} with the given hic file, you can extract the chromosome size. 
-The resulting list contains a list chromosomeSizes.
+The resulting list contains a list \code{chromosomeSizes}.
 }
 \examples{
 
