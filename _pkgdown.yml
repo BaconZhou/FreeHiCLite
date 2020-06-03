@@ -10,8 +10,9 @@ reference:
     Functions for FreeHiC simulator
 - contents:
   - FreeHiC
-  - FreeHiCJuicer
   - FreeSpikeIn
+  - FreeHiCJuicer
+
   
 - title: "Data extractor"
   desc: >
