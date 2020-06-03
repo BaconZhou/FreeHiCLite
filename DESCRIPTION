@@ -20,8 +20,10 @@ SystemRequirements: GNU make, C++11
 RoxygenNote: 7.1.0
 Depends: R (>= 3.1.0)
 Imports: Rcpp,
-    magrittr
-Suggests: knitr,
-    rmarkdown
+    methods
+Suggests: 
+    knitr,
+    rmarkdown,
+    learnr
 VignetteBuilder: knitr
 Encoding: UTF-8
