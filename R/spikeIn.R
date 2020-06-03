@@ -74,7 +74,8 @@
 #' contactsBackgroup <- list('1_1' = contacts, '2_2' = contacts2)
 #' spikeInlist <- list('1_1' = spikeIn, '2_2' = spikeIn2)
 #' 
-#' res <- FreeSpikeIn(contactsBackgroup, spikeInlist, kernelSmooth = kernelSmooth, bandwidth = bandwidth)
+#' res <- FreeSpikeIn(contactsBackgroup, spikeInlist, 
+#' kernelSmooth = kernelSmooth, bandwidth = bandwidth)
 #' str(res)
 #' 
 #' ## Dataframe version
@@ -92,7 +93,8 @@
 #' chr2 = chr2, y = contactsAll[,2], counts = contactsAll[,3])
 #' spikeInDf <- data.frame(chr1 = schr1, x = spikeInAll[,1], 
 #' chr2 = schr2, y = spikeInAll[,2], counts = spikeInAll[,3])
-#' res <- FreeSpikeIn(contactsDf, spikeInDf, kernelSmooth = kernelSmooth, bandwidth = bandwidth)
+#' res <- FreeSpikeIn(contactsDf, spikeInDf, 
+#' kernelSmooth = kernelSmooth, bandwidth = bandwidth)
 #' head(res)
 #' 
 #' 

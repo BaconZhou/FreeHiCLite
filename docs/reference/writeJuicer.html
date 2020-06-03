@@ -208,7 +208,8 @@ The resulting list contains a list <code>chromosomeSizes</code>.</p>
 <span class='no'>contactMatrixsList</span> <span class='kw'>&lt;-</span> <span class='no'>dat</span><span class='kw'>[[</span><span class='st'>'contact'</span>]]
 
 <span class='no'>.old_wd</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>())
-<span class='fu'>writeJuicer</span>(<span class='no'>contactMatrixsList</span>, <span class='st'>'test.txt'</span>)</div><div class='output co'>#&gt; <span class='error'>Error in file.exists(file): argument "file" is missing, with no default</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span>(<span class='no'>.old_wd</span>)</div></pre>
+<span class='fu'>writeJuicer</span>(<span class='no'>contactMatrixsList</span>, <span class='kw'>file</span> <span class='kw'>=</span> <span class='st'>'test.txt'</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span>(<span class='no'>.old_wd</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

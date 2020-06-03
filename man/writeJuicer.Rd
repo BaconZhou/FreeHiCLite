@@ -71,7 +71,7 @@ pairs = pairs, unit=unit, resolution=resolution)
 contactMatrixsList <- dat[['contact']]
 
 \dontshow{.old_wd <- setwd(tempdir())}
-writeJuicer(contactMatrixsList, 'test.txt')
+writeJuicer(contactMatrixsList, file = 'test.txt')
 \dontshow{setwd(.old_wd)}
 
 

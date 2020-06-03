@@ -1,0 +1,4 @@
+PKG_CXXFLAGS = -I../inst/include -DRVERSION
+PKG_LIBS= -lz -lcurl 
+
+CXX_STD = CXX11
