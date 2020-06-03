@@ -204,8 +204,10 @@ readJuicer <- function(file, chromosomes = NULL, pairs = NULL, unit = c("BP", "F
 #' juicerInfo <- readJuicerInformation(localFilePath)
 #' print(str(juicerInfo))
 #' 
+#' \donttest{
 #' juicerInfo <- readJuicerInformation(remoteFilePath)
 #' print(str(juicerInfo))
+#' }
 #' 
 #' @export
 readJuicerInformation <- function(file, verbose=FALSE) {
