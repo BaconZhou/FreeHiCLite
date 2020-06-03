@@ -615,7 +615,7 @@ namespace FreeHiC {
 
         bool hicReaderHttp::readMatrix(CURL *curl, long filePosition, int &blockBinCount, int &blockColumnCount) {
 #ifdef HTTPTEST
-            cout << "Read matrix data" << time() << endl;
+            cout << "Read matrix data " << time() << endl;
 #endif
             char *buffer;
             int size = sizeof(int) * 3;
@@ -836,11 +836,11 @@ namespace FreeHiC {
                         regionIndices, blockBinCount, blockColumnCount, c1 == c2);
             } else {
                 blockNumbers = getBlockNumbers();
+
             }
 
             std::vector<int> blockVec(blockNumbers.begin(), blockNumbers.end());
             std::sort(blockVec.begin(), blockVec.end());
-            DEBUG(blockVec.size());
             std::vector<contactRecord> tmp_records;
 
             for (const int & blockNumber : blockVec) {

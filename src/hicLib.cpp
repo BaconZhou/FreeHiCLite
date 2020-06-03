@@ -81,6 +81,7 @@ Rcpp::List hicDataInformation(FreeHiC::Juicer::hicReader *reader) {
   Rcpp::List info = Rcpp::List::create(
     Rcpp::Named("genomId") = reader->getGenome(),
     Rcpp::Named("resolution") = resolutions,
+    Rcpp::Named("pairs") = reader->getPairs(),
     Rcpp::Named("chromosomeSizes") = Rcpp::DataFrame::create(
       Rcpp::Named("chromosome") = chroName,
       Rcpp::Named("size") = chroSize));
