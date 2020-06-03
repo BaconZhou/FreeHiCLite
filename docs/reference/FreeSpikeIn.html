@@ -108,7 +108,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/BaconZhou/FreeHiCLite/">
+  <a href="https://github.com/yezhengSTAT/FreeHiC/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -127,7 +127,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>FreeHiC spikein</h1>
-    <small class="dont-index">Source: <a href='https://github.com/BaconZhou/FreeHiCLite/blob/master/R/spikeIn.R'><code>R/spikeIn.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/yezhengSTAT/FreeHiC/blob/master/R/spikeIn.R'><code>R/spikeIn.R</code></a></small>
     <div class="hidden name"><code>FreeSpikeIn.Rd</code></div>
     </div>
 
@@ -204,12 +204,12 @@
 <span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='no'>spikeIn</span>[,<span class='fl'>3</span>])</div><div class='img'><img src='FreeSpikeIn-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>FreeSpikeIn</span>(<span class='no'>contacts</span>, <span class='no'>spikeIn</span>, <span class='kw'>kernelSmooth</span> <span class='kw'>=</span> <span class='no'>kernelSmooth</span>, <span class='kw'>bandwidth</span> <span class='kw'>=</span> <span class='no'>bandwidth</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt;            x    y counts
-#&gt; [1,] 1902912  988      7
-#&gt; [2,] 1993687 1073      7
-#&gt; [3,] 1047284 1341     11
-#&gt; [4,]  922396 2227      6
-#&gt; [5,] 1647076 3340     12
-#&gt; [6,] 1673148 4468     13</div><div class='input'>
+#&gt; [1,]  463789 1895      8
+#&gt; [2,]  524004 3068      5
+#&gt; [3,]  414539 3484     11
+#&gt; [4,] 1322176 3904      7
+#&gt; [5,]  694618 5505     23
+#&gt; [6,]  985692 6096     14</div><div class='input'>
 <span class='co'>## List version</span>
 <span class='no'>N2</span> <span class='kw'>=</span> <span class='fl'>3000</span>
 <span class='no'>Ns2</span> <span class='kw'>=</span> <span class='fl'>300</span>
@@ -231,11 +231,11 @@
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>FreeSpikeIn</span>(<span class='no'>contactsBackgroup</span>, <span class='no'>spikeInlist</span>,
 <span class='kw'>kernelSmooth</span> <span class='kw'>=</span> <span class='no'>kernelSmooth</span>, <span class='kw'>bandwidth</span> <span class='kw'>=</span> <span class='no'>bandwidth</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; List of 2
-#&gt;  $ 1_1: int [1:2000, 1:3] 1902912 1993687 1047284 922396 1647076 1673148 934434 856839 1914771 1043449 ...
+#&gt;  $ 1_1: int [1:2000, 1:3] 463789 524004 414539 1322176 694618 985692 1762793 547605 1975355 1684675 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : NULL
 #&gt;   .. ..$ : chr [1:3] "x" "y" "counts"
-#&gt;  $ 2_2: int [1:3000, 1:3] 946186 589107 1124034 1984696 909878 1850716 1964085 1557392 1141305 95132 ...
+#&gt;  $ 2_2: int [1:3000, 1:3] 1254932 394790 1227661 1510126 1185085 1984565 1779963 118297 10647 1443158 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : NULL
 #&gt;   .. ..$ : chr [1:3] "x" "y" "counts"</div><div class='input'>
@@ -257,12 +257,12 @@
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>FreeSpikeIn</span>(<span class='no'>contactsDf</span>, <span class='no'>spikeInDf</span>,
 <span class='kw'>kernelSmooth</span> <span class='kw'>=</span> <span class='no'>kernelSmooth</span>, <span class='kw'>bandwidth</span> <span class='kw'>=</span> <span class='no'>bandwidth</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt;   chr1       x chr2    y counts
-#&gt; 1    1 1902912    1  988      7
-#&gt; 2    1 1993687    1 1073      7
-#&gt; 3    1 1047284    1 1341     11
-#&gt; 4    1  922396    1 2227      6
-#&gt; 5    1 1647076    1 3340     12
-#&gt; 6    1 1673148    1 4468     13</div><div class='input'>
+#&gt; 1    1  463789    1 1895      8
+#&gt; 2    1  524004    1 3068      5
+#&gt; 3    1  414539    1 3484     11
+#&gt; 4    1 1322176    1 3904      7
+#&gt; 5    1  694618    1 5505     23
+#&gt; 6    1  985692    1 6096     14</div><div class='input'>
 
 </div></pre>
   </div>

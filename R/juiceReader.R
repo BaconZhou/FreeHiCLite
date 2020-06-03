@@ -46,6 +46,7 @@
 #' }
 #' }
 #' @param verbose TRUE or FALSE. Whether print information.
+#' 
 #' @return A list object includes following items.
 #' \item{\code{contact}}{A list contains all the contact matrix. The keys of list is coded as \code{chrA_chrB}.}
 #' \item{\code{information}}{A list contains basic information of the contact matrix.}

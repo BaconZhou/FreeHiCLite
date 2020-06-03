@@ -914,7 +914,7 @@ namespace FreeHiC {
             if (ans.size() < 1) {
                 long position = this->fragmentSitePos;
                 if (fileResolutions["FRAG"].size() > 0) {
-                    for (int i = 0; i < chromosomes.size(); i++) {
+                    for (size_t i = 0; i < chromosomes.size(); i++) {
 #ifdef RVERSION
                         Rcpp::checkUserInterrupt();
 #endif
