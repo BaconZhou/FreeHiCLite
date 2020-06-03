@@ -13,11 +13,11 @@
 #' @param file Filename can be a local path or remote path. 
 #' The remote path full list can be obtained from \url{http://aidenlab.org/data.html}.
 #' @param chromosomes A vector contains all the chromosomes. 
-#' For example c("chr1", "chr2"), the resulting contact matrixs will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2). 
+#' For example c('chr1', 'chr2'), the resulting contact matrixs will include all the pairs of interaction (chr1_chr1, chr1_chr2, chr2_chr2). 
 #' @param pairs A vector contains all the pair. 
-#' The pair take format as "1_1" or "chr1_chr1", both means the contact between chromosome1 and chromosome1. If \code{pairs} presents, \code{chromosomes} argument will be ignore.
-#' @param unit Unit only supports c("BP", "FRAG"). 
-#' "BP" means base-pair, and "FRAG" means fragment.
+#' The pair take format as '1_1' or 'chr1_chr1', both means the contact between chromosome1 and chromosome1. If \code{pairs} presents, \code{chromosomes} argument will be ignore.
+#' @param unit Unit only supports c('BP', 'FRAG'). 
+#' 'BP' means base-pair, and 'FRAG' means fragment.
 #' @param resolution The desired resolution of the contact matrix. 
 #' The resolution must be a value from following list.
 #' \itemize{
@@ -45,7 +45,7 @@
 #' \item 1
 #' }
 #' }
-#' 
+#' @param verbose TRUE or FALSE. Whether print information.
 #' @return A list object includes following items.
 #' \item{contact}{A list contains all the contact matrix. The keys of list is coded as chrA_chrB.}
 #' \item{information}{A list contains basic information of the contact matrix.
@@ -61,29 +61,30 @@
 #' library(FreeHiCLite)
 #' 
 #' ## Remote file location. The reomte file include downloading, it may take a while
-#' remoteFilePath = "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
+#' remoteFilePath = 'https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic'
 #' 
 #' ## Local file location
-#' localFilePath = system.file("extdata", "example.hic", package = "FreeHiCLite")
+#' localFilePath = system.file('extdata', 'example.hic', package = 'FreeHiCLite')
 #' 
-#' ## Chromosomes needs to be extra
-#' chromosomes = c("chr1", "chr2")
+#' ## Chromosomes needs to be extracted
+#' chromosomes = c('chr1', 'chr2')
 #' 
-#' ## Pairs needs to be extra
-#' pairs = c("1_1", "1_2")
-#' unit = "BP"
+#' ## Pairs needs to be extracted
+#' pairs = c('1_1', '1_2')
+#' unit = 'BP'
 #' resolution = 500000L
 #' 
 #' ## pass chrosomes into function, it will contains all the interaction pairs
 #' 
-#' dat <- readJuicer(file=localFilePath, chromosomes=chromosomes, pairs = NULL, unit=unit, resolution=resolution)
+#' dat <- readJuicer(file=localFilePath, chromosomes=chromosomes, 
+#' pairs = NULL, unit=unit, resolution=resolution)
 #' 
 #' print(names(dat[['contact']]))
 #' 
 #' ## pass pairs into function, it will contains only the given pairs
 #' start = Sys.time()
-#' #dat <- readJuicer(file=localFilePath, chromosomes=chromosomes, pairs = pairs, unit=unit, resolution=resolution) ## Give you same result
-#' dat <- readJuicer(file=localFilePath, chromosomes=NULL, pairs = pairs, unit=unit, resolution=resolution)
+#' dat <- readJuicer(file=localFilePath, chromosomes=NULL, 
+#' pairs = pairs, unit=unit, resolution=resolution)
 #' end = Sys.time()
 #' 
 #' print(end - start)
@@ -94,77 +95,81 @@
 #' contacts = dat[['contact']]
 #' 
 #' ## chromsome 1 vs chromosome 1
-#' key = "1_1"
+#' key = '1_1'
 #' contactMatrix <- contacts[[key]]
 #' head(contactMatrix)
 #' 
 #' ## chromsome 1 vs chromosome 2
-#' key = "1_2"
+#' key = '1_2'
 #' contactMatrix <- contacts[[key]]
 #' head(contactMatrix)
 #' 
 #' 
 #' 
 #' @export
-readJuicer <- function(file, chromosomes = NULL, pairs = NULL, unit = c("BP", "FRAG"), 
-                       resolution) {
-    defResolution <- list("BP" = c(2500000, 1000000, 500000, 250000, 100000, 50000, 25000, 10000, 5000),
-                    "FRAG" = c(500, 250, 100, 50, 20, 5, 2, 1))
-    isHttp <- startsWith(file, 'http')
+readJuicer <- function(file, chromosomes = NULL, pairs = NULL, unit = c("BP", "FRAG"), resolution, 
+    verbose = FALSE) {
+    defResolution <- list(BP = c(2500000, 1e+06, 5e+05, 250000, 1e+05, 50000, 25000, 10000, 5000), 
+        FRAG = c(500, 250, 100, 50, 20, 5, 2, 1))
+    isHttp <- startsWith(file, "http")
     if (!isHttp) {
         file = normalizePath(file)
         stopifnot(file.exists(file))
-    } 
-    message("You are trying to access file from: ", file, ". Make sure you provide a valid path.")
+    }
+    if (verbose) 
+        message("You are trying to access file from: ", file, ". Make sure you provide a valid path.")
     
-    if (isHttp) message("Remote file can take a while.\nThe full list of remote files can be found in http://aidenlab.org/data.html")
+    if (isHttp & verbose) 
+        message("Remote file can take a while.\nThe full list of remote files can be found in http://aidenlab.org/data.html")
     
     ## process chromsome
     
     chromosomesChar <- NULL
     if (!is.null(chromosomes)) {
         chromosomesChar <- .chromosomes_clean(chromosomes)
-    } 
+    }
     
     ## process pairs
     pairClean <- NULL
     if (!is.null(pairs)) {
         pairClean <- .parse_pair(pairs)
-        if (is.logical(pairClean)) {stop("check input pair! ", paste(pairs, collapse = ", "))}
+        if (is.logical(pairClean)) {
+            stop("check input pair! ", paste(pairs, collapse = ", "))
+        }
     } else {
         pairClean <- .chrosomes_to_pair(chromosomesChar)
     }
-    message("Use pairs: ", paste(pairClean, collapse = ", "))
+    if (verbose) 
+        message("Use pairs: ", paste(pairClean, collapse = ", "))
     
     unit = match.arg(unit)
     
     if (length(resolution) > 1) {
-        stop("You provide resolution: ", paste0(resolution, collapse = ','), ". Please change the resolution to a number.\n",
-             "From resolution (", unit, "): ", paste0(defResolution[[unit]], collapse = ','))
+        stop("You provide resolution: ", paste0(resolution, collapse = ","), ". Please change the resolution to a number.\n", 
+            "From resolution (", unit, "): ", paste0(defResolution[[unit]], collapse = ","))
     }
     
-    hicInfo <- readJuicerInformation(file)
+    hicInfo <- readJuicerInformation(file, verbose = verbose)
     
     {
-        unitResolution <- hicInfo[['resolution']]
+        unitResolution <- hicInfo[["resolution"]]
         
         stopifnot(unit %in% names(unitResolution))
         stopifnot(resolution %in% unitResolution[[unit]])
         
-        chrAll <- hicInfo[["chromosomeSizes"]][['chromosome']]
+        chrAll <- hicInfo[["chromosomeSizes"]][["chromosome"]]
         .check_chr(pairClean, chrAll)
     }
     
     ans <- hicDataExtra(fileName = file, isHttp = isHttp, pair = pairClean, unit = unit, resolution = resolution)
     {
         cs <- ans$information$chromosomeSizes
-        ord <- order(cs[['chromosome']])
-        cs <- cs[ord,]
+        ord <- order(cs[["chromosome"]])
+        cs <- cs[ord, ]
         ans$information$chromosomeSizes <- cs
     }
     
-    ans$settings <- list("unit" = unit, "resolution" = resolution, 
-                         "chromosomes" = chromosomes, "file" = file)
+    ans$settings <- list(unit = unit, resolution = resolution, chromosomes = chromosomes, file = file)
     class(ans) = c("juicer", "freehic")
     ans
 }
@@ -186,20 +191,22 @@ readJuicer <- function(file, chromosomes = NULL, pairs = NULL, unit = c("BP", "F
 #' Check \code{\link[FreeHiCLite]{writeJuicer}} for details.
 #' 
 #' @param file Filename can be a local path or remote path. The remote path full list can be obtained from \url{http://aidenlab.org/data.html}.
+#' @param verbose TRUE or FALSE. Whether print information.
 #' 
 #' @return A list object includes hic file information.
 #' \item{genomId}{The genom id of the current hic file.}
 #' \item{resolution}{The list of current hic file available resolution.}
+#' \item{pairs}{The list of current hic file available pair.}
 #' \item{chromosomeSizes}{A dataframe of chromsomeSize (chromsome, size). Can be used in juicer pre function for different genom.}
 #' 
 #' @examples 
 #' library(FreeHiCLite)
 #' 
 #' ## Remote file location. The reomte file include downloading, it may take a while
-#' remoteFilePath = "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
+#' remoteFilePath = 'https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic'
 #' 
 #' ## Local file location
-#' localFilePath = system.file("extdata", "example.hic", package = "FreeHiCLite")
+#' localFilePath = system.file('extdata', 'example.hic', package = 'FreeHiCLite')
 #' 
 #' juicerInfo <- readJuicerInformation(localFilePath)
 #' print(str(juicerInfo))
@@ -210,27 +217,30 @@ readJuicer <- function(file, chromosomes = NULL, pairs = NULL, unit = c("BP", "F
 #' }
 #' 
 #' @export
-readJuicerInformation <- function(file, verbose=FALSE) {
-    isHttp <- startsWith(file, 'http')
+readJuicerInformation <- function(file, verbose = FALSE) {
+    isHttp <- startsWith(file, "http")
     if (!isHttp) {
         file = normalizePath(file)
         stopifnot(file.exists(file))
-    } 
-    # if (verbose) message("You are trying to access file from: ", file, ". Make sure you provide a valid path.")
+    }
+    # if (verbose) message('You are trying to access file from: ', file, '. Make sure you provide a
+    # valid path.')
     
-    # if (isHttp & verbose) message("Remote file can take a while.\nThe full list of remote files can be found in http://aidenlab.org/data.html")
+    # if (isHttp & verbose) message('Remote file can take a while.\nThe full list of remote files can
+    # be found in http://aidenlab.org/data.html')
     ans <- hicDataInformation(file, isHttp)
     
     if (verbose) {
         message("File: ", file)
         message("GenomId: ", ans[["genomId"]])
+        message("Available pair: ", paste0(ans[["pairs"]], collapse = ", "), ".")
         message("Hi-C resolution: ")
-        message("    BP: ", paste0(ans[['resolution']][['BP']], collapse = ", "), ".")
-        if (length(ans[['resolution']][['FRAG']]) > 0) {
-            message("    FRAG: ", paste0(ans[['resolution']][['FRAG']], collapse = ", "), ".")
+        message("    BP: ", paste0(ans[["resolution"]][["BP"]], collapse = ", "), ".")
+        if (length(ans[["resolution"]][["FRAG"]]) > 0) {
+            message("    FRAG: ", paste0(ans[["resolution"]][["FRAG"]], collapse = ", "), ".")
         } else {
-            message("    FRAG not avaiable.")
-        }   
+            message("    FRAG not available.")
+        }
     }
     
     class(ans) <- c("juicer", "information")
@@ -250,8 +260,8 @@ readJuicerInformation <- function(file, verbose=FALSE) {
 #' and c++ version \href{https://github.com/aidenlab/straw}{straw}.
 #' 
 #' @param file Filename can be a local path or remote path. The remote path full list can be obtained from \url{http://aidenlab.org/data.html}.
-#' @param chromsomes A vector contains all the chromosomes. 
-#' For example c("chr1", "chr2")
+#' @param chromosomes A vector contains all the chromosomes. 
+#' For example c('chr1', 'chr2')
 #' @param verbose A bool value, indicate whether print message
 #' 
 #' @return A list contains all the chromosomes and their fragement sites.
@@ -266,31 +276,33 @@ readJuicerInformation <- function(file, verbose=FALSE) {
 #' library(FreeHiCLite)
 #' 
 #' ## Remote file location. The reomte file include downloading, it may take a while
-#' remoteFilePath = "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
+#' remoteFilePath = 'https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic'
 #' 
 #' ## Local file location
-#' localFilePath = system.file("extdata", "example.hic", package = "FreeHiCLite")
+#' localFilePath = system.file('extdata', 'example.hic', package = 'FreeHiCLite')
 #' 
-#' fragSites <- readJuicerFragmentSites(remoteFilePath, c("chr1", "chr2"))
+#' fragSites <- readJuicerFragmentSites(remoteFilePath, c('chr1', 'chr2'))
 #' str(fragSites)
 #' 
 #' @export
-readJuicerFragmentSites <- function(file, chromosomes, verbose=TRUE) {
-    isHttp <- startsWith(file, 'http')
+readJuicerFragmentSites <- function(file, chromosomes, verbose = TRUE) {
+    isHttp <- startsWith(file, "http")
     if (!isHttp) {
         file = normalizePath(file)
         stopifnot(file.exists(file))
-    } 
-    if (verbose) message("You are trying to access file from: ", file, ". Make sure you provide a valid path.")
+    }
+    if (verbose) 
+        message("You are trying to access file from: ", file, ". Make sure you provide a valid path.")
     
-    if (isHttp & verbose) message("Remote file can take a while.\nThe full list of remote files can be found in http://aidenlab.org/data.html")
+    if (isHttp & verbose) 
+        message("Remote file can take a while.\nThe full list of remote files can be found in http://aidenlab.org/data.html")
     
     ## process chromsome
     
     chromosomesChar <- NULL
     if (!is.null(chromosomes)) {
         chromosomesChar <- .chromosomes_clean(chromosomes)
-    } 
+    }
     return(hicDataFragSites(fileName = file, isHttp = isHttp, chromosomes = chromosomesChar))
 }
 
@@ -298,16 +310,17 @@ readJuicerFragmentSites <- function(file, chromosomes, verbose=TRUE) {
     chromosomesChar <- as.character(chromosomes)
     ans <- rep(NA, length(chromosomesChar))
     for (i in seq_along(chromosomesChar)) {
-        ans[i] <-gsub("chr","",tolower(trimws(chromosomesChar[i])))
+        ans[i] <- gsub("chr", "", tolower(trimws(chromosomesChar[i])))
     }
     sort(ans)
 }
 
+
 .check_resolution <- function(unit, resolution) {
-    default <- list("BP" = c(2500000, 1000000, 500000, 250000, 100000, 50000, 25000, 10000, 5000),
-                    "FRAG" = c(500, 250, 100, 50, 20, 5, 2, 1))
+    default <- list(BP = c(2500000, 1e+06, 5e+05, 250000, 1e+05, 50000, 25000, 10000, 5000), FRAG = c(500, 
+        250, 100, 50, 20, 5, 2, 1))
     find <- resolution %in% default[[unit]]
-    return(fund)
+    return(find)
 }
 
 .check_chr <- function(pairs, chromsomes) {
@@ -326,9 +339,10 @@ readJuicerFragmentSites <- function(file, chromosomes, verbose=TRUE) {
 .parse_pair <- function(pairs) {
     ans <- rep(NA, length(pairs))
     for (i in seq_along(pairs)) {
-        tmp <- unlist(strsplit(pairs[i], '_'))
-        if (length(tmp) != 2) return(FALSE)
-        tmp <- paste0(.chromosomes_clean(tmp), collapse = '_')
+        tmp <- unlist(strsplit(pairs[i], "_"))
+        if (length(tmp) != 2) 
+            return(FALSE)
+        tmp <- paste0(.chromosomes_clean(tmp), collapse = "_")
         ans[i] = tmp
     }
     ans
