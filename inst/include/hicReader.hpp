@@ -11,7 +11,11 @@ namespace FreeHiC {
 // sparse matrix entry
 
 namespace Juicer {
+#ifdef WIN
     typedef long long ll;
+#else
+    typedef long ll;
+#endif
     /*
     The MIT License (MIT)
 

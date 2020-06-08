@@ -246,7 +246,7 @@ namespace FreeHiC {
             if (nChrs > 1000) {
                 cerr << "It may contains some bug. Please create an issue in the github. Thanks!" << endl;
 #ifdef RVERSION
-                Rcpp::stop("wired nchrs");
+                Rcpp::stop("nChrs too large");
 #else
                 return false;
 #endif
@@ -278,7 +278,7 @@ namespace FreeHiC {
                     <<  ". It should smaller than 10" << endl;
                 cerr << "It may contains some bug. Please create an issue in the github. Thanks!" << endl;
 #ifdef RVERSION
-                Rcpp::stop("wired bp resolution");
+                Rcpp::stop("nBpResolution larger than 10");
 #else
                 return false;
 #endif
@@ -300,7 +300,7 @@ namespace FreeHiC {
                      <<  ". It should smaller than 9" << endl;
                 cerr << "It may contains some bug. Please create an issue in the github. Thanks!" << endl;
 #ifdef RVERSION
-                Rcpp::stop("wired frag resolution");
+                Rcpp::stop("nFragResolution larger than 9");
 #else
                 return false;
 #endif
@@ -854,7 +854,7 @@ namespace FreeHiC {
 
 //
         bool hicReaderHttp::readData_(const std::string &chr1, const std::string &chr2) {
-
+            this->records.clear();
 #ifdef HTTPTEST
             cout << "start read data " << time() << endl;
 #endif
@@ -872,7 +872,7 @@ namespace FreeHiC {
             for (int i = 0; i < 4; i++)
                 regionIndices[i] = origRegionIndices[i] / binSize;
 
-            int blockBinCount, blockColumnCount;
+            int blockBinCount = 0, blockColumnCount = 0;
             std::stringstream ss;
             ss << c1 << "_" << c2;
             std::string key = ss.str();
@@ -884,8 +884,14 @@ namespace FreeHiC {
             ll filePosition = this->pairFilePositions[key];
 
 
+
             bool foundBlock = this->readMatrix(this->urlBuffer, filePosition,
                                                    blockBinCount, blockColumnCount);
+#ifdef WINTEST
+            DEBUG(filePosition);
+            DEBUG(blockBinCount);
+            DEBUG(blockColumnCount);
+#endif
             if (!foundBlock) {
                 cerr << "Did not find block" << endl;
                 return false;
@@ -903,7 +909,10 @@ namespace FreeHiC {
             std::vector<int> blockVec(blockNumbers.begin(), blockNumbers.end());
             std::sort(blockVec.begin(), blockVec.end());
             std::vector<contactRecord> tmp_records;
-
+#ifdef WINTEST
+            DEBUG(blockVec.size());
+            DEBUG(tmp_records.size());
+#endif
             for (const int & blockNumber : blockVec) {
                 // get contacts in this block
 #ifdef RVERSION
