@@ -36,7 +36,8 @@ chr1 = 'chr1'
 chr2 = 'chr2'
 
 ## Convert to hic
-(df = convertJuicer(contactMatrix, chr1, chr2))
+df = convertJuicer(contactMatrix, chr1, chr2)
+head(df)
 
 }
 \seealso{

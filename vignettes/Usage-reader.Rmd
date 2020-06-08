@@ -45,7 +45,7 @@ The remote file lists can be found in [http://aidenlab.org/data.html](http://aid
 
 ### Read basic information
 
-To access basic information about a `.hic` file. We can use function `readJuicerInformation()`. For example, we want to know which *genomeID* and what are the available *resolutions* of a remote file locates in: [https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic](). Besides, it will also extract the chromosomes sizes.
+To access basic information about a `.hic` file. We can use function `readJuicerInformation()`. For example, we want to know which *genomeID* and what are the available *resolutions* of a remote file locates in: `https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic`. Besides, it will also extract the chromosomes sizes.
 
 ```{r remote-info}
 ## Remote file location. The reomte file include downloading, it may take a while

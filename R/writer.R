@@ -130,7 +130,8 @@ writeJuicer <- function(contactMatrixsList, pairs = NULL, file, overwrite = TRUE
 #' chr2 = 'chr2'
 #' 
 #' ## Convert to hic
-#' (df = convertJuicer(contactMatrix, chr1, chr2))
+#' df = convertJuicer(contactMatrix, chr1, chr2)
+#' head(df)
 #' 
 #' @export
 convertJuicer <- function(contactMatrix, chr1, chr2) {

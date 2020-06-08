@@ -347,10 +347,11 @@ readJuicerFragmentSites <- function(file, chromosomes, verbose = TRUE) {
         tmp <- paste0(.chromosomes_clean(tmp), collapse = "_")
         ans[i] = tmp
     }
-    ans
+    sort(unique(ans))
 }
 
 .chrosomes_to_pair <- function(chromosomes) {
+    chromosomes = sort(unique(chromosomes))
     pair <- c()
     N <- length(chromosomes)
     for (i in 1:N) {

@@ -1,5 +1,5 @@
 library(FreeHiCLite)
-# library(pryr)
+library(pryr)
 # 
 # #dat1 <- hicData("/Users/pgzhou/Documents/Juicebox/data/inter.hic", "All", "All", "BP", 50000)
 # # dat2 <- hicData("/Users/pgzhou/Documents/Juicebox/data/inter.hic", "1", "2", "BP", 5000)
