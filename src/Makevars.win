@@ -5,7 +5,7 @@ PKG_LIBS= -L../windows/libcurl-$(VERSION)/lib${R_ARCH} \
 PKG_CPPFLAGS= \
 	-I../windows/libcurl-$(VERSION)/include -DCURL_STATICLIB -DSTRICT_R_HEADERS -I../inst/include -DRVERSION
 
-PKG_CXXFLAGS=-I../inst/include -DRVERSION
+#PKG_CXXFLAGS=-I../inst/include -DRVERSION
 
 CXX_STD = CXX11
 

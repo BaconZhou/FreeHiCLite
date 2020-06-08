@@ -1,8 +1,6 @@
-PKG_CFLAGS=$(C_VISIBILITY)
 PKG_CPPFLAGS=@cflags@ -DSTRICT_R_HEADERS -I../inst/include -DRVERSION
 PKG_LIBS=@libs@
-PKG_CXXFLAGS=-I../inst/include -DRVERSION
-
+# PKG_CXXFLAGS=-I../inst/include -DRVERSION
 CXX_STD = CXX11
 
 all: clean

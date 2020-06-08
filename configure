@@ -1,3 +1,5 @@
+# The following code is almost from Jeroen Ooms
+
 # Anticonf (tm) script by Jeroen Ooms (2019)
 # This script will query 'pkg-config' for the required cflags and ldflags.
 # If pkg-config is unavailable or does not find the library, try setting
@@ -10,7 +12,7 @@ PKG_DEB_NAME="libcurl4-openssl-dev"
 PKG_RPM_NAME="libcurl-devel"
 PKG_CSW_NAME="libcurl_dev"
 PKG_TEST_HEADER="<curl/curl.h>"
-PKG_LIBS="-lcurl"
+PKG_LIBS="-lcurl -lz"
 PKG_CFLAGS=""
 
 # Use pkg-config if available
