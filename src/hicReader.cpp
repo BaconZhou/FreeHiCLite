@@ -557,7 +557,7 @@ namespace FreeHiC {
                             }
                         } else {
                             bufferin.read((char *) &counts, sizeof(float));
-                            if (!isnan(counts)) {
+                            if (!std::isnan(counts)) {
                                 contactRecord record;
                                 record.binX = bin1;
                                 record.binY = bin2;
