@@ -67,9 +67,8 @@ class KernelSmooth {
     }
 
   private:
-    const double weights[5] = {0.5703485, 0.3459338, 0.07718827, 0.06335999,
-                              0.001933};
-    const int thresh = 5;
+    const double weights[5] = {0.5703485, 0.3459338, 0.07718827, 0.06335999, 0.001933};
+    const int thresh = 4;
 };
 
 class Spikein {

@@ -615,9 +615,9 @@ namespace FreeHiC {
             size_t numbytes = size * nitems;
             b[numbytes + 1] = '\0';
             std::string s(b);
-            int found = s.find("Content-Range");
+            std::size_t found = s.find("Content-Range");
             if (found != std::string::npos) {
-                int found2 = s.find("/");
+                std::size_t found2 = s.find("/");
                 //Content-Range: bytes 0-100000/891471462
                 if (found2 != std::string::npos) {
                     std::string total = s.substr(found2 + 1);
