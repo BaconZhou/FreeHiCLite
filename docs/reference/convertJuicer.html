@@ -183,7 +183,8 @@
 <span class='no'>chr2</span> <span class='kw'>=</span> <span class='st'>'chr2'</span>
 
 <span class='co'>## Convert to hic</span>
-(<span class='no'>df</span> <span class='kw'>=</span> <span class='fu'>convertJuicer</span>(<span class='no'>contactMatrix</span>, <span class='no'>chr1</span>, <span class='no'>chr2</span>))</div><div class='output co'>#&gt;   str1 chr1 pos1 frag1 str2 chr2 pos2 frag2 score
+<span class='no'>df</span> <span class='kw'>=</span> <span class='fu'>convertJuicer</span>(<span class='no'>contactMatrix</span>, <span class='no'>chr1</span>, <span class='no'>chr2</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>df</span>)</div><div class='output co'>#&gt;   str1 chr1 pos1 frag1 str2 chr2 pos2 frag2 score
 #&gt; 1    0 chr1    0     0    0 chr2    0     1   526
 #&gt; 2    0 chr1    0     0    0 chr2   50     1   123
 #&gt; 3    0 chr1   50     0    0 chr2   50     1   499
