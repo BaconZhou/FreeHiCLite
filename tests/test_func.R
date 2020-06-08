@@ -1,4 +1,4 @@
-# library(FreeHiCLite)
+library(FreeHiCLite)
 # library(pryr)
 # 
 # #dat1 <- hicData("/Users/pgzhou/Documents/Juicebox/data/inter.hic", "All", "All", "BP", 50000)
@@ -7,13 +7,14 @@
 # 
 # f = "DESCRIPTION"
 # normalizePath(f)
-# file1 <- "/Users/pgzhou/Documents/hicLib//data/rabbit_rep1_30.hic"
+file1 <- system.file('extdata', 'example.hic', package = 'FreeHiCLite')
+info <- readJuicerInformation(file1)
 # #file2 <- "/Users/pgzhou/Documents/Juicebox/data/inter.hic"
-# file3 <- "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
+file3 <- "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
 # 
 # 
-# system.time({dat1 <- FreeHiCLite::readJuicer(file1, c("chr2", "chr2"), NULL, "FRAG", 50L)})
-# info <- FreeHiCLite::readJuicerInformation(file1)
+system.time({dat1 <- FreeHiCLite::readJuicer(file3, c("chr2", "chr2"), NULL, "FRAG", 50L)})
+info <- FreeHiCLite::readJuicerInformation(file3)
 # frag <- FreeHiCLite::readJuicerFragmentSites(file1, c("chr1"))
 # str(info)
 # 

@@ -74,18 +74,18 @@ contains a fix set of resolutions.
 
 ``` r
 ## Remote file location. The reomte file include downloading, it may take a while
-remoteFilePath = "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
+remoteFilePath <- "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
  
 ## Local file location
-localFilePath = system.file("extdata", "example.hic", package = "FreeHiCLite")
+localFilePath <- system.file("extdata", "example.hic", package = "FreeHiCLite")
  
 ## Chromosomes needs to be extra
-chromosomes = c("chr1", "chr2")
+chromosomes <- c("chr1", "chr2")
 
 ## Pairs needs to be extra
-pairs = c("1_1", "1_2")
-unit = "BP"
-resolution = 500000L
+pairs <- c("1_1", "1_2")
+unit <- "BP"
+resolution <- 500000L
 ```
 
 #### Extract hic information
@@ -95,7 +95,7 @@ We can extract some basic information from a `.hic` file via:
 ``` r
 juicerInfo <- readJuicerInformation(localFilePath, verbose = TRUE)
 #> File: /Library/Frameworks/R.framework/Versions/4.0/Resources/library/FreeHiCLite/extdata/example.hic
-#> GenomId: hg19
+#> GenomId:
 #> Available pair: 1_1, 1_2, 1_3, 2_2, 2_3, 3_3.
 #> Hi-C resolution:
 #>     BP: 2500000, 500000, 5000.
@@ -147,7 +147,7 @@ str(datLoc)
 #>   .. .. ..$ : NULL
 #>   .. .. ..$ : chr [1:3] "x" "y" "counts"
 #>  $ information:List of 4
-#>   ..$ genomId        : chr "hg19"
+#>   ..$ genomeID       : chr "hg19"
 #>   ..$ resolution     :List of 2
 #>   .. ..$ BP  : int [1:3] 2500000 500000 5000
 #>   .. ..$ FRAG: int(0) 
@@ -194,8 +194,8 @@ To add spikeIn into contact matrix. The `FreeHiCLite` provides
 `FreeSpikeIn()` to add spikein.
 
 ``` r
-kernelSmooth = TRUE
-bandwith = 50000L
+kernelSmooth <- TRUE
+bandwidth <- 50000L
 
 ## Create a random spikeIn
 
@@ -204,13 +204,13 @@ Ns <- 0.1 * NROW(contact)
 spikeIn <- contact[sample(1:NROW(contact), Ns), ]
 spikeIn[,3] <- spikeIn[,3] * sample(seq(0, 10, 0.5), Ns, replace=TRUE) # 3rd is the counts
 
-spikeInContact <- FreeSpikeIn(contact, spikeIn, kernelSmooth = kernelSmooth, bandwith = bandwith)
+spikeInContact <- FreeSpikeIn(contact, spikeIn, kernelSmooth = kernelSmooth, bandwidth = bandwidth)
 print(summary(contact[,3]))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #>    1.00    2.00    4.00   25.71    9.00 4545.00
 print(summary(spikeInContact[,3]))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>    1.00    2.00    5.00   67.78   14.00 4545.00
+#>     1.0     2.0     5.0   149.1    14.0  4545.0
 ```
 
 ### Simulate from contact matrix
@@ -222,7 +222,7 @@ simulation.
 simuContact <- FreeHiC(spikeInContact, seqDepth = 2 * sum(contact[,3]), resolution = 5000L)
 print(summary(simuContact[,3]))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>     1.0     2.0     6.0    74.3    16.0  4444.0
+#>     1.0     2.0     6.0   163.7    16.0  4594.0
 ```
 
 ## References

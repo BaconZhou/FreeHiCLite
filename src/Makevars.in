@@ -1,18 +1,11 @@
-CURL_CONFIG=@CURL_CONFIG@
-
-# CURL_CFLAGS=$(shell $(CURL_CONFIG) --cflags)
-# CURL_LIBS=$(shell $(CURL_CONFIG) --libs)
-
-CURL_CFLAGS=@CURL_CFLAGS@
-CURL_LIBS=@CURL_LIBS@
-
-
-# -DRCURL_DEBUG_MEMORY
-DEFINES=@DEFINES@
-
+PKG_CFLAGS=$(C_VISIBILITY)
+PKG_CPPFLAGS=@cflags@ -DSTRICT_R_HEADERS -I../inst/include -DRVERSION
+PKG_LIBS=@libs@
 PKG_CXXFLAGS=-I../inst/include -DRVERSION
 
-PKG_CPPFLAGS=$(CURL_CFLAGS) $(DEFINES) $(shell xml2-config --cflags) -I../inst/include
-PKG_LIBS=$(CURL_LIBS) $(shell xml2-config --libs) -lz
-
 CXX_STD = CXX11
+
+all: clean
+
+clean:
+	rm -f $(SHLIB) $(OBJECTS)

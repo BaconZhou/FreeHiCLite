@@ -101,7 +101,7 @@ namespace FreeHiC {
                 cerr << "Can not find this pair " << key << endl;
                 return false;
             }
-            long filePosition = this->pairFilePositions[key];
+            ll filePosition = this->pairFilePositions[key];
 
             int blockBinCount, blockColumnCount;
             bool foundBlock = this->readMatrix(this->fileInStream, filePosition,
@@ -156,7 +156,7 @@ namespace FreeHiC {
         }
 
         bool hicReader::openFile() {
-            this->fileInStream.open(this->fileName_, std::fstream::in);
+            this->fileInStream.open(this->fileName_, std::fstream::in | std::fstream::binary);
             if (!this->fileInStream) {
                 cerr << "File " << this->fileName_ << " cannot be opened for reading"
                      << endl;
@@ -172,31 +172,55 @@ namespace FreeHiC {
         }
 
         bool hicReader::readHeader(std::istream &fin) {
+#ifdef WINTEST
+            DEBUG(this->filePos);
+#endif
             if (!this->readMagicString(fin)) {
                 cerr << "Hi-C magic string is missing, does not appear to be a hic file"
                      << endl;
                 this->master = -1;
                 return false;
             }
+#ifdef WINTEST
+            DEBUG(this->filePos);
+#endif
+
             this->filePos += 4;
             fin.read((char *) &this->version, sizeof(int));
+#ifdef WINTEST
+            DEBUG(this->version);
+            DEBUG(this->filePos);
+#endif
+
             if (version < 6) {
-                cerr << "Version " << version << " no longer supported" << endl;
+                cerr << "Version " << version << " no ller supported" << endl;
                 this->master = -1;
                 return false;
             }
             this->filePos += 4;
 
-            fin.read((char *) &this->master, sizeof(long));
-
-            this->filePos += 8
-                    ;
+            fin.read((char *) &this->master, sizeof(ll));
+#ifdef WINTEST
+            DEBUG(this->master);
+            DEBUG(sizeof(ll));
+            DEBUG(this->filePos);
+#endif
+            this->filePos += 8;
             getline(fin, this->genome, '\0');
 
             this->filePos += this->genome.size() + 1;
-
+#ifdef WINTEST
+            DEBUG(this->genome);
+            DEBUG(this->genome.size());
+            DEBUG(this->filePos);
+#endif
             int nAttributes;
             fin.read((char *) &nAttributes, sizeof(int));
+#ifdef WINTEST
+            DEBUG(nAttributes);
+            DEBUG(this->filePos);
+#endif
+
             this->filePos += 4;
 
             for (int i = 0; i < nAttributes; i++) {
@@ -205,17 +229,34 @@ namespace FreeHiC {
                 this->filePos += key.size() + 1;
                 getline(fin, value, '\0');
                 this->filePos += value.size() + 1;
+#ifdef WINTEST
+                DEBUG(key.size());
+                DEBUG(value.size());
+                DEBUG(this->filePos);
+#endif
             }
+
             int nChrs;
             fin.read((char *) &nChrs, sizeof(int));
             this->filePos += 4;
+#ifdef WINTEST
+            DEBUG(nChrs);
+            DEBUG(this->filePos);
+#endif
+            if (nChrs > 1000) {
+                cerr << "It may contains some bug. Please create an issue in the github. Thanks!" << endl;
+#ifdef RVERSION
+                Rcpp::stop("wired nchrs");
+#else
+                return false;
+#endif
+            }
             for (int i = 0; i < nChrs; i++) {
                 std::string name;
                 int length;
                 getline(fin, name, '\0');
 
                 this->filePos += name.size()+1;
-
                 name = cleanUpName(name);
                 fin.read((char *) &length, sizeof(int));
 
@@ -232,7 +273,16 @@ namespace FreeHiC {
             int nBpResolution;
             fin.read((char *) &nBpResolution, sizeof(int));
             this->filePos += 4;
-
+            if (nBpResolution > 10) {
+                cerr << "Current number of bp resolution is " << nBpResolution
+                    <<  ". It should smaller than 10" << endl;
+                cerr << "It may contains some bug. Please create an issue in the github. Thanks!" << endl;
+#ifdef RVERSION
+                Rcpp::stop("wired bp resolution");
+#else
+                return false;
+#endif
+            }
             std::vector<int> bpResolution;
             for (int i = 0; i < nBpResolution; i++) {
                 int bpResolution_;
@@ -245,6 +295,17 @@ namespace FreeHiC {
             int nFragResolution;
             fin.read((char *) &nFragResolution, sizeof(int));
             this->filePos += 4;
+            if (nFragResolution > 9) {
+                cerr << "Current number of FRAG resolution is " << nFragResolution
+                     <<  ". It should smaller than 9" << endl;
+                cerr << "It may contains some bug. Please create an issue in the github. Thanks!" << endl;
+#ifdef RVERSION
+                Rcpp::stop("wired frag resolution");
+#else
+                return false;
+#endif
+            }
+
             std::vector<int> FragResolution;
             for (int i = 0; i < nFragResolution; i++) {
                 int FragResolution_;
@@ -283,8 +344,8 @@ namespace FreeHiC {
 #endif
                 std::string str;
                 getline(fin, str, '\0');
-                long fpos;
-                fin.read((char *) &fpos, sizeof(long));
+                ll fpos;
+                fin.read((char *) &fpos, sizeof(ll));
                 int sizeInBytes;
                 fin.read((char *) &sizeInBytes, sizeof(int));
                 this->pairFilePositions[str] = fpos;
@@ -296,7 +357,7 @@ namespace FreeHiC {
             return found;
         }
 
-        bool hicReader::readMatrix(std::istream &fin, long filePosition,
+        bool hicReader::readMatrix(std::istream &fin, ll filePosition,
                                    int &blockBinCount, int &blockColumnCount) {
             fin.seekg(filePosition, std::ios::beg);
             int c1, c2;
@@ -363,8 +424,8 @@ namespace FreeHiC {
 #endif
                 int blockNumber;
                 fin.read((char *) &blockNumber, sizeof(int));
-                long filePosition;
-                fin.read((char *) &filePosition, sizeof(long));
+                ll filePosition;
+                fin.read((char *) &filePosition, sizeof(ll));
                 int blockSizeInBytes;
                 fin.read((char *) &blockSizeInBytes, sizeof(int));
                 indexEntry entry{};
@@ -548,7 +609,7 @@ namespace FreeHiC {
             return sites;
         }
 
-        // long total_bytes;
+        // ll total_bytes;
 
         size_t hdf(char *b, size_t size, size_t nitems, void *userdata) {
             size_t numbytes = size * nitems;
@@ -584,7 +645,7 @@ namespace FreeHiC {
             return realsize;
         }
 
-        char *hicReaderHttp::getData(CURL *curl, long position, int chunksize) {
+        char *hicReaderHttp::getData(CURL *curl, ll position, int chunksize) {
             std::ostringstream oss;
             struct MemoryStruct chunk;
 
@@ -613,7 +674,7 @@ namespace FreeHiC {
             return curl;
         }
 
-        bool hicReaderHttp::readMatrix(CURL *curl, long filePosition, int &blockBinCount, int &blockColumnCount) {
+        bool hicReaderHttp::readMatrix(CURL *curl, ll filePosition, int &blockBinCount, int &blockColumnCount) {
 #ifdef HTTPTEST
             cout << "Read matrix data " << time() << endl;
 #endif
@@ -658,7 +719,7 @@ namespace FreeHiC {
         }
 
 //
-        bool hicReaderHttp::readMatrixZoomData(CURL *curl, long &FilePosition, int &myBlockBinCount,
+        bool hicReaderHttp::readMatrixZoomData(CURL *curl, ll &FilePosition, int &myBlockBinCount,
                                                    int &myBlockColumnCount) {
             char *buffer;
             int header_size = 5 * sizeof(int) + 4 * sizeof(float);
@@ -704,8 +765,8 @@ namespace FreeHiC {
 
             if (found) {
                 buffer = getData(curl, FilePosition + header_size,
-                                 nBlocks * (sizeof(int) + sizeof(long) + sizeof(int)));
-                membuf sbuf2(buffer, buffer + nBlocks * (sizeof(int) + sizeof(long) + sizeof(int)));
+                                 nBlocks * (sizeof(int) + sizeof(ll) + sizeof(int)));
+                membuf sbuf2(buffer, buffer + nBlocks * (sizeof(int) + sizeof(ll) + sizeof(int)));
                 std::istream fin2(&sbuf2);
                 for (int b = 0; b < nBlocks; b++) {
 #ifdef RVERSION
@@ -713,8 +774,8 @@ namespace FreeHiC {
 #endif
                     int blockNumber;
                     fin2.read((char *) &blockNumber, sizeof(int));
-                    long filePosition;
-                    fin2.read((char *) &filePosition, sizeof(long));
+                    ll filePosition;
+                    fin2.read((char *) &filePosition, sizeof(ll));
                     int blockSizeInBytes;
                     fin2.read((char *) &blockSizeInBytes, sizeof(int));
                     indexEntry entry;
@@ -723,7 +784,7 @@ namespace FreeHiC {
                     blockMap[blockNumber] = entry;
                 }
             } else {
-                FilePosition = FilePosition + header_size + (nBlocks * (sizeof(int) + sizeof(long) + sizeof(int)));
+                FilePosition = FilePosition + header_size + (nBlocks * (sizeof(int) + sizeof(ll) + sizeof(int)));
             }
             delete buffer;
             return found;
@@ -739,7 +800,7 @@ namespace FreeHiC {
 #ifdef HTTPTEST
             cout << "Get buffer data " << time() << endl;
 #endif
-            long headerReader = this->needFragmentSite ? 50000000 : 100000;
+            ll headerReader = this->needFragmentSite ? 50000000 : 100000;
             if (this->urlBuffer) buffer = this->getData(this->urlBuffer, 0, headerReader);
 
 #ifdef HTTPTEST
@@ -769,7 +830,7 @@ namespace FreeHiC {
 #endif
             char *buffer2;
 
-            long bytesToRead = 100000; //this->totalBytes - this->master; // this mean download all the dataset
+            ll bytesToRead = 100000; //this->totalBytes - this->master; // this mean download all the dataset
             // bool foundFooter = false;
 
             buffer2 = getData(this->urlBuffer, this->master, bytesToRead);
@@ -820,7 +881,7 @@ namespace FreeHiC {
                 cerr << "Can not find this pair " << key << endl;
                 return false;
             }
-            long filePosition = this->pairFilePositions[key];
+            ll filePosition = this->pairFilePositions[key];
 
 
             bool foundBlock = this->readMatrix(this->urlBuffer, filePosition,
@@ -912,7 +973,7 @@ namespace FreeHiC {
                 ans = this->fragmentSitesCache[chrClean];
             }
             if (ans.size() < 1) {
-                long position = this->fragmentSitePos;
+                ll position = this->fragmentSitePos;
                 if (fileResolutions["FRAG"].size() > 0) {
                     for (size_t i = 0; i < chromosomes.size(); i++) {
 #ifdef RVERSION

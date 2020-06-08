@@ -64,18 +64,18 @@ The `.hic` file only contains two units of resolution, and each unit contains a 
 
 ```{r read-hic}
 ## Remote file location. The reomte file include downloading, it may take a while
-remoteFilePath = "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
+remoteFilePath <- "https://hicfiles.s3.amazonaws.com/hiseq/gm12878/in-situ/combined.hic"
  
 ## Local file location
-localFilePath = system.file("extdata", "example.hic", package = "FreeHiCLite")
+localFilePath <- system.file("extdata", "example.hic", package = "FreeHiCLite")
  
 ## Chromosomes needs to be extra
-chromosomes = c("chr1", "chr2")
+chromosomes <- c("chr1", "chr2")
 
 ## Pairs needs to be extra
-pairs = c("1_1", "1_2")
-unit = "BP"
-resolution = 500000L
+pairs <- c("1_1", "1_2")
+unit <- "BP"
+resolution <- 500000L
 ```
 
 #### Extract hic information
@@ -124,8 +124,8 @@ writeJuicer(datLoc, file, overwrite = TRUE)
 To add spikeIn into contact matrix. The `FreeHiCLite` provides `FreeSpikeIn()` to add spikein.
 
 ```{r spikein}
-kernelSmooth = TRUE
-bandwith = 50000L
+kernelSmooth <- TRUE
+bandwidth <- 50000L
 
 ## Create a random spikeIn
 
@@ -134,7 +134,7 @@ Ns <- 0.1 * NROW(contact)
 spikeIn <- contact[sample(1:NROW(contact), Ns), ]
 spikeIn[,3] <- spikeIn[,3] * sample(seq(0, 10, 0.5), Ns, replace=TRUE) # 3rd is the counts
 
-spikeInContact <- FreeSpikeIn(contact, spikeIn, kernelSmooth = kernelSmooth, bandwith = bandwith)
+spikeInContact <- FreeSpikeIn(contact, spikeIn, kernelSmooth = kernelSmooth, bandwidth = bandwidth)
 print(summary(contact[,3]))
 print(summary(spikeInContact[,3]))
 ```

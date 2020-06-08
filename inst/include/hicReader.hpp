@@ -11,6 +11,7 @@ namespace FreeHiC {
 // sparse matrix entry
 
 namespace Juicer {
+    typedef long long ll;
     /*
     The MIT License (MIT)
 
@@ -38,12 +39,12 @@ namespace Juicer {
 // holds the size and position
 struct indexEntry {
     int size;
-    long position;
+    ll position;
 };
 
 struct FragIndexEntry {
     int nSites;
-    long position;
+    ll position;
     FragIndexEntry() = default;
     FragIndexEntry(int nSites_, int position_)
         : nSites(nSites_), position(position_) {}
@@ -149,20 +150,20 @@ class hicReader {
     std::string unit_ = "BP";
     int resolution_ = 5000;
     bool useRegionIndex = false;
-    long filePos = 0;
+    ll filePos = 0;
 
     std::ifstream fileInStream;
 
     // file attributes
     int version = 0;
-    long master = 0;
+    ll master = 0;
 
     std::map<std::string, std::vector<int>> fileResolutions;
-    std::map<std::string, long> pairFilePositions;
+    std::map<std::string, ll> pairFilePositions;
 
     // fragment
     bool needFragmentSite = true;
-    long fragmentSitePos = 0;
+    ll fragmentSitePos = 0;
     std::map<std::string, FragIndexEntry> fragmentSitesIndex;
     std::map<std::string, std::vector<int>> fragmentSitesCache;
     std::map<std::string, int> chromosomeNSites; // fragmentCounts
@@ -189,7 +190,7 @@ class hicReader {
 
     bool readFooter(std::istream &fin);
 
-    bool readMatrix(std::istream &fin, long filePosition, int &blockBinCount,
+    bool readMatrix(std::istream &fin, ll filePosition, int &blockBinCount,
                     int &blockColumnCount);
 
     bool readMatrixZoomData(std::istream &fin, int &blockBinCount,
@@ -235,7 +236,7 @@ class hicReaderHttp : public hicReader {
 
   private:
     CURL *urlBuffer = nullptr;
-    // long totalBytes;
+    // ll totalBytes;
 
     bool prepareData() override;
 
@@ -244,14 +245,14 @@ class hicReaderHttp : public hicReader {
     static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb,
                                       void *userp);
 
-    char *getData(CURL *curl, long position, int chunksize);
+    char *getData(CURL *curl, ll position, int chunksize);
 
     CURL *initCURL(const char *url);
 
-    bool readMatrix(CURL *curl, long filePosition, int &blockBinCount,
+    bool readMatrix(CURL *curl, ll filePosition, int &blockBinCount,
                         int &blockColumnCount);
 
-    bool readMatrixZoomData(CURL *curl, long &FilePosition,
+    bool readMatrixZoomData(CURL *curl, ll &FilePosition,
                                 int &blockBinCount, int &blockColumnCount);
     void getChromosomeSites_(std::string chr) override;
 };
