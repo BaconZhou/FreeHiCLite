@@ -5,7 +5,13 @@
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs. 
+There were no ERRORs or WARNINGs. Only one NOTE
+
+* checking installed package size ... NOTE
+  installed size is 10.9Mb
+  sub-directories of 1Mb or more:
+    doc       4.0Mb
+    extdata   6.4Mb
 
 ## devtools check results
 
@@ -20,10 +26,7 @@ There were no ERRORs or WARNINGs.
       doc       4.0Mb
       extdata   6.4Mb
 
-> checking for GNU extensions in Makefiles ... NOTE
-  GNU make is a SystemRequirements.
-
-0 errors ✓ | 1 warning x | 2 notes x
+0 errors ✓ | 1 warning x | 1 note x
 
 ## rhub check results
 
