@@ -92,7 +92,7 @@ res <- FreeHiC(contacts, seqDepth, countScale, noiseRate, neighborZeroRate, reso
 After we perform `FreeHiC()`, we can visualize the result via juicebox. Here are the following command to use.
 
 ```{r write-freehic, eval=FALSE}
-writeJuicer(res, 'chr1.txt')
+writeJuicer(res, pairs = "1_1", file = 'chr1.txt')
 ```
 
 Here our genomeID is hg19.
@@ -103,14 +103,15 @@ java -jar /path/to/juicer_tool.jar pre chr1.txt chr1.hic genomeID
 
 Here is the simulated matrix.
 
-```{r compare}
+```{r compare, echo=FALSE}
 knitr::include_graphics("simu_chr1.png")
 ```
 
 We can also directly use `FreeHiCJuicer()` to perform simulation directly on the `.hic` file.
 
 ```{r freehicJuicer, eval = FALSE}
-res <- FreeHiCJuicer(file=localFilePath, chromosomes=c("chr1", "chr2", "chr3"),
+res <- FreeHiCJuicer(file=localFilePath, 
+                     chromosomes=c("chr1", "chr2", "chr3"),
                      pairs = NULL, unit=unit, resolution=resolution,
                      seqDepth = seqDepth, countScale = countScale,
                      noiseRate = noiseRate, neighborZeroRate = neighborZeroRate)
@@ -132,7 +133,10 @@ Ns <- 0.1 * NROW(contactBackground)
 spikeIn <- contactBackground[sample(1:NROW(contactBackground), Ns),]
 spikeIn[,3] <- spikeIn[,3] * sample(c(seq(0, 1, 0.5), seq(1, 5, 0.5)), Ns, replace = TRUE)
 
-spikeInRes <- FreeSpikeIn(contactBackground, spikeIn, kernelSmooth = TRUE, bandwidth = 5000)
+spikeInRes <- FreeSpikeIn(contactBackground = contactBackground, 
+                          contactSpikeInSignal = spikeIn, 
+                          kernelSmooth = TRUE, 
+                          bandwidth = 5000)
 ```
 
 ```{r write-spikein, eval=FALSE}
@@ -146,7 +150,11 @@ knitr::include_graphics("spikein_chr1.png")
 We can also perform spikein with `FreeHiC()`.
 
 ```{r spikein-freehic}
-spikeInFreeHiC <- FreeHiC(spikeInRes, seqDepth = sum(contactBackground[,3]), countScale = 0, noiseRate = 0.5, neighborZeroRate = 0.01, resolution = 5000)
+spikeInFreeHiC <- FreeHiC(spikeInRes, 
+                          seqDepth = sum(contactBackground[,3]), 
+                          countScale = 0, noiseRate = 0.5, 
+                          neighborZeroRate = 0.01, 
+                          resolution = 5000)
 ```
 
 ```{r write-spfree, eval =FALSE}

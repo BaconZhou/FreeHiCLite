@@ -47,7 +47,9 @@ void FreeContact::probDecrement() {
 void FreeContact::updateNeighborZero(const int &prevX, const int &prevY,
                                      const double &prevCounts, const int &maxX,
                                      const int &maxY, const int &resolution,
-                                     const double &totalScaledCounts) {
+                                     const double &totalScaledCounts,
+                                     const std::set<int> & xAvailable,
+                                     const std::set<int> & yAvailable) {
     int yLength = this->binY - prevY;
     int xLength = (this->binX + prevX) / 2;
     this->area = (double)xLength * yLength / (resolution * resolution);
@@ -82,7 +84,8 @@ void FreeContact::updateNeighborZero(const int &prevX, const int &prevY,
             tmp.binY = y;
         }
         tmp.counts = 1.0;
-        this->neighborRecords.emplace_back(tmp);
+        if ((xAvailable.find(tmp.binX) != xAvailable.end() ) && (yAvailable.find(tmp.binY) != yAvailable.end()) ) 
+            this->neighborRecords.emplace_back(tmp);
     }
 }
 
@@ -121,7 +124,7 @@ void FreeHiC::simulate(
             if (rng.uniform() < this->neighborZeroRate_) {
                 contact.updateNeighborZero(
                     prevX, prevY, prevCounts, maxBin.first, maxBin.second,
-                    this->resolution_, totalScaledCounts);
+                    this->resolution_, totalScaledCounts, this->chromeInfo[key].xAvailable, this->chromeInfo[key].yAvailable);
             }
 
             prevX = contact.getBinX();
@@ -145,6 +148,7 @@ void FreeHiC::getBasicInformation(
         this->recordsMap[key] = getBasicInformation(data, key, info);
         this->pairMaxBin[key] = std::make_pair(info.maxBinX, info.maxBinY);
         this->totalCounts += info.totalCounts;
+        this->chromeInfo[key] = info;
     }
 }
 
@@ -160,6 +164,8 @@ std::vector<FreeContact> FreeHiC::getBasicInformation(
         totalCounts_ += contact.counts;
         maxBinX = std::max(maxBinX, contact.binX);
         maxBinY = std::max(maxBinY, contact.binY);
+        info.xAvailable.insert(contact.binX);
+        info.yAvailable.insert(contact.binY);
     }
     info.key = key;
     info.maxBinX = maxBinX;
@@ -202,4 +208,6 @@ std::unordered_map<std::string, std::vector<contactRecord>> FreeHiC::getData() {
     }
     return ans;
 }
+
+
 } // namespace FreeHiC

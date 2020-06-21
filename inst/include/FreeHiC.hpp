@@ -19,6 +19,8 @@ namespace FreeHiC {
         int totalCounts = 0.0;
         int maxBinX = 0;
         int maxBinY = 0;
+        std::set<int> xAvailable;
+        std::set<int> yAvailable;
         std::string key;
     };
 
@@ -57,7 +59,7 @@ namespace FreeHiC {
 
         void updateNeighborZero(const int &prevX, const int &prevY, const double &prevCounts,
                                 const int &maxX, const int &maxY,
-                                const int &resolution, const double &totalScaledCounts);
+                                const int &resolution, const double &totalScaledCounts, const std::set<int> & xAvailable, const std::set<int> & yAvailable);
 
         void sample(const double &totalCounts, const double &totalScaleCounts);
 
@@ -114,11 +116,13 @@ namespace FreeHiC {
         // std::unordered_map<std::string, double> pairAverageCounts;
 
         std::unordered_map<std::string, std::vector<FreeContact>> recordsMap;
+        std::unordered_map<std::string, FreeInfo> chromeInfo;
 
         double totalCounts = 0.0;
 
         void getBasicInformation(const std::unordered_map<std::string, std::vector<contactRecord>> &dataMap);
         std::vector<FreeContact> getBasicInformation(const std::vector<contactRecord> &data, const std::string& key, FreeInfo &info);
+
     };
 }
 
