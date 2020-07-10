@@ -87,6 +87,7 @@ FreeHiC <- function(contacts, seqDepth = NULL, countScale = 1, noiseRate = 0, ne
     resolution = 50000L) {
     
     stopifnot(is.null(seqDepth) | seqDepth >= 0)
+    if (is.null(seqDepth)) seqDepth = 0
     stopifnot(countScale > -1)
     stopifnot(noiseRate >= 0 & noiseRate < 1)
     stopifnot(neighborZeroRate >= 0 & neighborZeroRate < 1)
@@ -143,8 +144,11 @@ FreeHiC <- function(contacts, seqDepth = NULL, countScale = 1, noiseRate = 0, ne
 
 .FreeHiCMatrix <- function(contactsMatrix, seqDepth, countScale, noiseRate, neighborZeroRate, resolution) {
     stopifnot(NCOL(contactsMatrix) == 3)
-    return(hicDataSimuMatrix(contactRecords = contactsMatrix, resolution = resolution, sequenceDepth = seqDepth, 
-        countScale = countScale, noiseRate = noiseRate, neighborZeroRate = neighborZeroRate))
+    return(hicDataSimuMatrix(contactRecords = contactsMatrix, 
+                             resolution = resolution, 
+                             sequenceDepth = seqDepth, 
+                             countScale = countScale, noiseRate = noiseRate, 
+                             neighborZeroRate = neighborZeroRate))
 }
 
 #' @title
