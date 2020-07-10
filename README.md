@@ -34,7 +34,7 @@ of downstream Hi-C analysis.
 Install the development version using the **devtools** package:
 
 ``` r
-devtools::install_github("banconzhou/FreeHiCLite")
+devtools::install_github("baconzhou/FreeHiCLite")
 ```
 
 ## Usage
@@ -67,8 +67,7 @@ contains a fix set of resolutions.
 1.  Base-pair-delimited resolutions (**BP**): 2.5M, 1M, 500K, 250K,
     100K, 50K, 25K, 10K, and 5K.
 2.  Fragment-delimited resolutions (**FRAG**): 500f, 250f, 100f, 50f,
-    20f, 5f, 2f,
-1f.
+    20f, 5f, 2f, 1f.
 
 <!-- end list -->
 
@@ -210,19 +209,18 @@ print(summary(contact[,3]))
 #>    1.00    2.00    4.00   25.71    9.00 4545.00
 print(summary(spikeInContact[,3]))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>     1.0     2.0     5.0   149.1    14.0  4545.0
+#>       1       2       5     206      14    4545
 ```
 
 ### Simulate from contact matrix
 
-Here we use `FreeHiC()` function to perform
-simulation.
+Here we use `FreeHiC()` function to perform simulation.
 
 ``` r
 simuContact <- FreeHiC(spikeInContact, seqDepth = 2 * sum(contact[,3]), resolution = 5000L)
 print(summary(simuContact[,3]))
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>     1.0     2.0     6.0   163.7    16.0  4594.0
+#>     1.0     2.0     6.0   225.9    16.0  4550.0
 ```
 
 ## References

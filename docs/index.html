@@ -97,7 +97,7 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>Install the development version using the <strong>devtools</strong> package:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"banconzhou/FreeHiCLite"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"baconzhou/FreeHiCLite"</span>)</pre></div>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
@@ -222,7 +222,7 @@
 <span class="co">#&gt;    1.00    2.00    4.00   25.71    9.00 4545.00</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">spikeInContact</span>[,<span class="fl">3</span>]))
 <span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">#&gt;     1.0     2.0     5.0   149.1    14.0  4545.0</span></pre></div>
+<span class="co">#&gt;       1       2       5     206      14    4545</span></pre></div>
 </div>
 <div id="simulate-from-contact-matrix" class="section level3">
 <h3 class="hasAnchor">
@@ -231,7 +231,7 @@
 <div class="sourceCode" id="cb11"><pre class="r"><span class="no">simuContact</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/FreeHiC.html">FreeHiC</a></span>(<span class="no">spikeInContact</span>, <span class="kw">seqDepth</span> <span class="kw">=</span> <span class="fl">2</span> * <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">contact</span>[,<span class="fl">3</span>]), <span class="kw">resolution</span> <span class="kw">=</span> <span class="fl">5000L</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">simuContact</span>[,<span class="fl">3</span>]))
 <span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">#&gt;     1.0     2.0     6.0   163.7    16.0  4594.0</span></pre></div>
+<span class="co">#&gt;     1.0     2.0     6.0   225.9    16.0  4550.0</span></pre></div>
 </div>
 </div>
 <div id="references" class="section level2">
