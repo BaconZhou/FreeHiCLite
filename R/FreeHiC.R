@@ -83,7 +83,7 @@
 #' @importFrom methods is
 #' 
 #' @export
-FreeHiC <- function(contacts, seqDepth = NULL, countScale = 1, noiseRate = 0, neighborZeroRate = 0, 
+FreeHiC <- function(contacts, seqDepth = 0, countScale = 1, noiseRate = 0, neighborZeroRate = 0, 
     resolution = 50000L) {
     
     stopifnot(is.null(seqDepth) | seqDepth >= 0)
@@ -230,9 +230,10 @@ FreeHiC <- function(contacts, seqDepth = NULL, countScale = 1, noiseRate = 0, ne
 #' 
 #' 
 #' @export
-FreeHiCJuicer <- function(file, chromosomes = NULL, pairs = NULL, unit = c("BP", "FRAG"), seqDepth = NULL, 
+FreeHiCJuicer <- function(file, chromosomes = NULL, pairs = NULL, unit = c("BP", "FRAG"), seqDepth = 0, 
     countScale = 1, noiseRate = 0, neighborZeroRate = 0, resolution = 50000L, verbose=TRUE) {
-    
+    if(is.null(seqDepth)) seqDepth = 0
+    if(is.null(countScale)) countScale = 0
     defResolution <- list(BP = c(2500000, 1e+06, 5e+05, 250000, 1e+05, 50000, 25000, 10000, 5000), 
         FRAG = c(500, 250, 100, 50, 20, 5, 2, 1))
     
