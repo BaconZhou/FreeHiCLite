@@ -41,7 +41,7 @@ FreeHi-C is designed for studies that are prone to simulate Hi-C interactions fr
 Install the development version using the **devtools** package:
 
 ```{r, eval = FALSE}
-devtools::install_github("banconzhou/FreeHiCLite")
+devtools::install_github("baconzhou/FreeHiCLite")
 ```
 
 ## Usage
