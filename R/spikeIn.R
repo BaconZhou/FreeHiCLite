@@ -123,6 +123,19 @@ FreeSpikeIn <- function(contactBackground, contactSpikeInSignal, kernelSmooth = 
     return(ans)
 }
 
+
+dataDriven <- function(conditionMatrixSummary1, conditionMatrixSummary2) {
+    mergeMatrix <- merge(conditionMatrixSummary1, conditionMatrixSummary2, by = c("x", "y"), all = TRUE)
+    nc <- NCOL(mergeMatrix)
+    stopifnot(nc == 4)
+    for(j in 3:nc) {
+        mergeMatrix[is.na(mergeMatrix[,j]) | (mergeMatrix[,j] < 1),j] = 0.45
+    }
+    log2FC <- log2(mergeMatrix[,4] / mergeMatrix[,3])
+    trueSet <- mergeMatrixabs(log2FC) > 2
+}
+
+
 .FreeSpikeInList <- function(contactBackground, contactSpikeInSignal, kernelSmooth, bandwidth) {
     pairs1 <- sort(names(contactBackground))
     pairs2 <- sort(names(contactSpikeInSignal))
