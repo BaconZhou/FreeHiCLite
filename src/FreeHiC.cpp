@@ -100,6 +100,11 @@ void FreeContact::assignRng(RandomNumber *rng_) { this->rng = rng_; }
 void FreeHiC::simulate(
     const std::unordered_map<std::string, std::vector<contactRecord>>
         &dataMap) {
+
+
+#ifdef RVERSION
+        GetRNGstate();
+#endif // RVERSION
     this->getBasicInformation(dataMap);
 
     double totalScaledCounts =
@@ -132,6 +137,10 @@ void FreeHiC::simulate(
             prevCounts = contact.getCounts();
         }
     }
+#ifdef RVERSION
+        PutRNGstate();
+#endif // RVERSION
+
 }
 
 void FreeHiC::getBasicInformation(

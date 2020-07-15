@@ -44,6 +44,18 @@ using std::endl;
 
 namespace FreeHiC {
 
+#ifdef RVERSION
+class RandomNumber {
+  public:
+    RandomNumber() {};
+
+    ~RandomNumber() = default;
+
+    int bernoulli() { return R::runif(0, 1) >= 0.5; }
+
+    double uniform() { return R::runif(0, 1); }
+};
+#else
 class RandomNumber {
   public:
     RandomNumber() : uni{0, 1.0}, bern{0.5} {};
@@ -59,6 +71,7 @@ class RandomNumber {
     std::uniform_real_distribution<double> uni;
     std::bernoulli_distribution bern;
 };
+#endif
 
 class contactRecord {
   public:

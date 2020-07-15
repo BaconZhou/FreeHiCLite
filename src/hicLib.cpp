@@ -245,10 +245,11 @@ Rcpp::IntegerMatrix hicDataSimuMatrix(const Rcpp::IntegerMatrix &contactRecords,
                              noiseRate, neighborZeroRate);
   
   std::unordered_map<std::string, std::vector<FreeHiC::contactRecord>> resMap;
-  resMap["1"] = matrixToContactVector(contactRecords);
+  resMap["1_1"] = matrixToContactVector(contactRecords);
   simulator.simulate(resMap);
+  // cout << "check random number: " << simulator.rng.uniform() << endl;
   std::unordered_map<std::string, std::vector<FreeHiC::contactRecord>> res = simulator.getData();
-  return contactVectorToMatrix(res["1"]);
+  return contactVectorToMatrix(res["1_1"]);
 }
 
 
