@@ -117,13 +117,17 @@ void FreeHiC::simulate(
         int prevX = 0, prevY = 0;
         double prevCounts = 0;
 
+        size_t debug_count = 0;
+
         for (FreeContact &contact : data) {
 #ifdef RVERSION
             Rcpp::checkUserInterrupt();
 #endif
             contact.assignRng(&rng);
-            if (rng.uniform() < this->noiseRate_)
+            if (rng.uniform() < this->noiseRate_)  {
                 contact.noise();
+                debug_count++;
+            }
             contact.sample(this->totalCounts, totalScaledCounts);
 
             if (rng.uniform() < this->neighborZeroRate_) {
@@ -136,6 +140,7 @@ void FreeHiC::simulate(
             prevY = contact.getBinY();
             prevCounts = contact.getCounts();
         }
+        cout << "noiseRate" << this->noiseRate_ <<  ", debug_count: " << debug_count << endl;
     }
 #ifdef RVERSION
         PutRNGstate();
