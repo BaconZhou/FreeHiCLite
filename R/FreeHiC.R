@@ -151,6 +151,41 @@ FreeHiC <- function(contacts, seqDepth = 0, countScale = 1, noiseRate = 0, neigh
                              neighborZeroRate = neighborZeroRate))
 }
 
+addSparsity <- function(path, new_path, Sparsity_max, Sparsity_min) {
+  files = list.files(path)
+  sparsity <- sapply(files, function(idx) {
+    file <- file.path(path, idx)
+    mat <- read.table(file)
+    c(idx, sum(mat$V3 > 0), sum(mat$V3))
+  })
+  
+  sparsity_df <- data.frame(id = sparsity[1, ],
+                            sparsity = as.numeric(sparsity[2, ]),
+                            counts = as.numeric(sparsity[3, ]))
+  
+  sparsity_df$remap = (sparsity_df$sparsity - min(sparsity_df$sparsity)) / 
+    (max(sparsity_df$sparsity) - min(sparsity_df$sparsity)) * 
+    Sparsity_max + Sparsity_min
+  sparsity_df$scale = sparsity_df$remap / sparsity_df$sparsity
+  
+  invisible(lapply(files, function(idx) {
+    file <- file.path(path, idx)
+    
+    mat <- read.table(file)
+    
+    counts <- sum(mat$V3)
+    
+    rescale_rate <- sparsity_df[idx, 'scale']
+    #    mat$V3 <- mat$V3 / rescale_rate
+    
+    prob <- mat$V3 / sum(mat$V3)
+    
+    id <- sort(sample(NROW(mat), floor(NROW(mat) * rescale_rate), prob = prob))
+    nmat <- mat[id, ]
+    write.table(nmat, file = file.path(new_path, idx), row.names=FALSE, col.names=FALSE)
+  }))
+}
+
 #' @title
 #' 
 #' FreeHiC directly from hic file
