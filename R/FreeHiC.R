@@ -18,7 +18,7 @@
 #' @param noiseRate The noise rate for contact matrix. 0 - 1 scale
 #' @param neighborZeroRate The rate for neighborhood noise rate. 0 - 1 scale
 #' @param resolution The resolution used in the contacts matrix. A positive number.
-#' 
+#' @param sparsity THe sparsity used to enforce matrix contact number. A positive number.
 #' @return A list or matrix or data.frame with the same format as \code{contacts}
 #' 
 #' @examples 
@@ -84,7 +84,7 @@
 #' 
 #' @export
 FreeHiC <- function(contacts, seqDepth = 0, countScale = 1, noiseRate = 0, neighborZeroRate = 0, 
-    resolution = 50000L) {
+    resolution = 50000L, sparsity = NULL) {
     
     stopifnot(is.null(seqDepth) | seqDepth >= 0)
     if (is.null(seqDepth)) seqDepth = 0
@@ -95,31 +95,36 @@ FreeHiC <- function(contacts, seqDepth = 0, countScale = 1, noiseRate = 0, neigh
     
     if (methods::is(contacts, "list")) {
         ans <- .FreeHiCList(contactsMap = contacts, seqDepth = seqDepth, countScale = countScale, noiseRate = noiseRate, 
-            neighborZeroRate = neighborZeroRate, resolution = resolution)
+            neighborZeroRate = neighborZeroRate, resolution = resolution, sparsity = sparsity)
     } else if (methods::is(contacts, "data.frame")) {
         ans <- .FreeHiCDf(contactsDf = contacts, seqDepth = seqDepth, countScale = countScale, noiseRate = noiseRate, 
-            neighborZeroRate = neighborZeroRate, resolution = resolution)
+            neighborZeroRate = neighborZeroRate, resolution = resolution, sparsity = sparsity)
     } else if (methods::is(contacts, "matrix")) {
         ans <- .FreeHiCMatrix(contactsMatrix = contacts, seqDepth = seqDepth, countScale = countScale, 
-            noiseRate = noiseRate, neighborZeroRate = neighborZeroRate, resolution = resolution)
+            noiseRate = noiseRate, neighborZeroRate = neighborZeroRate, resolution = resolution, sparsity = sparsity)
     } else {
         stop("Not implemented. Check ?FreeHIC")
     }
     return(ans)
 }
 
-.FreeHiCList <- function(contactsMap, seqDepth, countScale, noiseRate, neighborZeroRate, resolution) {
+.FreeHiCList <- function(contactsMap, seqDepth, countScale, noiseRate, neighborZeroRate, resolution, sparsity) {
     pairs <- names(contactsMap)
     stopifnot(!is.null(pairs))
-    return(hicDataSimuList(contactRecords = contactsMap, names = pairs, resolution = resolution, sequenceDepth = seqDepth, 
-        countScale = countScale, noiseRate = noiseRate, neighborZeroRate = neighborZeroRate))
+    ans <- hicDataSimuList(contactRecords = contactsMap, names = pairs, resolution = resolution, sequenceDepth = seqDepth, 
+        countScale = countScale, noiseRate = noiseRate, neighborZeroRate = neighborZeroRate)
+    ans <- lapply(ans, function(x) {.enforce_sparsity(ans, sparsity)})
+    return(ans)
 }
 
-.FreeHiCDf <- function(contactsDf, seqDepth, countScale, noiseRate, neighborZeroRate, resolution) {
+.FreeHiCDf <- function(contactsDf, seqDepth, countScale, noiseRate, neighborZeroRate, resolution, sparsity) {
     stopifnot(NCOL(contactsDf) == 5)
     contactsMap <- .dfToList(contactsDf)
     resList <- .FreeHiCList(contactsMap = contactsMap, seqDepth = seqDepth, countScale = countScale, 
         noiseRate = noiseRate, neighborZeroRate = neighborZeroRate, resolution = resolution)
+    
+    resList <- lapply(resList, function(x) {.enforce_sparsity(x, sparsity)})
+    
     pairs <- names(resList)
     counts <- sapply(resList, NROW)
     chrs <- sapply(pairs, FUN = function(x) {
@@ -136,19 +141,19 @@ FreeHiC <- function(contacts, seqDepth = 0, countScale = 1, noiseRate = 0, neigh
     
     mat <- do.call("rbind", resList)
     rm(resList)
-    
     df <- data.frame(chr1 = chr1, x = mat[, 1], chr2 = chr2, y = mat[, 2], counts = mat[, 3])
     names(df) <- names(contactsDf)
     return(df)
 }
 
-.FreeHiCMatrix <- function(contactsMatrix, seqDepth, countScale, noiseRate, neighborZeroRate, resolution) {
+.FreeHiCMatrix <- function(contactsMatrix, seqDepth, countScale, noiseRate, neighborZeroRate, resolution, sparsity) {
     stopifnot(NCOL(contactsMatrix) == 3)
-    return(hicDataSimuMatrix(contactRecords = contactsMatrix, 
+    ans <- hicDataSimuMatrix(contactRecords = contactsMatrix, 
                              resolution = resolution, 
                              sequenceDepth = seqDepth, 
                              countScale = countScale, noiseRate = noiseRate, 
-                             neighborZeroRate = neighborZeroRate))
+                             neighborZeroRate = neighborZeroRate)
+    .enforce_sparsity(ans, sparsity)
 }
 
 #' @title
@@ -299,3 +304,14 @@ FreeHiCJuicer <- function(file, chromosomes = NULL, pairs = NULL, unit = c("BP",
     return(lapply(split(contactsDf[, c("x", "y", "counts")], pairs), as.matrix))
 }
 
+.enforce_sparsity <- function(mat, sparsity = NULL) {
+    if ( is.null(sparsity) | is.na(sparsity) | (sparsity >= NROW(mat))) return(mat)
+    counts <- sum(mat[, 3]) # total number of contacts
+    
+    prob <- mat[, 3] / counts
+    
+    id <- sort(sample(NROW(mat), sparsity, prob = prob))
+    nmat <- mat[id, ]
+    nmat[, 3] <- round(nmat[, 3] / sum(nmat[, 3]) * counts, 0)
+    return(nmat)
+}
