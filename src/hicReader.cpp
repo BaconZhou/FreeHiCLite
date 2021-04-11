@@ -164,6 +164,12 @@ namespace FreeHiC {
             }
             return true;
         }
+        
+        bool hicReader::closeFile() {
+            this->fileInStream.close();
+            // cout << "file closed: " << this->fileName_ << endl;
+            return true;
+        }
 
         bool hicReader::readMagicString(std::istream &fin) {
             std::string str;

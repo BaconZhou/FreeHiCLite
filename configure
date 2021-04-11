@@ -41,6 +41,8 @@ CC=`${R_HOME}/bin/R CMD config CC`
 CFLAGS=`${R_HOME}/bin/R CMD config CFLAGS`
 CPPFLAGS=`${R_HOME}/bin/R CMD config CPPFLAGS`
 
+echo "R_HOME: $R_HOME"
+
 # For debugging
 echo "Using PKG_CFLAGS=$PKG_CFLAGS"
 echo "Using PKG_LIBS=$PKG_LIBS"

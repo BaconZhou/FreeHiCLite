@@ -149,6 +149,9 @@ Rcpp::List hicDataExtra(const std::string &fileName, bool isHttp,
   
   Rcpp::List ans = Rcpp::List::create(Rcpp::Named("contact") = contact,
                                       Rcpp::Named("information") = hicDataInformation(reader));
+  reader->closeFile();
+  delete reader;
+    
   return ans;
 }
 
@@ -167,6 +170,10 @@ Rcpp::List hicDataFragSites(const std::string &fileName, bool isHttp,
   for (const std::string &chr : chromosomes) {
     fragmentSites.push_back(reader->getChromosomeSites(chr), chr);
   }
+    
+  reader->closeFile();
+  delete reader;
+    
   return fragmentSites;
 }
 
@@ -179,7 +186,12 @@ Rcpp::List hicDataInformation(const std::string &fileName, bool isHttp) {
   } else {
     reader = new FreeHiC::Juicer::hicReader(fileName, "FRAG", 1);
   }
-  return hicDataInformation(reader);
+  Rcpp::List ans = hicDataInformation(reader);
+  
+  reader->closeFile();
+  delete reader;
+  
+  return ans;
 }
 
 // [[Rcpp::export]]
@@ -205,7 +217,10 @@ Rcpp::List hicDataSimuFromFile(const std::string &fileName,  bool isHttp,
     std::vector<FreeHiC::contactRecord> res = reader->readData(chrPair.first, chrPair.second); 
     resMap[pair[i]] = res;
   }
-
+    
+  reader->closeFile();
+  delete reader;
+    
   simulator.simulate(resMap);
   std::unordered_map<std::string, std::vector<FreeHiC::contactRecord>> res = simulator.getData();
   

@@ -145,6 +145,7 @@ class hicReader {
         return this->checked;
     }
 
+    bool closeFile();
   protected:
     // hic file
     std::string fileName_;
@@ -185,7 +186,7 @@ class hicReader {
     virtual bool prepareData();
 
     bool openFile();
-
+    
     static bool readMagicString(std::istream &fin);
 
     bool readHeader(std::istream &fin);

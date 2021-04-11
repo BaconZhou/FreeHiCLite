@@ -1,9 +1,0 @@
-PKG_CPPFLAGS= -DSTRICT_R_HEADERS -I../inst/include -DRVERSION
-PKG_LIBS=-lcurl
-# PKG_CXXFLAGS=-I../inst/include -DRVERSION
-CXX_STD = CXX11
-
-all: clean
-
-clean:
-	rm -f $(SHLIB) $(OBJECTS)
