@@ -1,5 +1,6 @@
-# The following code is almost from Jeroen Ooms
+#!/bin/sh
 
+# The following code is almost from Jeroen Ooms
 # Anticonf (tm) script by Jeroen Ooms (2019)
 # This script will query 'pkg-config' for the required cflags and ldflags.
 # If pkg-config is unavailable or does not find the library, try setting

@@ -186,7 +186,7 @@ class hicReader {
     virtual bool prepareData();
 
     bool openFile();
-    
+
     static bool readMagicString(std::istream &fin);
 
     bool readHeader(std::istream &fin);
